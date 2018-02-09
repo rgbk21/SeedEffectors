@@ -255,10 +255,12 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     vector<IMSeedSet> allSeedSets = phase2->getTree()->getAllSeeds(budget);
     IMResults::getInstance().addSeedSets(allSeedSets);
-    
+    cout << "\n before phase 2";
+    disp_mem_usage("");
     IMSeedSet bestSeedSet = phase2->getTree()->getBestSeedSet(budget);
     delete phase2;
-    
+    cout << "\n after phase 2";
+    disp_mem_usage("");
     cout<<"Selected k SeedSet: " << flush;
     set<int> seedSet=bestSeedSet.getSeedSet();
     /*

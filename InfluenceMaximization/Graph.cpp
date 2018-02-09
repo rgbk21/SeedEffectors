@@ -201,7 +201,7 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     this->rrSets =vector<vector<int>>();
-    int totalSize = 0;
+    long totalSize = 0;
     clock_t begin = clock();
     while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
@@ -274,7 +274,7 @@ vector<int> Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
 
 void Graph::generateRandomRRSets(int R, bool label) {
     this->rrSets = vector<vector<int>>();
-    int totalSize = 0;
+    long totalSize = 0;
     clock_t begin = clock();
     while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
