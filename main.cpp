@@ -230,7 +230,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         IMResults::getInstance().setNonTargetFileName(nonTargetsFileName);
         delete estimateNonTargets;
     }
-    cout << "\n Non Target file is dead";
+    cout << "\n Non Target file is dead ";
     disp_mem_usage("");
     cout << "\n Should be same as before" << flush;
     //Start phase 2
@@ -294,7 +294,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
      int n = influencedGraph->getNumberOfVertices();
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-
+    R=R/(2*2*4);
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
 
     cout << "\n RRsets done " << flush;
@@ -344,14 +344,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
 
     vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);
-    int removecount=0;
-    for(int k:NewactivatedSet){
-        if(seedSet.count(k)==1){
-            removecount++;
-            //cout << "\n already present in remove nodes = " <<k;
-        }
-    }
-    cout << "\n New Targets activated = " << NewactivatedSet.size()-removecount;
+
+    cout << "\n New Targets activated = " << NewactivatedSet.size();
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
     cout << "Elapsed time in minutes " << totalExecutionTime;

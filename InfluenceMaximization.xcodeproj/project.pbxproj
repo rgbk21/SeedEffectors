@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E235576202D4399000EAC11 /* hello.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E235574202D4399000EAC11 /* hello.cpp */; };
 		3107F0A01FE4661900EA0135 /* GenerateGraphLabels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */; };
 		310E789E200EB175000C70D9 /* TIMInfluenceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */; };
 		310E78A220103A04000C70D9 /* TIMCoverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A120103A04000C70D9 /* TIMCoverage.cpp */; };
@@ -53,6 +54,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E235574202D4399000EAC11 /* hello.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = hello.cpp; path = ../../test/hello.cpp; sourceTree = "<group>"; };
+		1E235575202D4399000EAC11 /* hello.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = hello.hpp; path = ../../test/hello.hpp; sourceTree = "<group>"; };
 		3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GenerateGraphLabels.cpp; sourceTree = "<group>"; };
 		3107F09F1FE4661900EA0135 /* GenerateGraphLabels.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GenerateGraphLabels.hpp; sourceTree = "<group>"; };
 		310E6A131FDE0FAB00D72424 /* jsonexperimenter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsonexperimenter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +157,8 @@
 		31FC367E1F354892005CAFEB = {
 			isa = PBXGroup;
 			children = (
+				1E235574202D4399000EAC11 /* hello.cpp */,
+				1E235575202D4399000EAC11 /* hello.hpp */,
 				310E6A821FE07AF000D72424 /* experiments.py */,
 				31D8716A1FD1EF5B00F51E73 /* cxxopts.hpp */,
 				31D871681FD1ED7D00F51E73 /* differencemain.cpp */,
@@ -297,6 +302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E235576202D4399000EAC11 /* hello.cpp in Sources */,
 				310E789E200EB175000C70D9 /* TIMInfluenceCalculator.cpp in Sources */,
 				310E78A5201BCE71000C70D9 /* BaselineGreedyTIM.cpp in Sources */,
 				3107F0A01FE4661900EA0135 /* GenerateGraphLabels.cpp in Sources */,

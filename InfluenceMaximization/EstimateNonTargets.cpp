@@ -44,6 +44,7 @@ vector<double> EstimateNonTargets::getNonTargetsUsingTIM() {
     int n = graph->getNumberOfVertices();
     double epsilon = EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    R=R/(2*2*4);
     cout << "\n For phase 1: R is " << R;
     cout << "\n Non targets number is " << graph->getNumberOfNonTargets();
     generateRandomRRSets(R, false);

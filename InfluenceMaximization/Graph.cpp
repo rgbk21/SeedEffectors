@@ -102,7 +102,6 @@ void Graph::readGraph(string fileName, float percentage) {
             labels.push_back(true);
         }
         int from, to;
-        float p;
         int maxDegree = 0;
         while (myFile >> from >> to) {
             graph[from].push_back(to);
@@ -244,8 +243,8 @@ vector<int> Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             if(visited[v])
                 continue;
             
-            //if(!labels[v])
-             //continue;
+            if(!labels[v])
+            continue;
             
             if(!visited[v])
             {
@@ -355,9 +354,7 @@ void Graph::assertTransposeIsCorrect() {
     int edges = 0;
     
     for (int i=0; i< n; i++) {
-        for (int j:graph[i]) {
-            edges++;
-        }
+        edges+=graph[i].size();
     }
     assert(edges==m);
     int edgeCount = 0;
