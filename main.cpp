@@ -291,10 +291,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout<< "\n influenced graph labels";
 
     //Random RR sets
-     int n = influencedGraph->getNumberOfVertices();
+    int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    R=R/(2*2*4);
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
 
     cout << "\n RRsets done " << flush;
@@ -326,6 +325,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         get++;
     }*/
     set<int> nodesToRemove=set<int>();
+    set<int> alreadyinSeed=set<int>();
     int i=0;
     int j=0;
     while(j<removeNodes && j< SortedNodeidCounts.size()){
@@ -333,6 +333,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         if(nodesToRemove.count(nodeid)==0){
             nodesToRemove.insert(nodeid);
             j++;
+            if(seedSet.count(nodeid)==1){
+                alreadyinSeed.insert(nodeid);
+            }
         }
         i++;
     }
@@ -346,6 +349,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);
 
     cout << "\n New Targets activated = " << NewactivatedSet.size();
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
     cout << "Elapsed time in minutes " << totalExecutionTime;
