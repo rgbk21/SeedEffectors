@@ -20,7 +20,7 @@
 #include "Graph.hpp"
 using namespace std;
 
-#define NUMBER_OF_SIMULATIONS 10000
+#define NUMBER_OF_SIMULATIONS 20000
 
 inline void singleDiffusion(set<int> *activatedSet, Graph *graph, set<int> *seedSet, set<int> *alreadyActivated, vector<int> *visitMark, vector<bool> *visited, deque<int> *queue) {
     
