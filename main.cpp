@@ -81,7 +81,7 @@ void testApprox(Graph *graph, int budget, ApproximationSetting setting, bool ext
     cout << "\nInfluence Targets: " << influence.first;
     cout << "\nInfluence NT: " << influence.second;
     IMResults::getInstance().setApproximationInfluence(influence);
-
+    
 }
 
 void loadResultsFileFrom(cxxopts::ParseResult result) {
@@ -132,11 +132,13 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     bool useIndegree = true;
     float probability = 0;
     int removeNodes=0;
+    string seedSelection;
     budget = result["budget"].as<int>();
     nonTargetThreshold = result["threshold"].as<int>();
     graphFileName = result["graph"].as<std::string>();
     percentageTargets = result["percentage"].as<int>();
     removeNodes=result["nodesRemove"].as<int>();
+    seedSelection=result["seedset"].as<std::string>();
     loadResultsFileFrom(result);
     
     if(result.count("method")>0) {
@@ -159,6 +161,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout << "\t Percentage:  " << percentageTargets;
     cout << "\t Method: " << method;
     cout << "\t Nodes removed: " << removeNodes;
+    cout << "\t Seed selection : " << seedSelection;
     
     if(useIndegree) {
         cout << "\t Probability: Indegree";
@@ -178,7 +181,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(fromFile) {
         FILE_LOG(logDEBUG) << "\n Reading Non targets from file: " << nonTargetsFileName;
     }
-
+    
     IMResults::getInstance().setFromFile(fromFile);
     // insert code here...
     float percentageTargetsFloat = (float)percentageTargets/(float)100;
@@ -190,93 +193,98 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     
     //Start phase 1
-    loadGraphSizeToResults(graph);
-    vector<double> nodeCounts;
-    clock_t phase1StartTime = clock();
-    cout << "\n Before any estimate non targets creation:";
-    disp_mem_usage("");
-    EstimateNonTargets *estimateNonTargets = NULL;
-    if(!fromFile) {
-        estimateNonTargets = new EstimateNonTargets(graph);
-        if(method==1) {
-            nodeCounts = estimateNonTargets->getNonTargetsUsingTIM();
-        } else {
-            nodeCounts = estimateNonTargets->getNonTargetsUsingSIM();
-        }
-    } else {
-        estimateNonTargets = new EstimateNonTargets();
-        estimateNonTargets->readFromFile(nonTargetsFileName);
-        nodeCounts = *estimateNonTargets->getAllNonTargetsCount();
-        delete estimateNonTargets;
-    }
-    cout << "\n Non targets file is alive ";
-    disp_mem_usage("");
-    clock_t phase1EndTime = clock();
-    
-    FILE_LOG(logDEBUG) << "Completed Phase 1";
-    double phase1TimeTaken = double(phase1EndTime - phase1StartTime) / CLOCKS_PER_SEC;
-    IMResults::getInstance().setPhase1Time(phase1TimeTaken);
-    if(!fromFile) {
-        nonTargetsFileName = graphFileName;
-        nonTargetsFileName+="_" + to_string(budget);
-        nonTargetsFileName+="_" + to_string(nonTargetThreshold);
-        nonTargetsFileName+="_" + to_string(percentageTargets);
-        nonTargetsFileName+="_" + to_string(rand() % 1000000);
-        nonTargetsFileName+="_1";
-        nonTargetsFileName+=".txt";
-        estimateNonTargets->writeToFile(nonTargetsFileName);
-        cout << "\nWriting Non Targets to file " << nonTargetsFileName;
-        cout << "\n";
-        IMResults::getInstance().setNonTargetFileName(nonTargetsFileName);
-        delete estimateNonTargets;
-    }
-    cout << "\n Non Target file is dead ";
-    disp_mem_usage("");
-    cout << "\n Should be same as before" << flush;
-    //Start phase 2
-    cout <<"Starting phase 2";
-    FILE_LOG(logDEBUG) << "Starting phase 2";
-    clock_t phase2StartTime = clock();
-    Phase2 *phase2= NULL;
-    if(method==1) {
-        phase2 = new Phase2TIM(graph);
-    }
-    else {
-        phase2 = new Phase2SIM(graph);
-    }
-    phase2->doPhase2(budget, nonTargetThreshold, nodeCounts);
-    IMResults::getInstance().addBestSeedSet(phase2->getTree()->getBestSeedSet(budget));
-    clock_t phase2EndTime = clock();
-    double phase2TimeTaken = double(phase2EndTime - phase2StartTime) / CLOCKS_PER_SEC;
-    FILE_LOG(logDEBUG) << "Completed phase 2";
-    
-    IMResults::getInstance().setPhase2Time(phase2TimeTaken);
-    IMResults::getInstance().setTotalTimeTaken(phase1TimeTaken + phase2TimeTaken);
-    
-    vector<IMSeedSet> allSeedSets = phase2->getTree()->getAllSeeds(budget);
-    IMResults::getInstance().addSeedSets(allSeedSets);
-    cout << "\n before phase 2";
-    disp_mem_usage("");
-    IMSeedSet bestSeedSet = phase2->getTree()->getBestSeedSet(budget);
-    delete phase2;
-    cout << "\n after phase 2";
-    disp_mem_usage("");
-    cout<<"Selected k SeedSet: " << flush;
-    set<int> seedSet=bestSeedSet.getSeedSet();
-    /*
-    int m = graph->getNumberOfVertices();
     set<int> seedSet;
-    for(int i=0;i<budget;){
-        int randomVertex;
-        randomVertex = rand() % (m-i);
-        if(seedSet.count(randomVertex)==0){
-            seedSet.insert(randomVertex);
-            i++;
+    if(seedSelection.compare("random")!=0){
+        loadGraphSizeToResults(graph);
+        vector<double> nodeCounts;
+        clock_t phase1StartTime = clock();
+        cout << "\n Before any estimate non targets creation:";
+        disp_mem_usage("");
+        EstimateNonTargets *estimateNonTargets = NULL;
+        if(!fromFile) {
+            estimateNonTargets = new EstimateNonTargets(graph);
+            if(method==1) {
+                nodeCounts = estimateNonTargets->getNonTargetsUsingTIM();
+            } else {
+                nodeCounts = estimateNonTargets->getNonTargetsUsingSIM();
+            }
+        } else {
+            estimateNonTargets = new EstimateNonTargets();
+            estimateNonTargets->readFromFile(nonTargetsFileName);
+            nodeCounts = *estimateNonTargets->getAllNonTargetsCount();
+            delete estimateNonTargets;
         }
-    }*/
+        cout << "\n Non targets file is alive ";
+        disp_mem_usage("");
+        clock_t phase1EndTime = clock();
+        
+        FILE_LOG(logDEBUG) << "Completed Phase 1";
+        double phase1TimeTaken = double(phase1EndTime - phase1StartTime) / CLOCKS_PER_SEC;
+        IMResults::getInstance().setPhase1Time(phase1TimeTaken);
+        if(!fromFile) {
+            nonTargetsFileName = graphFileName;
+            nonTargetsFileName+="_" + to_string(budget);
+            nonTargetsFileName+="_" + to_string(nonTargetThreshold);
+            nonTargetsFileName+="_" + to_string(percentageTargets);
+            nonTargetsFileName+="_" + to_string(rand() % 1000000);
+            nonTargetsFileName+="_1";
+            nonTargetsFileName+=".txt";
+            estimateNonTargets->writeToFile(nonTargetsFileName);
+            cout << "\nWriting Non Targets to file " << nonTargetsFileName;
+            cout << "\n";
+            IMResults::getInstance().setNonTargetFileName(nonTargetsFileName);
+            delete estimateNonTargets;
+        }
+        cout << "\n Non Target file is dead ";
+        disp_mem_usage("");
+        cout << "\n Should be same as before" << flush;
+        //Start phase 2
+        cout <<"Starting phase 2";
+        FILE_LOG(logDEBUG) << "Starting phase 2";
+        clock_t phase2StartTime = clock();
+        Phase2 *phase2= NULL;
+        if(method==1) {
+            phase2 = new Phase2TIM(graph);
+        }
+        else {
+            phase2 = new Phase2SIM(graph);
+        }
+        phase2->doPhase2(budget, nonTargetThreshold, nodeCounts);
+        IMResults::getInstance().addBestSeedSet(phase2->getTree()->getBestSeedSet(budget));
+        clock_t phase2EndTime = clock();
+        double phase2TimeTaken = double(phase2EndTime - phase2StartTime) / CLOCKS_PER_SEC;
+        FILE_LOG(logDEBUG) << "Completed phase 2";
+        
+        IMResults::getInstance().setPhase2Time(phase2TimeTaken);
+        IMResults::getInstance().setTotalTimeTaken(phase1TimeTaken + phase2TimeTaken);
+        
+        vector<IMSeedSet> allSeedSets = phase2->getTree()->getAllSeeds(budget);
+        IMResults::getInstance().addSeedSets(allSeedSets);
+        cout << "\n before phase 2";
+        disp_mem_usage("");
+        IMSeedSet bestSeedSet = phase2->getTree()->getBestSeedSet(budget);
+        delete phase2;
+        cout << "\n after phase 2";
+        disp_mem_usage("");
+        cout<<"Selected k SeedSet: " << flush;
+        seedSet=bestSeedSet.getSeedSet();
+    }
+    //seed set selected randomly
+    else{
+        int m = graph->getNumberOfVertices();
+        for(int i=0;i<budget;){
+            int randomVertex;
+            randomVertex = rand() % (m-i);
+            if(seedSet.count(randomVertex)==0){
+                seedSet.insert(randomVertex);
+                i++;
+            }
+        }
+    }
     for(auto item:seedSet)
-        cout<< item << " ";
+    cout<< item << " ";
     //Start Diffusion
+    clock_t ReverseStartTime = clock();
     vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
     vector<vector<int>>().swap(graph->rrSets);
     
@@ -289,13 +297,13 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
     
     cout<< "\n influenced graph labels";
-
+    
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
-
+    
     cout << "\n RRsets done " << flush;
     //clearing the memory
     vector<int>().swap(activatedSet);
@@ -314,16 +322,15 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         SortedNodeidCounts.push_back(node);
     }
     
-    cout<< "in graph sorted ids "<<SortedNodeidCounts.size()<<"  " <<flush;
     vector<int>().swap(NodeinRRsets);
     
     std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
     /*int get=0;
-    for(pair<int,int> p:SortedNodeidCounts){
-        if(get<50)
-            cout<< p.first << " " << p.second <<" ";
-        get++;
-    }*/
+     for(pair<int,int> p:SortedNodeidCounts){
+     if(get<50)
+     cout<< p.first << " " << p.second <<" ";
+     get++;
+     }*/
     set<int> nodesToRemove=set<int>();
     set<int> alreadyinSeed=set<int>();
     int i=0;
@@ -340,19 +347,21 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         i++;
     }
     vector<pair<int,int>>().swap(SortedNodeidCounts);
-
+    
     //remove nodes from graph
     for(int i:nodesToRemove){
         graph->removeOutgoingEdges(i);
     }
-
+    
     vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);
-
+    clock_t ReverseEndTime = clock();
     cout << "\n New Targets activated = " << NewactivatedSet.size();
     cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
+    double totalAlgorithmTime = double(ReverseStartTime - ReverseEndTime) / (CLOCKS_PER_SEC*60);
+    cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
-    cout << "Elapsed time in minutes " << totalExecutionTime;
+    cout << "\n Elapsed time in minutes " << totalExecutionTime;
 }
 
 
@@ -385,13 +394,13 @@ void executeDifferenceAlgorithms(cxxopts::ParseResult result) {
     cout << "\t Approximation setting: " << setting;
     cout << "\t Extend: " << extendPermutation;
     cout << flush;
-
+    
     Graph *graph = new Graph;
     graph->readGraph(graphFileName, percentageTargetsFloat);
-//    Begin f-g
+    //    Begin f-g
     clock_t differenceStartTime = clock();
     
-
+    
     testApprox(graph, budget, setting, extendPermutation);
     clock_t differenceEndTime = clock();
     double differenceTimeTaken = double(differenceEndTime - differenceStartTime) / CLOCKS_PER_SEC;
@@ -524,6 +533,7 @@ int main(int argc, char **argv) {
     ("p,probability", "Propogation probability", cxxopts::value<double>())
     ("approximation", " Approximation Settings", cxxopts::value<int>())
     ("r,nodesRemove", " Remove nodes number", cxxopts::value<int>())
+    ("s,seedset", " Random seed set", cxxopts::value<std::string>())
     ("e,extend", "Extend the permutation");
     auto result = options.parse(argc, argv);
     string algorithm = result["algorithm"].as<string>();
