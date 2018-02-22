@@ -55,6 +55,11 @@ bool sortbysecdesc(const pair<int,int> &a,const pair<int,int> &b)
     return (a.second > b.second);
 }
 
+bool sortbydegree(const int &a,const int &b)
+{
+    return (a > b);
+}
+
 void testApprox(Graph *graph, int budget, ApproximationSetting setting, bool extendPermutation) {
     DifferenceApproximator differenceApproximator(graph);
     differenceApproximator.setN(graph->n);
@@ -194,7 +199,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     //Start phase 1
     set<int> seedSet;
-    if(seedSelection.compare("random")!=0){
+    if(seedSelection.compare("bestTim")==0){
         loadGraphSizeToResults(graph);
         vector<double> nodeCounts;
         clock_t phase1StartTime = clock();
@@ -269,8 +274,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         cout<<"Selected k SeedSet: " << flush;
         seedSet=bestSeedSet.getSeedSet();
     }
+    
     //seed set selected randomly
-    else{
+    else if(seedSelection.compare("random")==0){
         int m = graph->getNumberOfVertices();
         for(int i=0;i<budget;){
             int randomVertex;
@@ -280,6 +286,36 @@ void executeTIMTIM(cxxopts::ParseResult result) {
                 i++;
             }
         }
+    }
+    
+    //seed set on best outdegree
+    else if(seedSelection.compare("bestOutDegree")==0){
+        int m = graph->getNumberOfVertices();
+        vector<pair<int,int>> Outdegree;
+        for(int i=0;i<m;i++){
+            pair<int,int> node= pair<int,int>();
+            node.first=i;
+            node.second=(int)graph->graph[i].size();
+            Outdegree.push_back(node);
+        }
+        std :: sort(Outdegree.begin(),Outdegree.end(), sortbysecdesc);
+        //select best top 50 on the basis of outdegree
+        vector<int> bestdegreenodes;
+        for(int i=0;i<50;i++){
+            bestdegreenodes.push_back(Outdegree.at(i).first);
+        }
+        vector<pair<int,int>>().swap(Outdegree);
+        //randomly select number of budget nodes
+        m=(int)bestdegreenodes.size();
+        for(int i=0;i<budget;){
+            int randomVertex;
+            randomVertex = bestdegreenodes[rand() % (m-i)];
+            if(seedSet.count(randomVertex)==0){
+                seedSet.insert(randomVertex);
+                i++;
+            }
+        }
+        vector<int>().swap(bestdegreenodes);
     }
     for(auto item:seedSet)
     cout<< item << " ";
@@ -357,7 +393,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t ReverseEndTime = clock();
     cout << "\n New Targets activated = " << NewactivatedSet.size();
     cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
-    double totalAlgorithmTime = double(ReverseStartTime - ReverseEndTime) / (CLOCKS_PER_SEC*60);
+    double totalAlgorithmTime = double(ReverseEndTime-ReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
