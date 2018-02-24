@@ -13,6 +13,7 @@
 #include "InfluenceMaximization/EstimateNonTargets.hpp"
 #include "InfluenceMaximization/TIMUtility.hpp"
 #include "InfluenceMaximization/Phase2.hpp"
+#include "InfluenceMaximization/SeedSet.hpp"
 #include "InfluenceMaximization/Diffusion.hpp"
 #include "InfluenceMaximization/IMResults/IMResults.h"
 #include "InfluenceMaximization/memoryusage.h"
@@ -124,6 +125,51 @@ void loadGraphSizeToResults(Graph *graph) {
     IMResults::getInstance().setNumberOfEdges(graph->getNumberOfEdges());
 }
 
+void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet){
+    //Find nodes to be removed
+    vector<int> NodeinRRsets=vector<int>() ;
+    NodeinRRsets=influencedGraph->NodeinRRsetsWithCounts;
+    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    
+    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+    for(int i=0;i<NodeinRRsets.size();i++){
+        pair<int,int> node= pair<int,int>();
+        node.first=i;
+        node.second=NodeinRRsets[i];
+        SortedNodeidCounts.push_back(node);
+    }
+    
+    vector<int>().swap(NodeinRRsets);
+    
+    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+    assert(SortedNodeidCounts.at(0).second>SortedNodeidCounts.at(1).second);
+    
+    set<int> nodesToRemove=set<int>();
+    set<int> alreadyinSeed=set<int>();
+    int i=0;
+    int j=0;
+    while(j<removeNodes && j< SortedNodeidCounts.size()){
+        int nodeid=SortedNodeidCounts.at(i).first;
+        if(nodesToRemove.count(nodeid)==0){
+            nodesToRemove.insert(nodeid);
+            j++;
+            if(seedSet.count(nodeid)==1){
+                alreadyinSeed.insert(nodeid);
+            }
+        }
+        i++;
+    }
+    vector<pair<int,int>>().swap(SortedNodeidCounts);
+    
+    //remove nodes from graph
+    for(int i:nodesToRemove){
+        graph->removeOutgoingEdges(i);
+        assert(graph->graph[i].size()==0);
+    }
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
+}
+
+
 void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeBegin = clock();
     cout << "\n begin execution tim tim ";
@@ -138,6 +184,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     float probability = 0;
     int removeNodes=0;
     string seedSelection;
+    int topBestThreshold=100;
+    
     budget = result["budget"].as<int>();
     nonTargetThreshold = result["threshold"].as<int>();
     graphFileName = result["graph"].as<std::string>();
@@ -167,6 +215,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout << "\t Method: " << method;
     cout << "\t Nodes removed: " << removeNodes;
     cout << "\t Seed selection : " << seedSelection;
+    cout << "\t Top best outdegree threshold : " <<topBestThreshold;
     
     if(useIndegree) {
         cout << "\t Probability: Indegree";
@@ -271,55 +320,31 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         delete phase2;
         cout << "\n after phase 2";
         disp_mem_usage("");
-        cout<<"Selected k SeedSet: " << flush;
         seedSet=bestSeedSet.getSeedSet();
     }
     
-    //seed set selected randomly
-    else if(seedSelection.compare("random")==0){
-        int m = graph->getNumberOfVertices();
-        for(int i=0;i<budget;){
-            int randomVertex;
-            randomVertex = rand() % (m-i);
-            if(seedSet.count(randomVertex)==0){
-                seedSet.insert(randomVertex);
-                i++;
-            }
+    else{
+        SeedSet *SeedClass=new SeedSet(graph , budget);
+        //seed set selected randomly
+        if(seedSelection.compare("random")==0){
+            seedSet=SeedClass->getCompletelyRandom();
         }
+         //seed set on best outdegree
+        else if(seedSelection.compare("randomOutDegree")==0){
+            seedSet=SeedClass->outdegreeRandom(topBestThreshold);
+        }
+        
+        else if(seedSelection.compare("farthestOutDegree")==0){
+            seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
+        }
+        delete SeedClass;
     }
-    
-    //seed set on best outdegree
-    else if(seedSelection.compare("bestOutDegree")==0){
-        int m = graph->getNumberOfVertices();
-        vector<pair<int,int>> Outdegree;
-        for(int i=0;i<m;i++){
-            pair<int,int> node= pair<int,int>();
-            node.first=i;
-            node.second=(int)graph->graph[i].size();
-            Outdegree.push_back(node);
-        }
-        std :: sort(Outdegree.begin(),Outdegree.end(), sortbysecdesc);
-        //select best top 50 on the basis of outdegree
-        vector<int> bestdegreenodes;
-        for(int i=0;i<50;i++){
-            bestdegreenodes.push_back(Outdegree.at(i).first);
-        }
-        vector<pair<int,int>>().swap(Outdegree);
-        //randomly select number of budget nodes
-        m=(int)bestdegreenodes.size();
-        for(int i=0;i<budget;){
-            int randomVertex;
-            randomVertex = bestdegreenodes[rand() % (m-i)];
-            if(seedSet.count(randomVertex)==0){
-                seedSet.insert(randomVertex);
-                i++;
-            }
-        }
-        vector<int>().swap(bestdegreenodes);
-    }
+    cout<<"Selected k SeedSet: " << flush;
     for(auto item:seedSet)
     cout<< item << " ";
+    
     //Start Diffusion
+    cout<< "\n Diffusion on graph started"<< flush;
     clock_t ReverseStartTime = clock();
     vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
     vector<vector<int>>().swap(graph->rrSets);
@@ -331,7 +356,6 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
-    
     cout<< "\n influenced graph labels";
     
     //Random RR sets
@@ -339,60 +363,19 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
-    
     cout << "\n RRsets done " << flush;
+    
     //clearing the memory
     vector<int>().swap(activatedSet);
     vector<vector<int>>().swap(influencedGraph->rrSets);
     
-    //Find nodes to be removed
-    vector<int> NodeinRRsets=vector<int>() ;
-    NodeinRRsets=influencedGraph->NodeinRRsetsWithCounts;
-    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    //get nodes to be removed and remove incoming and outgoing edges from graph
+    removeVertices(influencedGraph,graph,removeNodes,seedSet);
     
-    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-    for(int i=0;i<NodeinRRsets.size();i++){
-        pair<int,int> node= pair<int,int>();
-        node.first=i;
-        node.second=NodeinRRsets[i];
-        SortedNodeidCounts.push_back(node);
-    }
-    
-    vector<int>().swap(NodeinRRsets);
-    
-    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
-    /*int get=0;
-     for(pair<int,int> p:SortedNodeidCounts){
-     if(get<50)
-     cout<< p.first << " " << p.second <<" ";
-     get++;
-     }*/
-    set<int> nodesToRemove=set<int>();
-    set<int> alreadyinSeed=set<int>();
-    int i=0;
-    int j=0;
-    while(j<removeNodes && j< SortedNodeidCounts.size()){
-        int nodeid=SortedNodeidCounts.at(i).first;
-        if(nodesToRemove.count(nodeid)==0){
-            nodesToRemove.insert(nodeid);
-            j++;
-            if(seedSet.count(nodeid)==1){
-                alreadyinSeed.insert(nodeid);
-            }
-        }
-        i++;
-    }
-    vector<pair<int,int>>().swap(SortedNodeidCounts);
-    
-    //remove nodes from graph
-    for(int i:nodesToRemove){
-        graph->removeOutgoingEdges(i);
-    }
-    
+    //again diffusion on old graph with same seed after node removal
     vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);
     clock_t ReverseEndTime = clock();
     cout << "\n New Targets activated = " << NewactivatedSet.size();
-    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     double totalAlgorithmTime = double(ReverseEndTime-ReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();

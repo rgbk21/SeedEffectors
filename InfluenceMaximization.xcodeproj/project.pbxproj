@@ -7,20 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3107F0A01FE4661900EA0135 /* GenerateGraphLabels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */; };
-		310E789E200EB175000C70D9 /* TIMInfluenceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */; };
-		310E78A220103A04000C70D9 /* TIMCoverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A120103A04000C70D9 /* TIMCoverage.cpp */; };
-		310E78A5201BCE71000C70D9 /* BaselineGreedyTIM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A3201BCE71000C70D9 /* BaselineGreedyTIM.cpp */; };
-		311FFDFC20041C5900F68590 /* BaselineGreedy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 311FFDFA20041C5900F68590 /* BaselineGreedy.cpp */; };
-		31279D6E1F58EBD900FC4D9B /* Phase2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31279D6C1F58EBD900FC4D9B /* Phase2.cpp */; };
-		31279D711F63472700FC4D9B /* TIMCoverage.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 31279D701F63472700FC4D9B /* TIMCoverage.hpp */; };
-		313A589D1F4E072300F86148 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 313A589C1F4E072300F86148 /* Makefile */; };
-		3159634D1F9E756C000EB2F4 /* DifferenceApproximator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3159634B1F9E756C000EB2F4 /* DifferenceApproximator.cpp */; };
-		315963561F9EC153000EB2F4 /* FunctionEvaluators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 315963541F9EC153000EB2F4 /* FunctionEvaluators.cpp */; };
-		31A4949B1F510CBF00745401 /* IMTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494991F510CBF00745401 /* IMTree.cpp */; };
-		31A494A61F55D88B00745401 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494A51F55D88B00745401 /* main.cpp */; };
-		31A494A91F55E92700745401 /* EstimateNonTargets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494A71F55E92700745401 /* EstimateNonTargets.cpp */; };
-		31FC36931F354E56005CAFEB /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31FC36911F354E56005CAFEB /* Graph.cpp */; };
+		1E84640A2040AF9500DF798F /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 313A589C1F4E072300F86148 /* Makefile */; };
+		1E84640B2040AF9500DF798F /* BaselineGreedyTIM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A3201BCE71000C70D9 /* BaselineGreedyTIM.cpp */; };
+		1E84640C2040AF9500DF798F /* DifferenceApproximator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3159634B1F9E756C000EB2F4 /* DifferenceApproximator.cpp */; };
+		1E84640D2040AF9500DF798F /* GenerateGraphLabels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */; };
+		1E84640E2040AF9500DF798F /* TIMInfluenceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */; };
+		1E8464102040AFBF00DF798F /* TIMCoverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A120103A04000C70D9 /* TIMCoverage.cpp */; };
+		1E8464112040AFBF00DF798F /* TIMCoverage.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 31279D701F63472700FC4D9B /* TIMCoverage.hpp */; };
+		1E8464122040AFBF00DF798F /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31FC36911F354E56005CAFEB /* Graph.cpp */; };
+		1E8464132040AFBF00DF798F /* IMTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494991F510CBF00745401 /* IMTree.cpp */; };
+		1E8464142040AFBF00DF798F /* EstimateNonTargets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494A71F55E92700745401 /* EstimateNonTargets.cpp */; };
+		1E8464152040AFBF00DF798F /* FunctionEvaluators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 315963541F9EC153000EB2F4 /* FunctionEvaluators.cpp */; };
+		1E8464162040AFD700DF798F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31A494A51F55D88B00745401 /* main.cpp */; };
+		1E8464172040AFD700DF798F /* BaselineGreedy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 311FFDFA20041C5900F68590 /* BaselineGreedy.cpp */; };
+		1E8464182040AFD700DF798F /* Phase2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31279D6C1F58EBD900FC4D9B /* Phase2.cpp */; };
+		1E8464192040AFEA00DF798F /* SeedSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E9A3F30204091CC006580AD /* SeedSet.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +48,8 @@
 /* Begin PBXFileReference section */
 		1E235574202D4399000EAC11 /* hello.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = hello.cpp; path = /Users/Preeti/git/SeedEffectors/../../test/hello.cpp; sourceTree = "<absolute>"; };
 		1E235575202D4399000EAC11 /* hello.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = hello.hpp; path = ../../test/hello.hpp; sourceTree = "<group>"; };
+		1E9A3F30204091CC006580AD /* SeedSet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SeedSet.cpp; sourceTree = "<group>"; };
+		1E9A3F31204091CC006580AD /* SeedSet.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SeedSet.hpp; sourceTree = "<group>"; };
 		3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GenerateGraphLabels.cpp; sourceTree = "<group>"; };
 		3107F09F1FE4661900EA0135 /* GenerateGraphLabels.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GenerateGraphLabels.hpp; sourceTree = "<group>"; };
 		310E6A131FDE0FAB00D72424 /* jsonexperimenter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsonexperimenter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -203,6 +206,8 @@
 				3107F09F1FE4661900EA0135 /* GenerateGraphLabels.hpp */,
 				310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */,
 				310E789D200EB175000C70D9 /* TIMInfluenceCalculator.hpp */,
+				1E9A3F30204091CC006580AD /* SeedSet.cpp */,
+				1E9A3F31204091CC006580AD /* SeedSet.hpp */,
 			);
 			path = InfluenceMaximization;
 			sourceTree = "<group>";
@@ -293,20 +298,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				310E789E200EB175000C70D9 /* TIMInfluenceCalculator.cpp in Sources */,
-				310E78A5201BCE71000C70D9 /* BaselineGreedyTIM.cpp in Sources */,
-				3107F0A01FE4661900EA0135 /* GenerateGraphLabels.cpp in Sources */,
-				3159634D1F9E756C000EB2F4 /* DifferenceApproximator.cpp in Sources */,
-				313A589D1F4E072300F86148 /* Makefile in Sources */,
-				31A494A91F55E92700745401 /* EstimateNonTargets.cpp in Sources */,
-				310E78A220103A04000C70D9 /* TIMCoverage.cpp in Sources */,
-				31A4949B1F510CBF00745401 /* IMTree.cpp in Sources */,
-				315963561F9EC153000EB2F4 /* FunctionEvaluators.cpp in Sources */,
-				31279D711F63472700FC4D9B /* TIMCoverage.hpp in Sources */,
-				31279D6E1F58EBD900FC4D9B /* Phase2.cpp in Sources */,
-				311FFDFC20041C5900F68590 /* BaselineGreedy.cpp in Sources */,
-				31A494A61F55D88B00745401 /* main.cpp in Sources */,
-				31FC36931F354E56005CAFEB /* Graph.cpp in Sources */,
+				1E8464192040AFEA00DF798F /* SeedSet.cpp in Sources */,
+				1E8464162040AFD700DF798F /* main.cpp in Sources */,
+				1E8464172040AFD700DF798F /* BaselineGreedy.cpp in Sources */,
+				1E8464182040AFD700DF798F /* Phase2.cpp in Sources */,
+				1E8464102040AFBF00DF798F /* TIMCoverage.cpp in Sources */,
+				1E8464112040AFBF00DF798F /* TIMCoverage.hpp in Sources */,
+				1E8464122040AFBF00DF798F /* Graph.cpp in Sources */,
+				1E8464132040AFBF00DF798F /* IMTree.cpp in Sources */,
+				1E8464142040AFBF00DF798F /* EstimateNonTargets.cpp in Sources */,
+				1E8464152040AFBF00DF798F /* FunctionEvaluators.cpp in Sources */,
+				1E84640A2040AF9500DF798F /* Makefile in Sources */,
+				1E84640B2040AF9500DF798F /* BaselineGreedyTIM.cpp in Sources */,
+				1E84640C2040AF9500DF798F /* DifferenceApproximator.cpp in Sources */,
+				1E84640D2040AF9500DF798F /* GenerateGraphLabels.cpp in Sources */,
+				1E84640E2040AF9500DF798F /* TIMInfluenceCalculator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

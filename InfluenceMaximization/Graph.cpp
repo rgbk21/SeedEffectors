@@ -210,9 +210,6 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     for(int i=0;i<R;i++) {
         int randomVertex;
         randomVertex = activatedSet[rand() % t];
-        /*while(!labels[randomVertex]) {
-            randomVertex = rand() % n;
-        }*/
         generateRandomRRSetwithCount(randomVertex, i);
         totalSize+=rrSets[i].size();
     }
@@ -433,19 +430,14 @@ void Graph:: removeOutgoingEdges(int vertex){
     incomingNodes=graphTranspose[vertex];
     
     for(int i:incomingNodes){
-        /*cout<< "\n before removal "<< vertex;
-        for(auto item:graph[i])
-            cout<< item << " ";*/
         vector<int> outgoingEdges=vector<int>();
         for(int j:graph[i]){
             if(j!=vertex)
                 outgoingEdges.push_back(j);
         }
         graph[i]=outgoingEdges;
-        /*cout<< "\n after removal ";
-        for(auto item:graph[i])
-            cout<< item << " ";*/
     }
+    graphTranspose[vertex]=vector<int>();
 }
 
 
