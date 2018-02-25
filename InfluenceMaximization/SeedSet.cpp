@@ -65,29 +65,34 @@ set<int> SeedSet:: outdegreeFarthest(int topBestThreshold){
     //select best top number on the basis of outdegree
     vector<int> bestdegreenodes=getTopOutdegreeNodes(topBestThreshold);
     
-    for(int i=0;i<bestdegreenodes.size();i++){
-        vector<int> v1=graph->graph[bestdegreenodes[i]];
-        vector<pair<int,int>> distance;
-        for(int j=0;j<bestdegreenodes.size();j++){
-            if(bestdegreenodes[j]!=bestdegreenodes[i] && seedSet.count(bestdegreenodes[j])==0){
-                vector<int> v2=graph->graph[bestdegreenodes[j]];
-                std::sort(v1.begin(), v1.end());
-                std::sort(v2.begin(), v2.end());
-                std::vector<int> v_intersection;
-                std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
-                pair<int,int> node;
-                node.first=bestdegreenodes[j];
-                node.second=(int)v_intersection.size();
-                distance.push_back(node);
+    int i=0;
+    int randomvertex;
+    while(i<budget){
+        randomvertex=rand() % bestdegreenodes.size();
+        if(seedSet.count(bestdegreenodes[randomvertex])==0){
+            vector<int> v1=graph->graph[bestdegreenodes[randomvertex]];
+            vector<pair<int,int>> distance;
+            for(int j=0;j<bestdegreenodes.size();j++){
+                if(bestdegreenodes[j]!=bestdegreenodes[randomvertex] && seedSet.count(bestdegreenodes[j])==0){
+                    vector<int> v2=graph->graph[bestdegreenodes[j]];
+                    std::sort(v1.begin(), v1.end());
+                    std::sort(v2.begin(), v2.end());
+                    std::vector<int> v_intersection;
+                    std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
+                    pair<int,int> node;
+                    node.first=bestdegreenodes[j];
+                    node.second=(int)v_intersection.size();
+                    distance.push_back(node);
+                }
             }
+            std :: sort(distance.begin(),distance.end(), sortbypairasc);
+            seedSet.insert(distance.at(0).first);
+            i++;
+            if(i>=budget)
+                break;
+            seedSet.insert(bestdegreenodes[randomvertex]);
+            i++;
         }
-        std :: sort(distance.begin(),distance.end(), sortbypairasc);
-        if(seedSet.size()>=budget)
-            break;
-        seedSet.insert(distance.at(0).first);
-        if(seedSet.size()>=budget)
-            break;
-        seedSet.insert(bestdegreenodes[i]);
     }
     return seedSet;
 }
