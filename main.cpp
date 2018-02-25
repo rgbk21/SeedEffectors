@@ -239,12 +239,16 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     IMResults::getInstance().setFromFile(fromFile);
     // insert code here...
     float percentageTargetsFloat = (float)percentageTargets/(float)100;
+    
     //Generate graph
     Graph *graph = new Graph;
+    bool halfGraph=false;
     if(seedSelection.compare("bestHalfGraph")==0){
         graph->readHalfGraph(graphFileName, percentageTargetsFloat);
         seedSelection="bestTim";
+        halfGraph=true;
     }
+    
     else{
         graph->readGraph(graphFileName, percentageTargetsFloat);
     }
@@ -254,7 +258,6 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     //Start phase 1
     set<int> seedSet;
-    
     
     if(seedSelection.compare("bestTim")==0){
         loadGraphSizeToResults(graph);
@@ -351,6 +354,13 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     for(auto item:seedSet)
     cout<< item << " ";
     
+    if(halfGraph){
+        cout<<"Creating the complete graph again for diffusion: ";
+        graph->readGraph(graphFileName, percentageTargetsFloat);
+        if(!useIndegree) {
+            graph->setPropogationProbability(probability);
+        }
+    }
     //Start Diffusion
     cout<< "\n Diffusion on graph started"<< flush;
     clock_t ReverseStartTime = clock();
