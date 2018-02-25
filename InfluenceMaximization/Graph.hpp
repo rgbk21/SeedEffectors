@@ -45,6 +45,8 @@ public:
     vector<int> NodeinRRsetsWithCounts;
     void readGraph(string fileName);
     void readGraph(string fileName, float percentage);
+    void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
+    void readHalfGraph(string fileName, float percentage);
     void readLabels(string fileName);
     void writeLabels();
     void setLabels(vector<bool> labels, float percentageTargets);
@@ -75,7 +77,6 @@ public:
     bool flipCoinOnEdge(int u, int v);
     int generateRandomNumber(int u, int v);
     int getPropogationProbabilityNumber();
-    void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
     void removeOutgoingEdges(int v);
 };
 

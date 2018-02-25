@@ -74,7 +74,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset farthestOutDegree"
+            argument = "--seedset bestHalfGraph"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

@@ -45,6 +45,43 @@ bool Graph:: flipCoinOnEdge(int u, int v) {
     return randomNumber==0;
 }
 
+//********** Function for generating half graph ********
+void Graph::readHalfGraph(string fileName, float percentage){
+    this->graphName = fileName;
+    this->percentageTargets = percentage;
+    cout << "\n Generating half graph: ";
+    
+    ifstream myFile("graphs/" + fileName);
+    string s;
+    if(myFile.is_open()) {
+        myFile >> n >> m;
+        n=n/2;
+        for(int i =0;i<n;i++) {
+            graph.push_back(vector<int>());
+            visited.push_back(false);
+            inDegree.push_back(0);
+            labels.push_back(true);
+        }
+        int from, to;
+        int maxDegree = 0;
+        while (myFile >> from >> to) {
+            if(from< n && to < n){
+                graph[from].push_back(to);
+                inDegree[to] = inDegree[to]+1;
+                if(inDegree[to] > maxDegree) {
+                    maxDegree = inDegree[to];
+                }
+            }
+        }
+        myFile.close();
+    }
+    
+    graphTranspose = constructTranspose(graph);
+    visitMark = vector<int>(n);
+    this->numberOfTargets = this->getNumberOfVertices();
+    this->numberOfNonTargets = (int)nonTargets.size();
+}
+
 //********** Function only for the influenced graph ********
 
 void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> activatedSet) {

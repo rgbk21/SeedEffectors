@@ -241,13 +241,21 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     float percentageTargetsFloat = (float)percentageTargets/(float)100;
     //Generate graph
     Graph *graph = new Graph;
-    graph->readGraph(graphFileName, percentageTargetsFloat);
+    if(seedSelection.compare("bestHalfGraph")==0){
+        graph->readHalfGraph(graphFileName, percentageTargetsFloat);
+        seedSelection="bestTim";
+    }
+    else{
+        graph->readGraph(graphFileName, percentageTargetsFloat);
+    }
     if(!useIndegree) {
         graph->setPropogationProbability(probability);
     }
     
     //Start phase 1
     set<int> seedSet;
+    
+    
     if(seedSelection.compare("bestTim")==0){
         loadGraphSizeToResults(graph);
         vector<double> nodeCounts;
