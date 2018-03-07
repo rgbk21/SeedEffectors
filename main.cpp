@@ -169,6 +169,55 @@ void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<in
     cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
 }
 
+void checkMod(string graphFileName, float percentageTargetsFloat, Graph* graph,set<int> seedSet,int budget,bool useIndegree, float probability){
+    vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
+    cout << "\n submod activated size" <<activatedSet.size();
+    
+    set<int> modseedSet;
+    Graph *modGraph = new Graph;
+    modGraph->readGraph(graphFileName, percentageTargetsFloat);
+    if(!useIndegree) {
+        modGraph->setPropogationProbability(probability);
+    }
+    int n = (int)modGraph->getNumberOfVertices();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    modGraph->generateRandomRRSets(R, false);
+    vector<int> NodeinRRsets=vector<int>() ;
+    NodeinRRsets=modGraph->NodeinRRsetsWithCounts;
+    vector<int>().swap(modGraph->NodeinRRsetsWithCounts);
+    
+    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+    for(int i=0;i<NodeinRRsets.size();i++){
+        pair<int,int> node= pair<int,int>();
+        node.first=i;
+        node.second=NodeinRRsets[i];
+        SortedNodeidCounts.push_back(node);
+    }
+    
+    vector<int>().swap(NodeinRRsets);
+    
+    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+    int j=0;
+    for(int i=0;i<budget;i++){
+        modseedSet.insert(SortedNodeidCounts[i].first);
+        if(seedSet.count(SortedNodeidCounts[i].first)==1)
+            j++;
+    }
+    cout<<"\n intersection of submodular and modular "<< j;
+    cout<<"\n Selected k mod SeedSet: " << flush;
+    for(auto item:modseedSet)
+        cout<< item << " ";
+    vector<int> modActivatedSet=performDiffusion(modGraph,modseedSet,NULL);
+    cout << "\n mod activated size" <<modActivatedSet.size();
+    
+    //intersection of influenced graph of mod and submod seed sets
+    std::sort(modActivatedSet.begin(), modActivatedSet.end());
+    std::sort(activatedSet.begin(), activatedSet.end());
+    std::vector<int> v_intersection;
+    std::set_intersection(modActivatedSet.begin(), modActivatedSet.end(),activatedSet.begin(), activatedSet.end(),std::back_inserter(v_intersection));
+    cout << "\n influence intersection of mod and submod" <<v_intersection.size();
+}
 
 void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeBegin = clock();
@@ -332,6 +381,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         cout << "\n after phase 2";
         disp_mem_usage("");
         seedSet=bestSeedSet.getSeedSet();
+        vector<int>().swap(graph->NodeinRRsetsWithCounts);
+        //checkMod(graphFileName, percentageTargetsFloat, graph, seedSet,budget, useIndegree,probability);
     }
     
     else{
@@ -350,7 +401,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         }
         delete SeedClass;
     }
-    cout<<"Selected k SeedSet: " << flush;
+    
+    cout<<"Selected k sub SeedSet: " << flush;
     for(auto item:seedSet)
     cout<< item << " ";
     
@@ -399,6 +451,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
     cout << "\n Elapsed time in minutes " << totalExecutionTime;
+    
 }
 
 

@@ -137,6 +137,7 @@ void Graph::readGraph(string fileName, float percentage) {
             visited.push_back(false);
             inDegree.push_back(0);
             labels.push_back(true);
+            NodeinRRsetsWithCounts.push_back(0);
         }
         int from, to;
         int maxDegree = 0;
@@ -319,7 +320,10 @@ void Graph::generateRandomRRSets(int R, bool label) {
         while(!labels[randomVertex]) {
             randomVertex = rand() % n;
         }
-        generateRandomRRSet(randomVertex, i);
+        if(label)
+            generateRandomRRSet(randomVertex, i);
+        else
+            generateRandomRRSetwithCount(randomVertex, i);
         totalSize+=rrSets[i].size();
     }
     clock_t end = clock();
