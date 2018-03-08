@@ -70,15 +70,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-GrQc-processed.txt"
+            argument = "--graph ca-CondMat.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset bestHalfGraph"
+            argument = "--seedset bestTim"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 10"
+            argument = "--budget 30"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -94,7 +94,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 30"
+            argument = "--nodesRemove 15"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
