@@ -125,7 +125,18 @@ void loadGraphSizeToResults(Graph *graph) {
     IMResults::getInstance().setNumberOfEdges(graph->getNumberOfEdges());
 }
 
-void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet){
+void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet){
+    //Random RR sets
+    int n = (int)activatedSet.size();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+    cout << "\n RRsets done " << flush;
+    
+    //clearing the memory
+    vector<int>().swap(activatedSet);
+    vector<vector<int>>().swap(influencedGraph->rrSets);
+    
     //Find nodes to be removed
     vector<int> NodeinRRsets=vector<int>() ;
     NodeinRRsets=influencedGraph->NodeinRRsetsWithCounts;
@@ -219,6 +230,115 @@ void checkMod(string graphFileName, float percentageTargetsFloat, Graph* graph,s
     cout << "\n influence intersection of mod and submod" <<v_intersection.size();
 }
 
+int removeVerticesIterative(Graph *influencedGraph, vector<int> activatedSet){
+    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+    
+    for(int v=0;v<influencedGraph->getNumberOfVertices();v++){
+        //create graph removing one node at a time
+        Graph *newGraph = new Graph(*influencedGraph);
+        newGraph->removeOutgoingEdges(v);
+        
+        //Random RR sets
+        int n = (int)activatedSet.size();
+        double epsilon = (double)EPSILON;
+        int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+        newGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+        //cout << "\n RRsets done for node" << v<< flush;
+        
+        //clearing the memory
+        vector<vector<int>>().swap(newGraph->rrSets);
+        
+        //summation of influence after removing node v
+        pair<int,int> node= pair<int,int>();
+        node.first=v;
+        for(int i: newGraph->NodeinRRsetsWithCounts){
+            node.second+=i;
+        }
+        SortedNodeidCounts.push_back(node);
+        vector<int>().swap(newGraph->NodeinRRsetsWithCounts);
+    }
+    
+    //Find nodes to be removed
+    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+    return SortedNodeidCounts.at(SortedNodeidCounts.size()-1).first;
+}
+
+set<int> runTim(Graph *graph,bool fromFile,string nonTargetsFileName,int method,int budget,int nonTargetThreshold,string graphFileName,int percentageTargets){
+    loadGraphSizeToResults(graph);
+    vector<double> nodeCounts;
+    clock_t phase1StartTime = clock();
+    cout << "\n Before any estimate non targets creation:";
+    disp_mem_usage("");
+    EstimateNonTargets *estimateNonTargets = NULL;
+    if(!fromFile) {
+        estimateNonTargets = new EstimateNonTargets(graph);
+        if(method==1) {
+            nodeCounts = estimateNonTargets->getNonTargetsUsingTIM();
+        } else {
+            nodeCounts = estimateNonTargets->getNonTargetsUsingSIM();
+        }
+    } else {
+        estimateNonTargets = new EstimateNonTargets();
+        estimateNonTargets->readFromFile(nonTargetsFileName);
+        nodeCounts = *estimateNonTargets->getAllNonTargetsCount();
+        delete estimateNonTargets;
+    }
+    cout << "\n Non targets file is alive ";
+    disp_mem_usage("");
+    clock_t phase1EndTime = clock();
+    
+    FILE_LOG(logDEBUG) << "Completed Phase 1";
+    double phase1TimeTaken = double(phase1EndTime - phase1StartTime) / CLOCKS_PER_SEC;
+    IMResults::getInstance().setPhase1Time(phase1TimeTaken);
+    if(!fromFile) {
+        nonTargetsFileName = graphFileName;
+        nonTargetsFileName+="_" + to_string(budget);
+        nonTargetsFileName+="_" + to_string(nonTargetThreshold);
+        nonTargetsFileName+="_" + to_string(percentageTargets);
+        nonTargetsFileName+="_" + to_string(rand() % 1000000);
+        nonTargetsFileName+="_1";
+        nonTargetsFileName+=".txt";
+        estimateNonTargets->writeToFile(nonTargetsFileName);
+        cout << "\nWriting Non Targets to file " << nonTargetsFileName;
+        cout << "\n";
+        IMResults::getInstance().setNonTargetFileName(nonTargetsFileName);
+        delete estimateNonTargets;
+    }
+    cout << "\n Non Target file is dead ";
+    disp_mem_usage("");
+    cout << "\n Should be same as before" << flush;
+    //Start phase 2
+    cout <<"Starting phase 2";
+    FILE_LOG(logDEBUG) << "Starting phase 2";
+    clock_t phase2StartTime = clock();
+    Phase2 *phase2= NULL;
+    if(method==1) {
+        phase2 = new Phase2TIM(graph);
+    }
+    else {
+        phase2 = new Phase2SIM(graph);
+    }
+    phase2->doPhase2(budget, nonTargetThreshold, nodeCounts);
+    IMResults::getInstance().addBestSeedSet(phase2->getTree()->getBestSeedSet(budget));
+    clock_t phase2EndTime = clock();
+    double phase2TimeTaken = double(phase2EndTime - phase2StartTime) / CLOCKS_PER_SEC;
+    FILE_LOG(logDEBUG) << "Completed phase 2";
+    
+    IMResults::getInstance().setPhase2Time(phase2TimeTaken);
+    IMResults::getInstance().setTotalTimeTaken(phase1TimeTaken + phase2TimeTaken);
+    
+    vector<IMSeedSet> allSeedSets = phase2->getTree()->getAllSeeds(budget);
+    IMResults::getInstance().addSeedSets(allSeedSets);
+    cout << "\n before phase 2";
+    disp_mem_usage("");
+    IMSeedSet bestSeedSet = phase2->getTree()->getBestSeedSet(budget);
+    delete phase2;
+    cout << "\n after phase 2";
+    disp_mem_usage("");
+    return bestSeedSet.getSeedSet();
+}
+
 void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeBegin = clock();
     cout << "\n begin execution tim tim ";
@@ -309,78 +429,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     set<int> seedSet;
     
     if(seedSelection.compare("bestTim")==0){
-        loadGraphSizeToResults(graph);
-        vector<double> nodeCounts;
-        clock_t phase1StartTime = clock();
-        cout << "\n Before any estimate non targets creation:";
-        disp_mem_usage("");
-        EstimateNonTargets *estimateNonTargets = NULL;
-        if(!fromFile) {
-            estimateNonTargets = new EstimateNonTargets(graph);
-            if(method==1) {
-                nodeCounts = estimateNonTargets->getNonTargetsUsingTIM();
-            } else {
-                nodeCounts = estimateNonTargets->getNonTargetsUsingSIM();
-            }
-        } else {
-            estimateNonTargets = new EstimateNonTargets();
-            estimateNonTargets->readFromFile(nonTargetsFileName);
-            nodeCounts = *estimateNonTargets->getAllNonTargetsCount();
-            delete estimateNonTargets;
-        }
-        cout << "\n Non targets file is alive ";
-        disp_mem_usage("");
-        clock_t phase1EndTime = clock();
-        
-        FILE_LOG(logDEBUG) << "Completed Phase 1";
-        double phase1TimeTaken = double(phase1EndTime - phase1StartTime) / CLOCKS_PER_SEC;
-        IMResults::getInstance().setPhase1Time(phase1TimeTaken);
-        if(!fromFile) {
-            nonTargetsFileName = graphFileName;
-            nonTargetsFileName+="_" + to_string(budget);
-            nonTargetsFileName+="_" + to_string(nonTargetThreshold);
-            nonTargetsFileName+="_" + to_string(percentageTargets);
-            nonTargetsFileName+="_" + to_string(rand() % 1000000);
-            nonTargetsFileName+="_1";
-            nonTargetsFileName+=".txt";
-            estimateNonTargets->writeToFile(nonTargetsFileName);
-            cout << "\nWriting Non Targets to file " << nonTargetsFileName;
-            cout << "\n";
-            IMResults::getInstance().setNonTargetFileName(nonTargetsFileName);
-            delete estimateNonTargets;
-        }
-        cout << "\n Non Target file is dead ";
-        disp_mem_usage("");
-        cout << "\n Should be same as before" << flush;
-        //Start phase 2
-        cout <<"Starting phase 2";
-        FILE_LOG(logDEBUG) << "Starting phase 2";
-        clock_t phase2StartTime = clock();
-        Phase2 *phase2= NULL;
-        if(method==1) {
-            phase2 = new Phase2TIM(graph);
-        }
-        else {
-            phase2 = new Phase2SIM(graph);
-        }
-        phase2->doPhase2(budget, nonTargetThreshold, nodeCounts);
-        IMResults::getInstance().addBestSeedSet(phase2->getTree()->getBestSeedSet(budget));
-        clock_t phase2EndTime = clock();
-        double phase2TimeTaken = double(phase2EndTime - phase2StartTime) / CLOCKS_PER_SEC;
-        FILE_LOG(logDEBUG) << "Completed phase 2";
-        
-        IMResults::getInstance().setPhase2Time(phase2TimeTaken);
-        IMResults::getInstance().setTotalTimeTaken(phase1TimeTaken + phase2TimeTaken);
-        
-        vector<IMSeedSet> allSeedSets = phase2->getTree()->getAllSeeds(budget);
-        IMResults::getInstance().addSeedSets(allSeedSets);
-        cout << "\n before phase 2";
-        disp_mem_usage("");
-        IMSeedSet bestSeedSet = phase2->getTree()->getBestSeedSet(budget);
-        delete phase2;
-        cout << "\n after phase 2";
-        disp_mem_usage("");
-        seedSet=bestSeedSet.getSeedSet();
+        seedSet=runTim(graph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
         vector<int>().swap(graph->NodeinRRsetsWithCounts);
         //checkMod(graphFileName, percentageTargetsFloat, graph, seedSet,budget, useIndegree,probability);
     }
@@ -391,7 +440,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         if(seedSelection.compare("random")==0){
             seedSet=SeedClass->getCompletelyRandom();
         }
-         //seed set on best outdegree
+        //seed set on best outdegree
         else if(seedSelection.compare("randomOutDegree")==0){
             seedSet=SeedClass->outdegreeRandom(topBestThreshold);
         }
@@ -404,7 +453,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     cout<<"Selected k sub SeedSet: " << flush;
     for(auto item:seedSet)
-    cout<< item << " ";
+        cout<< item << " ";
     
     if(halfGraph){
         cout<<"Creating the complete graph again for diffusion: ";
@@ -426,21 +475,36 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
-    cout<< "\n influenced graph labels";
+    cout<< "\n influenced graph labels"<<flush;
     
-    //Random RR sets
-    int n = (int)activatedSet.size();
-    double epsilon = (double)EPSILON;
-    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
-    cout << "\n RRsets done " << flush;
+    //get node to be removed
+    set<int> nodesToremove;
+    set<int> alreadyinSeed;
+    while(removeNodes!=0){
+        int node=removeVerticesIterative(influencedGraph,activatedSet);
+        nodesToremove.insert(node);
+        cout<< "\n Selected node is "<<node<<flush;
+        if(seedSet.count(node)==1){
+            alreadyinSeed.insert(node);
+        }
+        //remove edges of the node from graph
+        influencedGraph->removeOutgoingEdges(node);
+        assert(influencedGraph->graph[node].size()==0);
+        removeNodes--;
+    }
     
-    //clearing the memory
-    vector<int>().swap(activatedSet);
-    vector<vector<int>>().swap(influencedGraph->rrSets);
+    //remove nodes from graph
+    cout<< "nodes To remove are";
+    for(int i:nodesToremove){
+        cout<< i << " ";
+        graph->removeOutgoingEdges(i);
+        assert(graph->graph[i].size()==0);
+    }
+    
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     
     //get nodes to be removed and remove incoming and outgoing edges from graph
-    removeVertices(influencedGraph,graph,removeNodes,seedSet);
+    //removeVertices(influencedGraph,graph,removeNodes,seedSet,activatedSet);
     
     //again diffusion on old graph with same seed after node removal
     vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);

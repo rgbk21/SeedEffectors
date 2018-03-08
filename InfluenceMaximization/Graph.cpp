@@ -87,20 +87,19 @@ void Graph::readHalfGraph(string fileName, float percentage){
 void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> activatedSet) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
-    cout << "\n Reading Reverse targets graph: ";
+    //cout << "\n Reading Reverse targets graph: ";
     
     ifstream myFile("graphs/" + fileName);
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
         
-        cout<<"value of n in graph "<<n<<flush;
+        //cout<<"value of n in graph "<<n<<flush;
         for(int i =0;i<n;i++) {
             graph.push_back(vector<int>());
             visited.push_back(false);
             inDegree.push_back(0);
             labels.push_back(false);
-            NodeinRRsetsWithCounts.push_back(0);
         }
         for(int i:activatedSet) {
             labels[i]=true;
@@ -137,7 +136,6 @@ void Graph::readGraph(string fileName, float percentage) {
             visited.push_back(false);
             inDegree.push_back(0);
             labels.push_back(true);
-            NodeinRRsetsWithCounts.push_back(0);
         }
         int from, to;
         int maxDegree = 0;
@@ -237,6 +235,10 @@ vector<int>* Graph::getNonTargets() {
 
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
+    visitMark = vector<int>(n);
+    for(int i=0;i<n;i++){
+        NodeinRRsetsWithCounts.push_back(0);
+    }
     this->rrSets =vector<vector<int>>();
     long totalSize = 0;
     clock_t begin = clock();
@@ -253,11 +255,11 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     }
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout <<"\n Generated " << R << " RR sets\n";
+    /*cout <<"\n Generated " << R << " RR sets\n";
     cout << "Elapsed time " << elapsed_secs;
     cout<< " \n Time per RR Set is " << elapsed_secs/R;
     cout<< "\n Total Size is " << totalSize;
-    cout<<"\n Average size is " << (float)totalSize/(float)R;
+    cout<<"\n Average size is " << (float)totalSize/(float)R;*/
 }
 
 //********** Function only for the influenced graph ********
@@ -466,17 +468,37 @@ vector<int> Graph::oldRRSetGeneration(int randomVertex, int rrSetID) {
 }
 
 void Graph:: removeOutgoingEdges(int vertex){
+    vector<int> outgoingNodes=vector<int>();
+    outgoingNodes=graph[vertex];
+    
+    for(int i:outgoingNodes){
+        vector<int> outgoingEdges=vector<int>();
+        for(int j:graphTranspose[i]){
+            if(j!=vertex)
+                outgoingEdges.push_back(j);
+        }
+         graphTranspose[i]=outgoingEdges;
+    }
     graph[vertex]=vector<int>();
+    
+    
     vector<int> incomingNodes=vector<int>();
     incomingNodes=graphTranspose[vertex];
     
     for(int i:incomingNodes){
         vector<int> outgoingEdges=vector<int>();
+        vector<int> incomingEdges=vector<int>();
         for(int j:graph[i]){
             if(j!=vertex)
                 outgoingEdges.push_back(j);
         }
         graph[i]=outgoingEdges;
+        
+        for(int j:graphTranspose[i]){
+            if(j!=vertex)
+                incomingEdges.push_back(j);
+        }
+        graphTranspose[i]=incomingEdges;
     }
     graphTranspose[vertex]=vector<int>();
 }
