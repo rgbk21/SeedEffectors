@@ -18,6 +18,7 @@
 #include <ctime>
 #include <deque>
 #include <string.h>
+#include <set>
 using namespace std;
 
 class Graph {
@@ -37,12 +38,16 @@ public:
     vector<vector<int> > graph;
     vector<vector<int> > graphTranspose;
     vector<vector<int>> rrSets;
+    vector<set<int>> newrrSets;
     vector<bool> labels;
     deque<int> q;
     vector<int> inDegree;
     vector<bool> visited;
     vector<int> visitMark;
     vector<int> NodeinRRsetsWithCounts;
+    vector<vector<set<int>>> associatedSet;
+    vector<vector<vector<int>>> newassociatedSet;
+    vector<vector<int>> coverage;
     void readGraph(string fileName);
     void readGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
@@ -65,7 +70,7 @@ public:
     void generateRandomRRSetsFromTargets(int R, vector<int> activatedSet);
     
     vector<int> generateRandomRRSet(int randomVertex, int rrSetID);
-    vector<int> generateRandomRRSetwithCount(int randomVertex, int rrSetID);
+    void generateRandomRRSetwithCount(int randomVertex, int rrSetID);
     void clearRandomRRSets();
     vector<vector<int>>* getRandomRRSets();
     
