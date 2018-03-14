@@ -360,7 +360,7 @@ int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activate
         node.first=i;
         for(int j=0;j<influencedGraph->getNumberOfVertices();j++){
             for(int r=0;r<R;r++){
-                if(influencedGraph->newrrSets[r].count(j)==1){
+                //if(influencedGraph->newrrSets[r].count(j)==1){
                     /*if(influencedGraph->associatedSet[r].at(j).count(i)==1 ){
                         node.second++;
                         continue;
@@ -369,7 +369,7 @@ int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activate
                         if(influencedGraph->associatedSet[r].at(j).count(v)==1)*/
                             node.second++;
                     //}
-                }
+                //}
             }
         }
         SortedNodeidCounts.push_back(node);
@@ -383,30 +383,22 @@ int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activate
 
 int getMarginalLoss(Graph *influencedGraph, vector<int> activatedSet,set<int>nodesToremove)
 {
-    //Random RR sets
-    int n = (int)activatedSet.size();
-    double epsilon = (double)EPSILON;
-    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    cout<< "RR sets are: "<<R;
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
-    
-    //clearing the memory
-    vector<int>().swap(activatedSet);
-    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
-    
-    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-    
-    for(int i=0;i<influencedGraph->getNumberOfVertices();i++){
-        pair<int,int> node= pair<int,int>();
-        node.first=i;
-        for(int j=0;j<influencedGraph->getNumberOfVertices();j++){
-            node.second+=influencedGraph->coverage[j][i];
+    int vertexnum=influencedGraph->getNumberOfVertices();
+    influencedGraph->coverage=vector<int>(vertexnum);
+    int maxsum=0;
+    int maxIndex=-1;
+    for(int i=0;i<vertexnum;i++){
+        int total=0;
+        for(int j=0;j<vertexnum;j++){
+            total+=influencedGraph->associatedSet[i][j].size();
         }
-        SortedNodeidCounts.push_back(node);
+        influencedGraph->coverage[i]=total;
+        if(total>maxsum){
+            maxIndex=i;
+            maxsum=total;
+        }
     }
-    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
-    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-    return SortedNodeidCounts.at(0).first;
+    return maxIndex;
 }
 
 
@@ -551,24 +543,42 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     //get node to be removed
     set<int> nodesToremove;
     set<int> alreadyinSeed;
-    /*vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-     
-     SortedNodeidCounts=modifiedremoveVerticesIterative(influencedGraph,activatedSet,SortedNodeidCounts,nodesToremove);
-     pair<int,int> node=SortedNodeidCounts.at(0);
-     nodesToremove.insert(node.first);
-     vector<int>oldmarginalLoss=vector<int>(influencedGraph->getNumberOfVertices());*/
+    //Random RR sets
+    int n = (int)activatedSet.size();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    cout<< "RR sets are: "<<R;
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+    
+    //clearing the memory
+    vector<int>().swap(activatedSet);
+    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
+    
     while(removeNodes!=0){
         //int node=removeVerticesIterative(influencedGraph,activatedSet);
         //int node=modifiedremoveVerticesIterative(influencedGraph,activatedSet,nodesToremove);
-        int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
+        
         nodesToremove.insert(node);
         cout<< "\n Selected node is "<<node<<flush;
         if(seedSet.count(node)==1){
             alreadyinSeed.insert(node);
         }
-        //remove edges of the node from graph
-        //influencedGraph->removeOutgoingEdges(node);
-        //assert(influencedGraph->graph[node].size()==0);
+        //remove node from RRset
+        influencedGraph->removeNodeFromRRset(node);
+        vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+        for(int i=0;i<influencedGraph->coverage.size();i++){
+            pair<int,int> node= pair<int,int>();
+            node.first=i;
+            node.second=influencedGraph->coverage[i];
+            SortedNodeidCounts.push_back(node);
+        }
+        std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+        assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+        node = SortedNodeidCounts.at(0).first;
+        /*remove edges of the node from graph
+        influencedGraph->removeOutgoingEdges(node);
+        assert(influencedGraph->graph[node].size()==0);*/
         removeNodes--;
     }
     

@@ -38,7 +38,6 @@ public:
     vector<vector<int> > graph;
     vector<vector<int> > graphTranspose;
     vector<vector<int>> rrSets;
-    vector<set<int>> newrrSets;
     vector<bool> labels;
     deque<int> q;
     vector<int> inDegree;
@@ -46,8 +45,7 @@ public:
     vector<int> visitMark;
     vector<int> NodeinRRsetsWithCounts;
     vector<vector<set<int>>> associatedSet;
-    vector<vector<vector<int>>> newassociatedSet;
-    vector<vector<int>> coverage;
+    vector<int> coverage;
     void readGraph(string fileName);
     void readGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
@@ -83,6 +81,7 @@ public:
     int generateRandomNumber(int u, int v);
     int getPropogationProbabilityNumber();
     void removeOutgoingEdges(int v);
+    void removeNodeFromRRset(int v);
 };
 
 #endif /* Graph_hpp */
