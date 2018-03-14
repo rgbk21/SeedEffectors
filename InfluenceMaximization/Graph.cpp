@@ -236,32 +236,26 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     visitMark = vector<int>(n);
-    newassociatedSet=vector<vector<vector<int>>>(n);
-    coverage=vector<vector<int>>(n,vector<int>(n,0));
-    //associatedSet=vector<vector<set<int>>>(R);
+    associatedSet=vector<vector<set<int>>>();
     for(int i=0;i<n;i++){
-        NodeinRRsetsWithCounts.push_back(0);
-        newassociatedSet.push_back(vector<vector<int>>(n));
+        //NodeinRRsetsWithCounts.push_back(0);
+        associatedSet.push_back(vector<set<int>>(n));
     }
-    this->newrrSets=vector<set<int>>();
     long totalSize = 0;
     clock_t begin = clock();
-    /*this->rrSets =vector<vector<int>>();
+    this->rrSets =vector<vector<int>>();
      while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
-    }*/
-    while(newrrSets.size()<R) {
-        newrrSets.push_back(set<int>());
-        //associatedSet.push_back(vector<set<int>>(n));
     }
+    
     //to do... random RR sets from activated nodes in Influenced graph
     int t=(int)activatedSet.size();
     for(int i=0;i<R;i++) {
         int randomVertex;
         randomVertex = activatedSet[rand() % t];
         generateRandomRRSetwithCount(randomVertex, i);
-        //totalSize+=rrSets[i].size();
-        totalSize+=newrrSets[i].size();
+        totalSize+=rrSets[i].size();
+
     }
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -275,11 +269,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     q.clear();
-    //vector<set<int>> oneAS=vector<set<int>>(n);
-    vector<vector<int>> newAS=vector<vector<int>>(n,vector<int>(newrrSets.size(),0));
-    
-    //rrSets[rrSetID].push_back(randomVertex);
-    newrrSets[rrSetID].insert(randomVertex);
+    vector<set<int>> oneAS=vector<set<int>>(n);
+    rrSets[rrSetID].push_back(randomVertex);
     
     q.push_back(randomVertex);
     int nVisitMark = 0;
@@ -287,9 +278,9 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     visited[randomVertex] = true;
     while(!q.empty()) {
         int expand=q.front();
-        //oneAS[expand].insert(expand);
-        newAS[expand][rrSetID]=1;
-        coverage[randomVertex][expand]++;
+        oneAS[expand].insert(expand);
+        //associatedSet[expand][expand].insert(rrSetID);
+
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -307,22 +298,32 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 visited[v]=true;
             }
             q.push_back(v);
-            //rrSets[rrSetID].push_back(v);
-            newrrSets[rrSetID].insert(v);
+            rrSets[rrSetID].push_back(v);
+           
+            /*std::sort(associatedSet[v][expand].begin(), associatedSet[v][expand].end());
+            std::sort(v2.begin(), v2.end());
+            std::vector<int> v_intersection;
+            std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
+            */
+            oneAS[v].insert(oneAS[expand].begin(),oneAS[expand].end());
             
-           // oneAS[v].insert(oneAS[expand].begin(),oneAS[expand].end());
-            newAS[v][rrSetID]=1;
+            /*
             // get the count of the node
             int count=1;
             if(NodeinRRsetsWithCounts[v]!=0){
                 count=NodeinRRsetsWithCounts[v];
                 count+=1;
             }
-            NodeinRRsetsWithCounts[v]=count;
+            NodeinRRsetsWithCounts[v]=count;*/
         }
     }
-    //associatedSet[rrSetID]=oneAS;
-    newassociatedSet[randomVertex]=newAS;
+
+    for(int v=0;v<oneAS.size();v++){
+        for(int i: oneAS[v]){
+            associatedSet[i][v].insert(rrSetID);
+        }
+    }
+    
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
@@ -524,6 +525,53 @@ void Graph:: removeOutgoingEdges(int vertex){
     graphTranspose[vertex]=vector<int>();
 }
 
+void Graph:: removeNodeFromRRset(int vertex){
+    /*vector<vector<set<int>>> newassociatedSet= vector<vector<set<int>>>(associatedSet);
+    for(int i=0;i<n;i++){
+        set<int> RRid3 = associatedSet[vertex][i];
+        if(RRid3.size()>0){
+            for(int j=0;j<n;j++){
+                set<int> RRid4=associatedSet[j][i];
+                if(RRid4.size()>0){
+                    for(int r:RRid3){
+                        if(RRid4.count(r)==1){
+                            RRid4.erase(r);
+                            //coverage[j]--;
+                        }
+                    }
+                    associatedSet[j][i]=RRid4;
+                }
+            }
+            associatedSet[vertex][i].clear();
+        }
+    }
+    //coverage[vertex]=0;
+    */
+    
+    for(int i=0;i<n;i++){
+        set<int> RRid1 = associatedSet[vertex][i];
+        if(RRid1.size()>0){
+            for(int r:RRid1){
+                for(int j:rrSets[r]){
+                set<int> RRid2=associatedSet[j][i];
+                    if(RRid2.count(r)==1){
+                        RRid2.erase(r);
+                        coverage[j]--;
+                    }
+                   associatedSet[j][i]=RRid2;
+                }
+            }
+        }
+        associatedSet[vertex][i].clear();
+    }
+    coverage[vertex]=0;
+    /*for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(associatedSet[j][i]!=newassociatedSet[j][i])
+                cout<<"false"<<associatedSet[j][i].size()<<" "<<newassociatedSet[j][i].size();
+        }
+    }*/
+}
 
 
     
