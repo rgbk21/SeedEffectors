@@ -317,8 +317,8 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             
             if(visited[v]){
                 //do intersection here
-                 set<int> intersect;
-                 set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
+                std::set<int> intersect;
+                std::set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
                 for(int i:nodeAS[v]){
                     if(i!=v && intersect.count(i)==0){
                         pairAssociatedSet[i].erase(v);
