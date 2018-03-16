@@ -47,6 +47,7 @@ public:
     vector<int> visitMark;
     vector<int> NodeinRRsetsWithCounts;
     vector<vector<set<int>>> associatedSet;
+    vector<set<int>> nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
     vector<int> coverage;
     void readGraph(string fileName);

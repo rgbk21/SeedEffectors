@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph com-dblp.ungraph.txt"
+            argument = "--graph graph_ic_75k.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

@@ -237,6 +237,7 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     visitMark = vector<int>(n);
+    nodeAS=vector<set<int>>(n);
     //associatedSet=vector<vector<set<int>>>();
     pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
     
@@ -257,6 +258,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     for(int i=0;i<R;i++) {
         int randomVertex;
         randomVertex = activatedSet[rand() % t];
+        //cout <<" " << i;
         generateRandomRRSetwithCount(randomVertex, i);
         totalSize+=rrSets[i].size();
 
@@ -274,8 +276,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     q.clear();
     unordered_map<int,unordered_set<int>> newAS;
-    //vector<set<int>> oneAS=vector<set<int>>(n);
-    
+
     rrSets[rrSetID].push_back(randomVertex);
     
     pair<int,unordered_set<int>> node;
@@ -286,7 +287,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     visited[randomVertex] = true;
     while(!q.empty()) {
         int expand=q.front();
-        //oneAS[expand].insert(expand);
+        nodeAS[expand].insert(expand);
         //associatedSet[expand][expand].insert(rrSetID);
         
         if(pairAssociatedSet[expand].empty()){
@@ -299,20 +300,14 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
         
         else{
             newAS=pairAssociatedSet[expand];
-            std::unordered_map<int, unordered_set<int>>::iterator it = newAS.find(expand);
-            if (it != newAS.end()){
-                it->second.insert(rrSetID);
-            }
+            newAS.find(expand)->second.insert(rrSetID);
         }
         //if(newAS.count(expand)==1){
-        
-            
             //set<int> oldRRsets=newAS.find(expand)->second;
             //oldRRsets.insert(rrSetID);
-        
             //newAS.at(expand)=oldRRsets;
         //}
-        
+
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
 
@@ -322,16 +317,13 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             
             if(visited[v]){
                 //do intersection here
-                /*std::sort(pairAssociatedSet[expand].begin(), pairAssociatedSet[expand].end());
-                 std::sort(v2.begin(), v2.end());
-                 std::vector<int> v_intersection;
-                 std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
-                 
-                node=pair<int,set<int>>();
-                 node.first=v;
-                 for(int i:newAS.find(expand)->second)
-                 node.second.insert(i);
-                 newAS.insert(node);*/
+                 set<int> intersect;
+                 set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
+                for(int i:nodeAS[v]){
+                    if(i!=v && intersect.count(i)==0){
+                        pairAssociatedSet[i].erase(v);
+                    }
+                }
                 continue;
             }
      
@@ -367,7 +359,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             node.second.insert(temp.begin(),temp.end());*/
             
             
-            //oneAS[v].insert(oneAS[expand].begin(),oneAS[expand].end());
+            nodeAS[v].insert(nodeAS[expand].begin(),nodeAS[expand].end());
             //newAS.second.insert(oneAS[expand].begin(),oneAS[expand].end());
             /*
             // get the count of the node
