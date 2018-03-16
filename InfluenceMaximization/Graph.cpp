@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sstream>
 #include <iomanip>
+
 using namespace std;
 void Graph::readGraph(string fileName) {
     readGraph(fileName, 0.8);
@@ -236,11 +237,14 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     visitMark = vector<int>(n);
-    associatedSet=vector<vector<set<int>>>();
-    for(int i=0;i<n;i++){
+    //associatedSet=vector<vector<set<int>>>();
+    pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+    
+    /*for(int i=0;i<n;i++){
         //NodeinRRsetsWithCounts.push_back(0);
         associatedSet.push_back(vector<set<int>>(n));
-    }
+    }*/
+    
     long totalSize = 0;
     clock_t begin = clock();
     this->rrSets =vector<vector<int>>();
@@ -259,8 +263,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     }
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    /*cout <<"\n Generated " << R << " RR sets\n";
-    cout << "Elapsed time " << elapsed_secs;
+    cout <<"\n Generated reverse" << R << " RR sets\n";
+    /*cout << "Elapsed time " << elapsed_secs;
     cout<< " \n Time per RR Set is " << elapsed_secs/R;
     cout<< "\n Total Size is " << totalSize;
     cout<<"\n Average size is " << (float)totalSize/(float)R;*/
@@ -269,29 +273,71 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     q.clear();
-    vector<set<int>> oneAS=vector<set<int>>(n);
+    unordered_map<int,unordered_set<int>> newAS;
+    //vector<set<int>> oneAS=vector<set<int>>(n);
+    
     rrSets[rrSetID].push_back(randomVertex);
     
+    pair<int,unordered_set<int>> node;
+
     q.push_back(randomVertex);
     int nVisitMark = 0;
     visitMark[nVisitMark++] = randomVertex;
     visited[randomVertex] = true;
     while(!q.empty()) {
         int expand=q.front();
-        oneAS[expand].insert(expand);
+        //oneAS[expand].insert(expand);
         //associatedSet[expand][expand].insert(rrSetID);
-
+        
+        if(pairAssociatedSet[expand].empty()){
+            newAS =unordered_map<int,unordered_set<int>>();
+            node=pair<int,unordered_set<int>>();
+            node.first=expand;
+            node.second.insert(rrSetID);
+            newAS.insert(node);
+        }
+        
+        else{
+            newAS=pairAssociatedSet[expand];
+            std::unordered_map<int, unordered_set<int>>::iterator it = newAS.find(expand);
+            if (it != newAS.end()){
+                it->second.insert(rrSetID);
+            }
+        }
+        //if(newAS.count(expand)==1){
+        
+            
+            //set<int> oldRRsets=newAS.find(expand)->second;
+            //oldRRsets.insert(rrSetID);
+        
+            //newAS.at(expand)=oldRRsets;
+        //}
+        
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
+
             int v=graphTranspose[expand][j];
             if(!this->flipCoinOnEdge(v, expand))
                 continue;
-            if(visited[v])
-                continue;
             
+            if(visited[v]){
+                //do intersection here
+                /*std::sort(pairAssociatedSet[expand].begin(), pairAssociatedSet[expand].end());
+                 std::sort(v2.begin(), v2.end());
+                 std::vector<int> v_intersection;
+                 std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
+                 
+                node=pair<int,set<int>>();
+                 node.first=v;
+                 for(int i:newAS.find(expand)->second)
+                 node.second.insert(i);
+                 newAS.insert(node);*/
+                continue;
+            }
+     
             if(!labels[v])
             continue;
-            
+
             if(!visited[v])
             {
                 visitMark[nVisitMark++]=v;
@@ -299,14 +345,30 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             }
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
-           
-            /*std::sort(associatedSet[v][expand].begin(), associatedSet[v][expand].end());
-            std::sort(v2.begin(), v2.end());
-            std::vector<int> v_intersection;
-            std::set_intersection(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(v_intersection));
-            */
-            oneAS[v].insert(oneAS[expand].begin(),oneAS[expand].end());
             
+            /*if(newAS.count(v)==1){
+                set<int> oldRRsets=newAS.find(v)->second;
+                oldRRsets.insert(rrSetID);
+                newAS.at(v)=oldRRsets;
+            }*/
+            std::unordered_map<int, unordered_set<int>>::iterator it = newAS.find(v);
+
+            if (it != newAS.end()){
+                it->second.insert(rrSetID);
+            }
+            else{
+                node=pair<int,unordered_set<int>>();
+                node.first=v;
+                node.second.insert(rrSetID);
+                newAS.insert(node);
+            }
+
+            /*set<int> temp=newAS.find(expand)->second;
+            node.second.insert(temp.begin(),temp.end());*/
+            
+            
+            //oneAS[v].insert(oneAS[expand].begin(),oneAS[expand].end());
+            //newAS.second.insert(oneAS[expand].begin(),oneAS[expand].end());
             /*
             // get the count of the node
             int count=1;
@@ -316,17 +378,23 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             }
             NodeinRRsetsWithCounts[v]=count;*/
         }
+        pairAssociatedSet[expand]=newAS;
     }
-
-    for(int v=0;v<oneAS.size();v++){
+    
+    
+    
+    /*for(int v=0;v<oneAS.size();v++){
         for(int i: oneAS[v]){
             associatedSet[i][v].insert(rrSetID);
         }
-    }
+    }*/
     
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
+    //vector<set<int>>().swap(oneAS);
+    unordered_map<int,unordered_set<int>>().swap(newAS);
+ 
 }
 
 
@@ -526,6 +594,28 @@ void Graph:: removeOutgoingEdges(int vertex){
 }
 
 void Graph:: removeNodeFromRRset(int vertex){
+    for(pair<int,unordered_set<int>> RRpair : pairAssociatedSet[vertex]){
+        if(RRpair.second.size()>0){
+            for(int RRi:RRpair.second){
+                for(int j:rrSets[RRi]){
+                    std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[j].find(RRpair.first);
+                    if (it != pairAssociatedSet[j].end() && it->second.count(RRi)==1){
+                        it->second.erase(RRi);
+                        coverage[j]--;
+                    }
+                   /* set<int> temp = pairAssociatedSet[j].find(RRpair.first)->second;
+                    if(temp.size()>0 && temp.count(RRi)==1){
+                        temp.erase(RRi);
+                        coverage[j]--;
+                        pairAssociatedSet[j].at(RRpair.first)=temp;
+                    }  */
+                }
+            }
+        }
+    }
+    pairAssociatedSet[vertex].clear();
+    coverage[vertex]=0;
+   
     /*vector<vector<set<int>>> newassociatedSet= vector<vector<set<int>>>(associatedSet);
     for(int i=0;i<n;i++){
         set<int> RRid3 = associatedSet[vertex][i];
@@ -548,7 +638,7 @@ void Graph:: removeNodeFromRRset(int vertex){
     //coverage[vertex]=0;
     */
     
-    for(int i=0;i<n;i++){
+    /*for(int i=0;i<n;i++){
         set<int> RRid1 = associatedSet[vertex][i];
         if(RRid1.size()>0){
             for(int r:RRid1){
@@ -564,7 +654,8 @@ void Graph:: removeNodeFromRRset(int vertex){
         }
         associatedSet[vertex][i].clear();
     }
-    coverage[vertex]=0;
+    coverage[vertex]=0;*/
+    
     /*for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
             if(associatedSet[j][i]!=newassociatedSet[j][i])

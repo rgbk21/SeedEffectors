@@ -19,6 +19,8 @@
 #include <deque>
 #include <string.h>
 #include <set>
+#include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 class Graph {
@@ -45,6 +47,7 @@ public:
     vector<int> visitMark;
     vector<int> NodeinRRsetsWithCounts;
     vector<vector<set<int>>> associatedSet;
+    vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
     vector<int> coverage;
     void readGraph(string fileName);
     void readGraph(string fileName, float percentage);

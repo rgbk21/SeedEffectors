@@ -389,8 +389,9 @@ int getMarginalLoss(Graph *influencedGraph, vector<int> activatedSet,set<int>nod
     int maxIndex=-1;
     for(int i=0;i<vertexnum;i++){
         int total=0;
-        for(int j=0;j<vertexnum;j++){
-            total+=influencedGraph->associatedSet[i][j].size();
+        for(pair<int,unordered_set<int>> j : influencedGraph->pairAssociatedSet[i]){
+            //total+=influencedGraph->associatedSet[i][j].size();
+            total+=j.second.size();
         }
         influencedGraph->coverage[i]=total;
         if(total>maxsum){
