@@ -237,7 +237,7 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     visitMark = vector<int>(n);
-    nodeAS=vector<set<int>>(n);
+    
     //associatedSet=vector<vector<set<int>>>();
     pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
     
@@ -258,25 +258,23 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     for(int i=0;i<R;i++) {
         int randomVertex;
         randomVertex = activatedSet[rand() % t];
-        //cout <<" " << i;
         generateRandomRRSetwithCount(randomVertex, i);
         totalSize+=rrSets[i].size();
-
     }
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout <<"\n Generated reverse" << R << " RR sets\n";
-    /*cout << "Elapsed time " << elapsed_secs;
+    cout << "Elapsed time " << elapsed_secs;
     cout<< " \n Time per RR Set is " << elapsed_secs/R;
     cout<< "\n Total Size is " << totalSize;
-    cout<<"\n Average size is " << (float)totalSize/(float)R;*/
+    cout<<"\n Average size is " << (float)totalSize/(float)R;
 }
 
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     q.clear();
-    unordered_map<int,unordered_set<int>> newAS;
-
+    //unordered_map<int,unordered_set<int>> newAS;
+    nodeAS=vector<set<int>>(n);
     rrSets[rrSetID].push_back(randomVertex);
     
     pair<int,unordered_set<int>> node;
@@ -289,7 +287,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
         int expand=q.front();
         nodeAS[expand].insert(expand);
         //associatedSet[expand][expand].insert(rrSetID);
-        
+        /*
         if(pairAssociatedSet[expand].empty()){
             newAS =unordered_map<int,unordered_set<int>>();
             node=pair<int,unordered_set<int>>();
@@ -301,7 +299,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
         else{
             newAS=pairAssociatedSet[expand];
             newAS.find(expand)->second.insert(rrSetID);
-        }
+        }*/
         //if(newAS.count(expand)==1){
             //set<int> oldRRsets=newAS.find(expand)->second;
             //oldRRsets.insert(rrSetID);
@@ -314,21 +312,24 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             int v=graphTranspose[expand][j];
             if(!this->flipCoinOnEdge(v, expand))
                 continue;
+            if(!labels[v])
+                continue;
             
             if(visited[v]){
                 //do intersection here
                 std::set<int> intersect;
                 std::set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
-                for(int i:nodeAS[v]){
+                set<int> temp=nodeAS[v];
+                for(int i:temp){
                     if(i!=v && intersect.count(i)==0){
-                        pairAssociatedSet[i].erase(v);
+                        //pairAssociatedSet[i].find(v)->second.erase(rrSetID);
+                        nodeAS[v].erase(i);
                     }
                 }
                 continue;
             }
      
-            if(!labels[v])
-            continue;
+            
 
             if(!visited[v])
             {
@@ -343,7 +344,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 oldRRsets.insert(rrSetID);
                 newAS.at(v)=oldRRsets;
             }*/
-            std::unordered_map<int, unordered_set<int>>::iterator it = newAS.find(v);
+            /*std::unordered_map<int, unordered_set<int>>::iterator it = newAS.find(v);
 
             if (it != newAS.end()){
                 it->second.insert(rrSetID);
@@ -353,14 +354,11 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 node.first=v;
                 node.second.insert(rrSetID);
                 newAS.insert(node);
-            }
-
+            }*/
+            nodeAS[v].insert(nodeAS[expand].begin(),nodeAS[expand].end());
             /*set<int> temp=newAS.find(expand)->second;
             node.second.insert(temp.begin(),temp.end());*/
             
-            
-            nodeAS[v].insert(nodeAS[expand].begin(),nodeAS[expand].end());
-            //newAS.second.insert(oneAS[expand].begin(),oneAS[expand].end());
             /*
             // get the count of the node
             int count=1;
@@ -370,23 +368,46 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             }
             NodeinRRsetsWithCounts[v]=count;*/
         }
-        pairAssociatedSet[expand]=newAS;
+        //pairAssociatedSet[expand]=newAS;
     }
-    
-    
-    
+
     /*for(int v=0;v<oneAS.size();v++){
         for(int i: oneAS[v]){
             associatedSet[i][v].insert(rrSetID);
         }
     }*/
+    for(int i=0;i<nodeAS.size();i++){
+        if(nodeAS[i].size()>0){
+            for(int j:nodeAS[i]){
+                if(pairAssociatedSet[j].empty()){
+                    node=pair<int,unordered_set<int>>();
+                    node.first=i;
+                    node.second.insert(rrSetID);
+                    pairAssociatedSet[j].insert(node);
+                }
+                
+                else{
+                    std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[j].find(i);
+                    if (it != pairAssociatedSet[j].end()){
+                        it->second.insert(rrSetID);
+                    }
+                    else{
+                        node=pair<int,unordered_set<int>>();
+                        node.first=i;
+                        node.second.insert(rrSetID);
+                        pairAssociatedSet[j].insert(node);
+                    }
+                }
+            }
+        }
+    }
     
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
     //vector<set<int>>().swap(oneAS);
-    unordered_map<int,unordered_set<int>>().swap(newAS);
- 
+    //unordered_map<int,unordered_set<int>>().swap(newAS);
+    vector<set<int>>().swap(nodeAS);
 }
 
 
