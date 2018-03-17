@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sstream>
 #include <iomanip>
+#include <iterator>
 
 SeedSet::SeedSet(Graph *graph, int budget) {
     this->graph =graph;
