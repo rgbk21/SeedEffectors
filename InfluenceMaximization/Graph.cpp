@@ -237,7 +237,7 @@ vector<int>* Graph::getNonTargets() {
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     visitMark = vector<int>(n);
-    
+    coverage=vector<int>(n,0);
     //associatedSet=vector<vector<set<int>>>();
     pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
     
@@ -329,8 +329,6 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 continue;
             }
      
-            
-
             if(!visited[v])
             {
                 visitMark[nVisitMark++]=v;
@@ -384,18 +382,21 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                     node.first=i;
                     node.second.insert(rrSetID);
                     pairAssociatedSet[j].insert(node);
+                    coverage[j]++;
                 }
                 
                 else{
                     std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[j].find(i);
                     if (it != pairAssociatedSet[j].end()){
                         it->second.insert(rrSetID);
+                        coverage[j]++;
                     }
                     else{
                         node=pair<int,unordered_set<int>>();
                         node.first=i;
                         node.second.insert(rrSetID);
                         pairAssociatedSet[j].insert(node);
+                        coverage[j]++;
                     }
                 }
             }

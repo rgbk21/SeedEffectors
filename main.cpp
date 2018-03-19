@@ -384,7 +384,8 @@ int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activate
 int getMarginalLoss(Graph *influencedGraph, vector<int> activatedSet,set<int>nodesToremove)
 {
     int vertexnum=influencedGraph->getNumberOfVertices();
-    influencedGraph->coverage=vector<int>(vertexnum);
+    //influencedGraph->coverage=vector<int>(vertexnum);
+    vector<int> checkCoverage=vector<int>(vertexnum,0);
     int maxsum=0;
     int maxIndex=-1;
     for(int i=0;i<vertexnum;i++){
@@ -393,12 +394,17 @@ int getMarginalLoss(Graph *influencedGraph, vector<int> activatedSet,set<int>nod
             //total+=influencedGraph->associatedSet[i][j].size();
             total+=j.second.size();
         }
-        influencedGraph->coverage[i]=total;
+        //influencedGraph->coverage[i]=total;
+        checkCoverage[i]=total;
+        if(checkCoverage[i]!=influencedGraph->coverage[i]){
+            cout<<"actual "<<checkCoverage[i]<<"calculated "<<influencedGraph->coverage[i];
+        }
         if(total>maxsum){
             maxIndex=i;
             maxsum=total;
         }
     }
+    
     return maxIndex;
 }
 
@@ -554,8 +560,17 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     //clearing the memory
     vector<int>().swap(activatedSet);
     vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
-    int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
-    
+    //int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
+    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+    for(int i=0;i<influencedGraph->coverage.size();i++){
+        pair<int,int> node= pair<int,int>();
+        node.first=i;
+        node.second=influencedGraph->coverage[i];
+        SortedNodeidCounts.push_back(node);
+    }
+    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+    int node = SortedNodeidCounts.at(0).first;
     while(removeNodes!=0){
         //int node=removeVerticesIterative(influencedGraph,activatedSet);
         //int node=modifiedremoveVerticesIterative(influencedGraph,activatedSet,nodesToremove);
@@ -567,7 +582,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         }
         //remove node from RRset
         influencedGraph->removeNodeFromRRset(node);
-        vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+        SortedNodeidCounts=vector<pair<int,int>>();
         for(int i=0;i<influencedGraph->coverage.size();i++){
             pair<int,int> node= pair<int,int>();
             node.first=i;
