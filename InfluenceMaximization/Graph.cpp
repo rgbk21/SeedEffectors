@@ -15,6 +15,10 @@ using namespace std;
 void Graph::readGraph(string fileName) {
     readGraph(fileName, 0.8);
 }
+bool sortbydegree(const set<int> &a,const set<int> &b)
+{
+    return (a.size() > b.size());
+}
 
 Graph::Graph() {
     this->standardProbability = false;
@@ -267,7 +271,9 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet) {
     cout <<"\n Generated reverse" << R << " RR sets\n";
     cout << "Elapsed time " << elapsed_secs;
     cout<< " \n Time per RR Set is " << elapsed_secs/R;
-    cout<< "\n Total Size is " << totalSize;
+    cout<< "\n Total Size is " << totalSize<<flush;
+    std :: sort(rrSets.begin(),rrSets.end(), sortbydegree);
+    cout<< "\n max size is "<<rrSets.at(0).size();
     cout<<"\n Average size is " << (float)totalSize/(float)R;
 }
 
@@ -318,7 +324,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             
             if(visited[v]){
                 //do intersection here
-                std::unordered_set<int> intersect;
+                /*std::unordered_set<int> intersect;
                 std::set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
                 set<int> temp=nodeAS[v];
                 for(int i:temp){
@@ -326,7 +332,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                         //pairAssociatedSet[i].find(v)->second.erase(rrSetID);
                         nodeAS[v].erase(i);
                     }
-                }
+                }*/
                 continue;
             }
      
