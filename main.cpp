@@ -540,6 +540,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     Graph *influencedGraph = new Graph;
     influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
+    
     if(!useIndegree) {
         influencedGraph->setPropogationProbability(probability);
     }

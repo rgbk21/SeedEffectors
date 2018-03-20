@@ -123,6 +123,7 @@ void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> a
     this->numberOfNonTargets =this->getNumberOfVertices()-this->numberOfTargets;
 }
 
+
 void Graph::readGraph(string fileName, float percentage) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
@@ -317,7 +318,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             
             if(visited[v]){
                 //do intersection here
-                std::set<int> intersect;
+                std::unordered_set<int> intersect;
                 std::set_intersection(nodeAS[expand].begin(), nodeAS[expand].end(),nodeAS[v].begin(), nodeAS[v].end(),std::inserter(intersect,intersect.begin()));
                 set<int> temp=nodeAS[v];
                 for(int i:temp){
@@ -374,6 +375,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             associatedSet[i][v].insert(rrSetID);
         }
     }*/
+    /*
     for(int i=0;i<nodeAS.size();i++){
         if(nodeAS[i].size()>0){
             for(int j:nodeAS[i]){
@@ -401,7 +403,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 }
             }
         }
-    }
+    }*/
     
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
