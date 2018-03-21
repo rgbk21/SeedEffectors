@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--modularity submodular"
+            argument = "--modularity modular"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
