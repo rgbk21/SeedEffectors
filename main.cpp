@@ -125,7 +125,7 @@ void loadGraphSizeToResults(Graph *graph) {
     IMResults::getInstance().setNumberOfEdges(graph->getNumberOfEdges());
 }
 
-set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet, string modular){
+set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet, string modular,set<int> alreadyinSeed){
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
@@ -156,7 +156,6 @@ set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, se
     assert(SortedNodeidCounts.at(0).second>SortedNodeidCounts.at(1).second);
     
     set<int> nodesToRemove=set<int>();
-    set<int> alreadyinSeed=set<int>();
     int i=0;
     int j=0;
     while(j<removeNodes && j< SortedNodeidCounts.size()){
@@ -171,13 +170,12 @@ set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, se
         i++;
     }
     vector<pair<int,int>>().swap(SortedNodeidCounts);
-    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     //remove nodes from graph
     /*for(int i:nodesToRemove){
         graph->removeOutgoingEdges(i);
         assert(graph->graph[i].size()==0);
     }*/
-
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     return  nodesToRemove;
 }
 
@@ -538,13 +536,12 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     //Start Diffusion
     cout<< "\n Diffusion on graph started"<< flush;
-    clock_t ReverseStartTime = clock();
     vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
     vector<vector<int>>().swap(graph->rrSets);
     delete graph;
-    
     cout << "\n Targets activated = " << activatedSet.size();
     
+   
     Graph *influencedGraph = new Graph;
     influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
     
@@ -555,13 +552,16 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
     cout<< "\n influenced graph labels"<<flush;
     
+     clock_t ReverseStartTime = clock();
     //get node to be removed
     set<int> nodesToremove;
+    set<int> alreadyinSeed= set<int>();
+    
     if(modular.compare("modular")==0){
-        nodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular);
+        nodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular,alreadyinSeed);
     }
     else{
-        set<int> alreadyinSeed;
+        
         //Random RR sets
         int n = (int)activatedSet.size();
         double epsilon = (double)EPSILON;
@@ -608,8 +608,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
              assert(influencedGraph->graph[node].size()==0);*/
             removeNodes--;
         }
-        cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     }
+    clock_t ReverseEndTime = clock();
     
     //remove nodes from graph
     Graph *newGraph = new Graph;
@@ -636,7 +636,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     //again diffusion on old graph with same seed after node removal
     vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
-    cout << "\n New Targets activated = " << NewactivatedSet.size();
+    
     
     //find intersection of new and old activated set
     std::vector<int> intersect;
@@ -644,10 +644,11 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     std::sort(activatedSet.begin(), activatedSet.end());
     std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
     
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
+    cout << "\n Old Targets activated = " << activatedSet.size();
+    cout << "\n New Targets activated = " << NewactivatedSet.size();
     cout << "\n intersection size "<<intersect.size();
-
     cout << "\n Percentage of intersect with old " <<double(intersect.size()*100/activatedSet.size())<<"%";
-    clock_t ReverseEndTime = clock();
     double totalAlgorithmTime = double(ReverseEndTime-ReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();
