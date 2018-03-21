@@ -70,7 +70,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-CondMat.txt"
+            argument = "--modularity submodular"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--graph ca-GrQc-processed.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
