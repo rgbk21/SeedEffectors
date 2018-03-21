@@ -34,6 +34,7 @@ private:
     vector<int> nonTargets;
     int numberOfTargets;
     int numberOfNonTargets;
+    
 
 public:
     Graph();
@@ -70,10 +71,11 @@ public:
     
     vector<vector<int>> constructTranspose(vector<vector<int> > aGraph);
     void generateRandomRRSets(int R, bool label);
-    void generateRandomRRSetsFromTargets(int R, vector<int> activatedSet);
+    void generateRandomRRSetsFromTargets(int R, vector<int> activatedSet, string modular);
     
     vector<int> generateRandomRRSet(int randomVertex, int rrSetID);
     void generateRandomRRSetwithCount(int randomVertex, int rrSetID);
+    void generateRandomRRSetwithCountMod(int randomVertex, int rrSetID);
     void clearRandomRRSets();
     vector<vector<int>>* getRandomRRSets();
     

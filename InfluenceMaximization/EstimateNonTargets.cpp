@@ -76,7 +76,7 @@ vector<vector<int>>* EstimateNonTargets::generateRandomRRSets(int R, bool label)
        nodeCounts[i] = (double)nodeCounts[i] * (double)graph->getNumberOfNonTargets()/(double)R;
         
         if(nodeCounts[i]==0) {
-            assert(graph->labels[i]);
+            //assert(graph->labels[i]);
         }
         if(nodeCounts[i] > maxInfluence) {
             maxNode = i;

@@ -125,12 +125,12 @@ void loadGraphSizeToResults(Graph *graph) {
     IMResults::getInstance().setNumberOfEdges(graph->getNumberOfEdges());
 }
 
-void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet){
+set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet, string modular){
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, modular);
     cout << "\n RRsets done " << flush;
     
     //clearing the memory
@@ -171,13 +171,14 @@ void removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<in
         i++;
     }
     vector<pair<int,int>>().swap(SortedNodeidCounts);
-    
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     //remove nodes from graph
-    for(int i:nodesToRemove){
+    /*for(int i:nodesToRemove){
         graph->removeOutgoingEdges(i);
         assert(graph->graph[i].size()==0);
-    }
-    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
+    }*/
+
+    return  nodesToRemove;
 }
 
 void checkMod(string graphFileName, float percentageTargetsFloat, Graph* graph,set<int> seedSet,int budget,bool useIndegree, float probability){
@@ -230,7 +231,7 @@ void checkMod(string graphFileName, float percentageTargetsFloat, Graph* graph,s
     cout << "\n influence intersection of mod and submod" <<v_intersection.size();
 }
 
-int removeVerticesIterative(Graph *influencedGraph, vector<int> activatedSet){
+int removeVerticesIterative(Graph *influencedGraph, vector<int> activatedSet,string modular){
     vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
     
     for(int v=0;v<influencedGraph->getNumberOfVertices();v++){
@@ -242,7 +243,7 @@ int removeVerticesIterative(Graph *influencedGraph, vector<int> activatedSet){
         int n = (int)activatedSet.size();
         double epsilon = (double)EPSILON;
         int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-        newGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+        newGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular);
         //cout << "\n RRsets done for node" << v<< flush;
         
         //clearing the memory
@@ -341,13 +342,13 @@ set<int> runTim(Graph *graph,bool fromFile,string nonTargetsFileName,int method,
 }
 
 
-int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activatedSet, set<int>nodesToremove){
+int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activatedSet, set<int>nodesToremove, string modular){
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular);
     
     //clearing the memory
     vector<int>().swap(activatedSet);
@@ -361,14 +362,14 @@ int modifiedremoveVerticesIterative(Graph *influencedGraph, vector<int> activate
         for(int j=0;j<influencedGraph->getNumberOfVertices();j++){
             for(int r=0;r<R;r++){
                 //if(influencedGraph->newrrSets[r].count(j)==1){
-                    /*if(influencedGraph->associatedSet[r].at(j).count(i)==1 ){
-                        node.second++;
-                        continue;
-                    }
-                    for(int v:nodesToremove){
-                        if(influencedGraph->associatedSet[r].at(j).count(v)==1)*/
-                            node.second++;
-                    //}
+                /*if(influencedGraph->associatedSet[r].at(j).count(i)==1 ){
+                 node.second++;
+                 continue;
+                 }
+                 for(int v:nodesToremove){
+                 if(influencedGraph->associatedSet[r].at(j).count(v)==1)*/
+                node.second++;
+                //}
                 //}
             }
         }
@@ -423,6 +424,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     float probability = 0;
     int removeNodes=0;
     string seedSelection;
+    string modular;
     int topBestThreshold=100;
     
     budget = result["budget"].as<int>();
@@ -431,6 +433,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     percentageTargets = result["percentage"].as<int>();
     removeNodes=result["nodesRemove"].as<int>();
     seedSelection=result["seedset"].as<std::string>();
+    modular=result["modularity"].as<std::string>();
+    
     loadResultsFileFrom(result);
     
     if(result.count("method")>0) {
@@ -537,6 +541,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t ReverseStartTime = clock();
     vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
     vector<vector<int>>().swap(graph->rrSets);
+    delete graph;
+    
+    cout << "\n Targets activated = " << activatedSet.size();
     
     Graph *influencedGraph = new Graph;
     influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
@@ -544,46 +551,28 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         influencedGraph->setPropogationProbability(probability);
     }
-    cout << "\n Targets activated = " << activatedSet.size();
+    
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
     cout<< "\n influenced graph labels"<<flush;
     
     //get node to be removed
     set<int> nodesToremove;
-    set<int> alreadyinSeed;
-    //Random RR sets
-    int n = (int)activatedSet.size();
-    double epsilon = (double)EPSILON;
-    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    cout<< "RR sets are: "<<R;
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet);
-    
-    //clearing the memory
-    vector<int>().swap(activatedSet);
-    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
-    //int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
-    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-    for(int i=0;i<influencedGraph->coverage.size();i++){
-        pair<int,int> node= pair<int,int>();
-        node.first=i;
-        node.second=influencedGraph->coverage[i];
-        SortedNodeidCounts.push_back(node);
+    if(modular.compare("modular")==0){
+        nodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular);
     }
-    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
-    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-    int node = SortedNodeidCounts.at(0).first;
-    while(removeNodes!=0){
-        //int node=removeVerticesIterative(influencedGraph,activatedSet);
-        //int node=modifiedremoveVerticesIterative(influencedGraph,activatedSet,nodesToremove);
+    else{
+        set<int> alreadyinSeed;
+        //Random RR sets
+        int n = (int)activatedSet.size();
+        double epsilon = (double)EPSILON;
+        int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+        cout<< "RR sets are: "<<R;
+        influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular);
         
-        nodesToremove.insert(node);
-        cout<< "\n Selected node is "<<node<<flush;
-        if(seedSet.count(node)==1){
-            alreadyinSeed.insert(node);
-        }
-        //remove node from RRset
-        influencedGraph->removeNodeFromRRset(node);
-        SortedNodeidCounts=vector<pair<int,int>>();
+        //clearing the memory
+        vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+        //int node=getMarginalLoss(influencedGraph,activatedSet,nodesToremove);
+        vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
         for(int i=0;i<influencedGraph->coverage.size();i++){
             pair<int,int> node= pair<int,int>();
             node.first=i;
@@ -592,30 +581,73 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         }
         std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
         assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-        node = SortedNodeidCounts.at(0).first;
-        /*remove edges of the node from graph
-        influencedGraph->removeOutgoingEdges(node);
-        assert(influencedGraph->graph[node].size()==0);*/
-        removeNodes--;
+        int node = SortedNodeidCounts.at(0).first;
+        while(removeNodes!=0){
+            //int node=removeVerticesIterative(influencedGraph,activatedSet,modular);
+            //int node=modifiedremoveVerticesIterative(influencedGraph,activatedSet,nodesToremove,modular);
+            
+            nodesToremove.insert(node);
+            cout<< "\n Selected node is "<<node<<flush;
+            if(seedSet.count(node)==1){
+                alreadyinSeed.insert(node);
+            }
+            //remove node from RRset
+            influencedGraph->removeNodeFromRRset(node);
+            SortedNodeidCounts=vector<pair<int,int>>();
+            for(int i=0;i<influencedGraph->coverage.size();i++){
+                pair<int,int> node= pair<int,int>();
+                node.first=i;
+                node.second=influencedGraph->coverage[i];
+                SortedNodeidCounts.push_back(node);
+            }
+            std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+            assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+            node = SortedNodeidCounts.at(0).first;
+            /*remove edges of the node from graph
+             influencedGraph->removeOutgoingEdges(node);
+             assert(influencedGraph->graph[node].size()==0);*/
+            removeNodes--;
+        }
+        cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     }
     
     //remove nodes from graph
-    cout<< "nodes To remove are";
-    for(int i:nodesToremove){
-        cout<< i << " ";
-        graph->removeOutgoingEdges(i);
-        assert(graph->graph[i].size()==0);
+    Graph *newGraph = new Graph;
+    newGraph->readGraph(graphFileName, percentageTargetsFloat);
+
+    if(!useIndegree) {
+        newGraph->setPropogationProbability(probability);
     }
     
-    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
+    cout<< "\n nodes To remove are ";
+    for(int i:nodesToremove){
+        cout<< i << " ";
+        newGraph->removeOutgoingEdges(i);
+        assert(newGraph->graph[i].size()==0);
+        assert(newGraph->graphTranspose[i].size()==0);
+    }
+    seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
+    cout<<"\n Selected new SeedSet: " << flush;
+    for(auto item:seedSet)
+        cout<< item << " ";
     
     //get nodes to be removed and remove incoming and outgoing edges from graph
     //removeVertices(influencedGraph,graph,removeNodes,seedSet,activatedSet);
     
     //again diffusion on old graph with same seed after node removal
-    vector<int> NewactivatedSet=performDiffusion(graph,seedSet,NULL);
-    clock_t ReverseEndTime = clock();
+    vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
     cout << "\n New Targets activated = " << NewactivatedSet.size();
+    
+    //find intersection of new and old activated set
+    std::vector<int> intersect;
+    std::sort(NewactivatedSet.begin(), NewactivatedSet.end());
+    std::sort(activatedSet.begin(), activatedSet.end());
+    std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
+    
+    cout << "\n intersection size "<<intersect.size();
+
+    cout << "\n Percentage of intersect with old " <<double(intersect.size()*100/activatedSet.size())<<"%";
+    clock_t ReverseEndTime = clock();
     double totalAlgorithmTime = double(ReverseEndTime-ReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();
@@ -793,6 +825,7 @@ int main(int argc, char **argv) {
     ("p,probability", "Propogation probability", cxxopts::value<double>())
     ("approximation", " Approximation Settings", cxxopts::value<int>())
     ("r,nodesRemove", " Remove nodes number", cxxopts::value<int>())
+    ("w,modularity", " Modular selection", cxxopts::value<std::string>())
     ("s,seedset", " Random seed set", cxxopts::value<std::string>())
     ("e,extend", "Extend the permutation");
     auto result = options.parse(argc, argv);
