@@ -264,6 +264,8 @@ int removeVerticesIterative(Graph *influencedGraph, vector<int> activatedSet,str
     return SortedNodeidCounts.at(SortedNodeidCounts.size()-1).first;
 }
 
+
+
 set<int> runTim(Graph *graph,bool fromFile,string nonTargetsFileName,int method,int budget,int nonTargetThreshold,string graphFileName,int percentageTargets){
     loadGraphSizeToResults(graph);
     vector<double> nodeCounts;
@@ -407,6 +409,21 @@ int getMarginalLoss(Graph *influencedGraph, vector<int> activatedSet,set<int>nod
     return maxIndex;
 }
 
+set<int> getSeed(Graph *graph,int budget,vector<int> activatedSet){
+    vector<vector<int>> lookupTable;
+    TIMCoverage timCoverage(&lookupTable);
+    double epsilon = 2;
+    int n = graph->n;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    graph->generateRandomRRSets(R, true);
+    vector<vector<int>> *randomRRSets = graph->getRandomRRSets();
+    timCoverage.initializeLookupTable(randomRRSets, graph->n);
+    timCoverage.initializeDataStructures((int)randomRRSets->size(), graph->n);
+    unordered_set<int> activatedNodes;
+    activatedNodes.insert(activatedSet.begin(),activatedSet.end());
+    set<int> seedSet = timCoverage.findTopKNodes(budget, randomRRSets,activatedNodes);
+    return seedSet;
+}
 
 void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeBegin = clock();
@@ -501,6 +518,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     set<int> seedSet;
     
     if(seedSelection.compare("bestTim")==0){
+        
         seedSet=runTim(graph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
         vector<int>().swap(graph->NodeinRRsetsWithCounts);
         //checkMod(graphFileName, percentageTargetsFloat, graph, seedSet,budget, useIndegree,probability);
@@ -626,7 +644,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         assert(newGraph->graph[i].size()==0);
         assert(newGraph->graphTranspose[i].size()==0);
     }
-    seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
+    seedSet=getSeed(newGraph, budget,activatedSet);
+    //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
     cout<<"\n Selected new SeedSet: " << flush;
     for(auto item:seedSet)
         cout<< item << " ";
@@ -725,7 +744,7 @@ void executeTIMOnLabelledGraph(cxxopts::ParseResult result) {
     timCoverage->initializeDataStructures(R, n);
     timCoverage->offsetCoverage(0, -10);
     // 0 should not be the top
-    set<int> topNodes = timCoverage->findTopKNodes(budget, rrSets);
+    set<int> topNodes = timCoverage->findTopKNodes(budget, rrSets,unordered_set<int>());
     delete timCoverage;
     
     Graph *labelledGraph = new Graph;

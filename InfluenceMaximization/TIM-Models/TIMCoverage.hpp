@@ -15,6 +15,7 @@
 #include <assert.h>
 #include <queue>
 #include <set>
+#include <unordered_set>
 #include <math.h>
 using namespace std;
 
@@ -66,7 +67,7 @@ public:
     
     set<pair<int, int>> findTopKNodesWithInfluence(int k, vector<vector<int>> *rrSets);
     
-    set<int> findTopKNodes(int k, vector<vector<int>> *rrSets);
+    set<int> findTopKNodes(int k, vector<vector<int>> *rrSets,unordered_set<int> activatedNodes);
     
     void addToSeed(int vertex, vector<vector<int>> *rrSets);
 
