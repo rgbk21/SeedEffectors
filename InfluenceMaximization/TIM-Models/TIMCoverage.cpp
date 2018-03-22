@@ -161,10 +161,14 @@ set<pair<int, int>> TIMCoverage::findTopKNodesWithInfluence(int k, vector<vector
     return topKNodesWithInfluence;
 }
 
-set<int> TIMCoverage::findTopKNodes(int k, vector<vector<int>> *rrSets) {
+set<int> TIMCoverage::findTopKNodes(int k, vector<vector<int>> *rrSets,unordered_set<int> activatedNodes) {
     set<int> topKNodes;
-    for(int i=0; i< k; i++) {
-        topKNodes.insert(findMaxInfluentialNodeAndUpdateModel(rrSets).first);
+    for(int i=0; i< k;) {
+        int node=findMaxInfluentialNodeAndUpdateModel(rrSets).first;
+        if(activatedNodes.count(node)==1){
+            topKNodes.insert(node);
+            i++;
+        }
     }
     return topKNodes;
 }
