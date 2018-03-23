@@ -646,6 +646,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     //seedSet=getSeed(newGraph, budget,activatedSet);
     SeedSet *SeedClass=new SeedSet(newGraph , budget);
+    int k=0;
+    while(k<=10){
     seedSet=SeedClass->getCompletelyRandom();
     //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
     cout<<"\n Selected new SeedSet: " << flush;
@@ -670,6 +672,8 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     cout << "\n New Targets activated = " << NewactivatedSet.size();
     cout << "\n intersection size "<<intersect.size();
     cout << "\n Percentage of intersect with old " <<double(intersect.size()*100/activatedSet.size())<<"%";
+        k++;
+    }
     double totalAlgorithmTime = double(ReverseEndTime-ReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;
     clock_t executionTimeEnd = clock();
