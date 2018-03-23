@@ -74,7 +74,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-GrQc-processed.txt"
+            argument = "--graph attribute.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -82,7 +82,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 20"
+            argument = "--budget 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -94,11 +94,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--probability indegree"
-            isEnabled = "NO">
+            argument = "--probability 1"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 10"
+            argument = "--nodesRemove 1"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

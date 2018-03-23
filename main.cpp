@@ -644,7 +644,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         assert(newGraph->graph[i].size()==0);
         assert(newGraph->graphTranspose[i].size()==0);
     }
-    seedSet=getSeed(newGraph, budget,activatedSet);
+    //seedSet=getSeed(newGraph, budget,activatedSet);
+    SeedSet *SeedClass=new SeedSet(newGraph , budget);
+    seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
     //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
     cout<<"\n Selected new SeedSet: " << flush;
     for(auto item:seedSet)
