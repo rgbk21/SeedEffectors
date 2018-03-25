@@ -411,10 +411,9 @@ set<int> getSeed(Graph *graph,int budget,vector<int> activatedSet){
     return seedSet;
 }
 
-void newDiffusion(Graph *newGraph, set<int>nodesToremove,vector<int> activatedSet,int budget,int topBestThreshold){
-    
-    cout<< "\n nodes To remove are ";
-    for(int i:nodesToremove){
+void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>subModNodes,vector<int> activatedSet,int budget,int topBestThreshold){
+    cout<< "\n nodes To remove in mod graph ";
+    for(int i:modNodes){
         cout<< i << " ";
         newGraph->removeOutgoingEdges(i);
         assert(newGraph->graph[i].size()==0);
@@ -423,30 +422,51 @@ void newDiffusion(Graph *newGraph, set<int>nodesToremove,vector<int> activatedSe
     
     //int k=0;
     //while(k<=10){
-        set<int> seedSet=set<int>();
-        SeedSet *SeedClass=new SeedSet(newGraph , budget);
-        seedSet=SeedClass->outdegreeRandom(topBestThreshold);
-        //seedSet=getSeed(newGraph, budget,activatedSet);
-        //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
-        cout<<"\n Selected new SeedSet: " << flush;
-        for(auto item:seedSet)
-            cout<< item << " ";
-        
-        //again diffusion on old graph after node removal
-        vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
-
-        //find intersection of new and old activated set
-        std::vector<int> intersect;
-        std::sort(NewactivatedSet.begin(), NewactivatedSet.end());
-        std::sort(activatedSet.begin(), activatedSet.end());
-        std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
-        
-        cout << "\n Old Targets activated = " << activatedSet.size();
-        cout << "\n New Targets activated = " << NewactivatedSet.size();
-        cout << "\n intersection size "<<intersect.size();
-        cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
-        set<int>().swap(seedSet);
-       // k++;
+    set<int> seedSet=set<int>();
+    SeedSet *SeedClass=new SeedSet(newGraph , budget);
+    seedSet=SeedClass->outdegreeRandom(topBestThreshold,modNodes,subModNodes);
+    //seedSet=getSeed(newGraph, budget,activatedSet);
+    //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
+    cout<<"\n Selected new SeedSet: " << flush;
+    for(auto item:seedSet)
+        cout<< item << " ";
+    
+    //again diffusion on old graph after node removal
+    vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
+    
+    //find intersection of new and old activated set
+    std::vector<int> intersect;
+    std::sort(NewactivatedSet.begin(), NewactivatedSet.end());
+    std::sort(activatedSet.begin(), activatedSet.end());
+    std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
+    
+    cout << "\n Old Targets activated = " << activatedSet.size();
+    cout << "\n New Targets activated = " << NewactivatedSet.size();
+    cout << "\n intersection size "<<intersect.size();
+    cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
+    
+    cout<< "\n nodes To remove in submod graph "<<flush;
+    for(int i:subModNodes){
+        cout<< i << " ";
+        subNewGraph->removeOutgoingEdges(i);
+        assert(subNewGraph->graph[i].size()==0);
+        assert(subNewGraph->graphTranspose[i].size()==0);
+    }
+    //again diffusion on old graph after node removal
+    vector<int> SubNewactivatedSet=performDiffusion(subNewGraph,seedSet,NULL);
+    
+    //find intersection of new and old activated set
+    std::vector<int> subIntersect;
+    std::sort(SubNewactivatedSet.begin(), SubNewactivatedSet.end());
+    std::sort(activatedSet.begin(), activatedSet.end());
+    std::set_intersection(activatedSet.begin(), activatedSet.end(),SubNewactivatedSet.begin(), SubNewactivatedSet.end(),std::back_inserter(subIntersect));
+    
+    cout << "\n Old Targets activated = " << activatedSet.size();
+    cout << "\n New Targets activated = " << SubNewactivatedSet.size();
+    cout << "\n intersection size "<<subIntersect.size();
+    cout << "\n Percentage of intersect with old " <<double((subIntersect.size()*100)/activatedSet.size())<<"%";
+    
+    // k++;
     //}
 }
 
@@ -556,7 +576,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         }
         //seed set on best outdegree
         else if(seedSelection.compare("randomOutDegree")==0){
-            seedSet=SeedClass->outdegreeRandom(topBestThreshold);
+            seedSet=SeedClass->outdegreeRandom(topBestThreshold,set<int>(),set<int>());
         }
         
         else if(seedSelection.compare("farthestOutDegree")==0){
@@ -581,7 +601,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
     vector<vector<int>>().swap(graph->rrSets);
     delete graph;
-
+    
     cout<< "\n Creating Influenced Graph "<< flush;
     Graph *influencedGraph = new Graph;
     influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
@@ -591,16 +611,16 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     }
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
-
+    
     
     //get node to be removed
-    set<int> nodesToremove;
+    set<int> modNodesToremove;
     set<int> alreadyinSeed= set<int>();
     
     if(modular.compare("modular")==0){
         cout << "\n ******* Running modular approach ******** \n" <<flush;
         clock_t ModReverseStartTime = clock();
-        nodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular,alreadyinSeed);
+        modNodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular,alreadyinSeed);
         clock_t ModReverseEndTime = clock();
         
         //remove nodes from graph
@@ -610,15 +630,15 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         if(!useIndegree) {
             newGraph->setPropogationProbability(probability);
         }
-        //diffusion on new graph after removing nodes
-        newDiffusion(newGraph,nodesToremove,activatedSet,budget,topBestThreshold);
+        
         double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
         cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime<<flush;
-        set<int>().swap(nodesToremove);
+        
     }
     //else{
     cout << "\n ******* Running Sub Modular approach ******** \n" <<flush;
     clock_t subModReverseStartTime = clock();
+    set<int> subModNodesToremove;
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
@@ -645,7 +665,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
             h++;
         }
         int node = SortedNodeidCounts.at(h).first;
-        nodesToremove.insert(node);
+        subModNodesToremove.insert(node);
         if(seedSet.count(node)==1){
             alreadyinSeed.insert(node);
         }
@@ -664,7 +684,15 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         newGraph->setPropogationProbability(probability);
     }
-    newDiffusion(newGraph,nodesToremove,activatedSet,budget,topBestThreshold);
+    
+    //remove nodes from graph
+    Graph *subNewGraph = new Graph;
+    subNewGraph->readGraph(graphFileName, percentageTargetsFloat);
+    
+    if(!useIndegree) {
+        subNewGraph->setPropogationProbability(probability);
+    }
+    newDiffusion(newGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold);
     
     double totalAlgorithmTime = double(subModReverseEndTime-subModReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse algorithm time in minutes " << totalAlgorithmTime;

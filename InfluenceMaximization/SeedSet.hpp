@@ -26,7 +26,7 @@ class SeedSet {
     
     set<int> getCompletelyRandom();
     
-    set<int> outdegreeRandom(int topBestThreshold);
+    set<int> outdegreeRandom(int topBestThreshold,set<int> modNodes,set<int> subModNodes);
     
     set<int> outdegreeFarthest(int topBestThreshold);
     
