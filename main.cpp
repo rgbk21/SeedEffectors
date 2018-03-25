@@ -155,12 +155,12 @@ set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, se
     int j=0;
     while(j<removeNodes && j< SortedNodeidCounts.size()){
         int nodeid=SortedNodeidCounts.at(i).first;
-        if(nodesToRemove.count(nodeid)==0 && seedSet.count(nodeid)==0){
+        if(nodesToRemove.count(nodeid)==0 ){
             nodesToRemove.insert(nodeid);
             j++;
-            /*if(seedSet.count(nodeid)==1){
+            if(seedSet.count(nodeid)==1){
              alreadyinSeed.insert(nodeid);
-             }*/
+             }
         }
         i++;
     }
@@ -661,9 +661,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
         assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
         int h=0;
-        while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
+        /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
             h++;
-        }
+        }*/
         int node = SortedNodeidCounts.at(h).first;
         subModNodesToremove.insert(node);
         if(seedSet.count(node)==1){
