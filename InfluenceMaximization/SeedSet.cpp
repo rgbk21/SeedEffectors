@@ -43,7 +43,7 @@ set<int> SeedSet::getCompletelyRandom() {
 
 //Randomly selecting from topBestThreshold number of vertices with highest outdegree
 
-set<int> SeedSet:: outdegreeRandom(int topBestThreshold){
+set<int> SeedSet:: outdegreeRandom(int topBestThreshold,set<int> modNodes,set<int> subModNodes){
     //select best top number on the basis of outdegree
     vector<int> bestdegreenodes=getTopOutdegreeNodes(topBestThreshold);
     //randomly select number of budget nodes
@@ -51,7 +51,7 @@ set<int> SeedSet:: outdegreeRandom(int topBestThreshold){
     for(int i=0;i<budget;){
         int randomVertex;
         randomVertex = bestdegreenodes[rand() % m];
-        if(seedSet.count(randomVertex)==0){
+        if(seedSet.count(randomVertex)==0 && modNodes.count(randomVertex)==0 && subModNodes.count(randomVertex)==0 ){
             seedSet.insert(randomVertex);
             i++;
         }
