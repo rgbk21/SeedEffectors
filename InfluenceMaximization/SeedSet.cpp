@@ -28,12 +28,12 @@ bool sortbypairasc(const pair<int,int> &a,const pair<int,int> &b)
 }
 
 //Randomly select from all vertices
-set<int> SeedSet::getCompletelyRandom() {
+set<int> SeedSet::getCompletelyRandom(set<int> modNodes,set<int> subModNodes) {
     int m = graph->getNumberOfVertices();
     for(int i=0;i<budget;){
         int randomVertex;
         randomVertex = rand() % m;
-        if(seedSet.count(randomVertex)==0){
+        if(seedSet.count(randomVertex)==0 && modNodes.count(randomVertex)==0 && subModNodes.count(randomVertex)==0){
             seedSet.insert(randomVertex);
             i++;
         }

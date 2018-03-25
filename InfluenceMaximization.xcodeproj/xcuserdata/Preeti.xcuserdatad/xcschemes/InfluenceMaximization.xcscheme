@@ -74,7 +74,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph wiki-Vote.txt"
+            argument = "--graph email-EuAll.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

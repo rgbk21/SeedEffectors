@@ -424,7 +424,8 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
     //while(k<=10){
     set<int> seedSet=set<int>();
     SeedSet *SeedClass=new SeedSet(newGraph , budget);
-    seedSet=SeedClass->outdegreeRandom(topBestThreshold,modNodes,subModNodes);
+    //seedSet=SeedClass->outdegreeRandom(topBestThreshold,modNodes,subModNodes);
+     seedSet=SeedClass->getCompletelyRandom(modNodes,subModNodes);
     //seedSet=getSeed(newGraph, budget,activatedSet);
     //seedSet=runTim(newGraph,fromFile,nonTargetsFileName,method,budget,nonTargetThreshold, graphFileName, percentageTargets);
     cout<<"\n Selected new SeedSet: " << flush;
@@ -572,7 +573,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         SeedSet *SeedClass=new SeedSet(graph , budget);
         //seed set selected randomly
         if(seedSelection.compare("random")==0){
-            seedSet=SeedClass->getCompletelyRandom();
+            seedSet=SeedClass->getCompletelyRandom(set<int>(),set<int>());
         }
         //seed set on best outdegree
         else if(seedSelection.compare("randomOutDegree")==0){
