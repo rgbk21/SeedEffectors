@@ -16,17 +16,166 @@
 #include <deque>
 #include "TIM-Models/TIMCoverage.hpp"
 #include <assert.h>
+#include <unordered_map>
 
 #include "Graph.hpp"
 using namespace std;
 
 #define NUMBER_OF_SIMULATIONS 20000
 
+/*bool sortmap(const int &a,const int &b)
+{
+    return a > b;
+}
+
+inline void dagSingleDiffusion(set<int> activatedSet, Graph *graph, set<int> seedSet,vector<int> *visitMark, vector<bool> *visited, deque<int> *queue, unordered_map<int,unordered_map<int,int>> aggregateReachableSetInDag, unordered_map<int,int> aggregateSizeOfReachableTargets) {
+    
+    int nVisitMark = 0;
+    
+    for(int seed: seedSet) {
+        if(activatedSet.find(seed)==activatedSet.end()) {
+            if(!(*visited)[seed]) {
+                queue->push_front(seed);
+            }
+        }
+        while(!queue->empty()) {
+            int u = queue->front();
+            (*visited)[u] = true;
+            (*visitMark)[nVisitMark] = u;
+            nVisitMark++;
+            queue->pop_front();
+            activatedSet.insert(u);
+            for (int v : graph->graph[u]) {
+                bool activeEdge = graph->flipCoinOnEdge(u, v);
+                if (activeEdge) {
+                    if(!(*visited)[v])
+                        if (activatedSet.find(v)==activatedSet.end()) {
+                            queue->push_front(v);
+                        }
+                }
+            }
+        }
+        unordered_map<int,int> aggregateReachableNodesForNode=unordered_map<int,int>();
+        int reachableNodesCount = 0;
+        for(int reachableNode:activatedSet){
+            reachableNodesCount++;
+            if (aggregateReachableSetInDag.count(seed)==1) {
+                aggregateReachableNodesForNode = aggregateReachableSetInDag.at(seed);
+            }
+            int currentFrequencyOFReachableNode = 0;
+            if (aggregateReachableNodesForNode.count(reachableNode)==1) {
+                currentFrequencyOFReachableNode = aggregateReachableNodesForNode.at(reachableNode);
+            }
+            currentFrequencyOFReachableNode++;
+            aggregateReachableNodesForNode.insert(reachableNode, currentFrequencyOFReachableNode);
+        }
+        aggregateReachableSetInDag[seed]=aggregateReachableNodesForNode;
+        int aggregateReachableSetSize = 0;
+        if (aggregateSizeOfReachableTargets.count(seed)==1) {
+            aggregateReachableSetSize = aggregateSizeOfReachableTargets.at(seed);
+        }
+        aggregateReachableSetSize += reachableNodesCount;
+        aggregateSizeOfReachableTargets.insert(seed, aggregateReachableSetSize);
+        
+    }
+    
+    for(int i=0; i<nVisitMark; i++) {
+        (*visited)[(*visitMark)[i]] = false;
+    }
+}
+
+
+inline set<int> dagDiffusion(Graph *graph, set<int> seedSet) {
+    vector<int> visitMark;
+    vector<bool> visited;
+    for(int i=0; i<graph->n; i++) {
+        visitMark.push_back(0);
+        visited.push_back(false);
+    }
+    unordered_map<int,unordered_map<int,int>> aggregateReachableSetInDag=unordered_map<int,unordered_map<int,int>>();
+    unordered_map<int,int> aggregateSizeOfReachableTargets=unordered_map<int,int>();
+    
+    set<int> activatedSet = set<int>();
+    deque<int> *diffusionQueue = new deque<int>();
+    for (int i=0; i<NUMBER_OF_SIMULATIONS; i++) {
+        dagSingleDiffusion(activatedSet, graph, seedSet, &visitMark, &visited, diffusionQueue, aggregateReachableSetInDag, aggregateSizeOfReachableTargets);
+        activatedSet.clear();
+    }
+    delete diffusionQueue;
+    set<int> avgReachableSet=set<int>();
+    unordered_map<int, set<int>> result = unordered_map<int, set<int>>();
+    for(unordered_map<int,unordered_map<int,int>>::iterator node = aggregateReachableSetInDag.begin(); node != aggregateReachableSetInDag.end(); ++node) {
+        unordered_map<int,int> aggregateReachableNodeFrequencyMap = node->second;
+        int avgReachableTargetsSize = round((float) aggregateSizeOfReachableTargets.at(node->first) / NUMBER_OF_SIMULATIONS);
+        std :: sort(aggregateReachableNodeFrequencyMap.begin(),aggregateReachableNodeFrequencyMap.end(), sortmap);
+        
+        for(int i=0; i<avgReachableTargetsSize; i++) {
+            avgReachableSet.insert(aggregateReachableNodeFrequencyMap.at(i));
+        }
+    }
+    return avgReachableSet;
+}
+*/
+
+inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string graphFileName) {
+    string influenceFile;
+    vector<int> visitMark;
+    vector<bool> visited;
+    for(int i=0; i<graph->n; i++) {
+        visitMark.push_back(0);
+        visited.push_back(false);
+    }
+    
+    set<int> *activatedSet = new set<int>();
+    deque<int> *queue = new deque<int>();
+    influenceFile=graphFileName;
+    influenceFile+="_influenceFile.txt";
+    ofstream myfile;
+    influenceFile = "graphs/" + influenceFile;
+    myfile.open (influenceFile);
+    myfile <<graph->n<<" "<<graph->m<<"\n";
+    int nVisitMark = 0;
+
+    for(int seed: seedSet) {
+        if(activatedSet->find(seed)==activatedSet->end()) {
+            if(!(visited)[seed]) {
+                queue->push_front(seed);
+            }
+        }
+        while(!queue->empty()) {
+            int u = queue->front();
+            visited[u] = true;
+            visitMark[nVisitMark] = u;
+            nVisitMark++;
+            queue->pop_front();
+            activatedSet->insert(u);
+            for (int v : graph->graph[u]) {
+                bool activeEdge = graph->flipCoinOnEdge(u, v);
+                if (activeEdge) {
+                    if(!visited[v])
+                        if (activatedSet->find(v)==activatedSet->end()) {
+                            queue->push_front(v);
+                            myfile <<u<<" "<<v<<"\n";
+                        }
+                }
+            }
+        }
+    }
+    myfile.close();
+    for(int i=0; i<nVisitMark; i++) {
+        visited[visitMark[i]] = false;
+    }
+    return influenceFile;
+}
+
+
+
+
 inline void singleDiffusion(set<int> *activatedSet, Graph *graph, set<int> *seedSet, set<int> *alreadyActivated, vector<int> *visitMark, vector<bool> *visited, deque<int> *queue) {
     
     int nVisitMark = 0;
     if(alreadyActivated!=NULL) {
-//        activatedSet->insert(alreadyActivated->begin(), alreadyActivated->end());
+        //        activatedSet->insert(alreadyActivated->begin(), alreadyActivated->end());
     }
     for(int seed: *seedSet) {
         if(activatedSet->find(seed)==activatedSet->end()) {
@@ -45,9 +194,9 @@ inline void singleDiffusion(set<int> *activatedSet, Graph *graph, set<int> *seed
                 bool activeEdge = graph->flipCoinOnEdge(u, v);
                 if (activeEdge) {
                     if(!(*visited)[v])
-                    if (activatedSet->find(v)==activatedSet->end()) {
-                        queue->push_front(v);
-                    }
+                        if (activatedSet->find(v)==activatedSet->end()) {
+                            queue->push_front(v);
+                        }
                 }
             }
         }
@@ -57,6 +206,7 @@ inline void singleDiffusion(set<int> *activatedSet, Graph *graph, set<int> *seed
         (*visited)[(*visitMark)[i]] = false;
     }
 }
+
 
 inline vector<int> performDiffusion(Graph *graph, set<int> seedSet, set<int> *alreadyActivated) {
     int activatedFrequency[graph->n];
