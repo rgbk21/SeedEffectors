@@ -74,7 +74,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph email-EuAll.txt"
+            argument = "--graph ca-GrQc-processed.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -82,7 +82,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 20"
+            argument = "--budget 10"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

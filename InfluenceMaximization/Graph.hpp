@@ -55,6 +55,7 @@ public:
     void readGraph(string fileName);
     void readGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
+    vector<int> writeInfluencedGraph(string fileName, float percentage, string influenceFile);
     void readHalfGraph(string fileName, float percentage);
     void readLabels(string fileName);
     void writeLabels();

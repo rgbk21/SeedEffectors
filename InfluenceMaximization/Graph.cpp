@@ -87,6 +87,53 @@ void Graph::readHalfGraph(string fileName, float percentage){
     this->numberOfNonTargets = (int)nonTargets.size();
 }
 
+
+vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string influenceFile) {
+    this->graphName = fileName;
+    this->percentageTargets = percentage;
+    //cout << "\n Reading Reverse targets graph: ";
+    unordered_set<int> activatedSet;
+    ifstream myFile(influenceFile);
+    string s;
+    if(myFile.is_open()) {
+        myFile >> n >> m;
+
+        for(int i =0;i<n;i++) {
+            graph.push_back(vector<int>());
+            visited.push_back(false);
+            inDegree.push_back(0);
+            labels.push_back(false);
+        }
+        
+        int from, to;
+        int maxDegree = 0;
+        while (myFile >> from >> to) {
+            labels[from]=true;
+            graph[from].push_back(to);
+            inDegree[to] = inDegree[to]+1;
+            labels[to]=true;
+            if(inDegree[to] > maxDegree) {
+                maxDegree = inDegree[to];
+            }
+            activatedSet.insert(from);
+            activatedSet.insert(to);
+        }
+        myFile.close();
+    }
+    graphTranspose = constructTranspose(graph);
+    visitMark = vector<int>(n);
+    this->numberOfTargets =(int) activatedSet.size();
+    this->numberOfNonTargets =(int)nonTargets.size();
+    
+    vector<int> activatedVector=vector<int>(activatedSet.size());
+    int k=0;
+    for(int i:activatedSet){
+        activatedVector[k++]=i;
+    }
+    return activatedVector;
+}
+
+
 //********** Function only for the influenced graph ********
 
 void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> activatedSet) {
