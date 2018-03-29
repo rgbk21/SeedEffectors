@@ -70,6 +70,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--newSeedset 1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--modularity modular"
             isEnabled = "YES">
          </CommandLineArgument>
@@ -78,7 +82,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset bestTim"
+            argument = "--seedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

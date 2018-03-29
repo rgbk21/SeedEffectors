@@ -295,47 +295,62 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     
     
     /*for(int i=0;i<n;i++){
-        //NodeinRRsetsWithCounts.push_back(0);
-        associatedSet.push_back(vector<set<int>>(n));
-    }*/
+     //NodeinRRsetsWithCounts.push_back(0);
+     associatedSet.push_back(vector<set<int>>(n));
+     }*/
     
     long totalSize = 0;
-   
+    
     this->rrSets =vector<vector<int>>();
-     while(rrSets.size()<R) {
+    while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
     }
     
     //to do... random RR sets from activated nodes in Influenced graph
-    int t=(int)activatedSet.size();
+    
     if(modular.compare("modular")==0){
         NodeinRRsetsWithCounts=vector<int>(n,0);
-        for(int i=0;i<R;i++) {
-            int randomVertex;
-            randomVertex = activatedSet[rand() % t];
-            generateRandomRRSetwithCountMod(randomVertex, i);
-            totalSize+=rrSets[i].size();
+        if(activatedSet.size()==0){
+            for(int i=0;i<R;i++) {
+                int randomVertex;
+                randomVertex = rand() % n;
+                while(!labels[randomVertex]) {
+                    randomVertex = rand() % n;
+                }
+                generateRandomRRSetwithCountMod(randomVertex, i);
+                totalSize+=rrSets[i].size();
+            }
         }
-    }
-    else{
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
-        for(int i=0;i<R;i++) {
-            int randomVertex;
-            randomVertex = activatedSet[rand() % t];
-            generateRandomRRSetwithCount(randomVertex, i);
-            totalSize+=rrSets[i].size();
+            else{
+                int t=(int)activatedSet.size();
+                for(int i=0;i<R;i++) {
+                    int randomVertex;
+                    randomVertex = activatedSet[rand() % t];
+                    generateRandomRRSetwithCountMod(randomVertex, i);
+                    totalSize+=rrSets[i].size();
+                }
+            }
         }
+        else{
+            pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+            int t=(int)activatedSet.size();
+            for(int i=0;i<R;i++) {
+                int randomVertex;
+                randomVertex = activatedSet[rand() % t];
+                generateRandomRRSetwithCount(randomVertex, i);
+                totalSize+=rrSets[i].size();
+            }
+        }
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        cout <<"\n Generated reverse" << R << " RR sets\n";
+        cout << "Elapsed time " << elapsed_secs;
+        cout<< " \n Time per RR Set is " << elapsed_secs/R;
+        cout<< "\n Total Size is " << totalSize<<flush;
+        //std :: sort(rrSets.begin(),rrSets.end(), sortbydegree);
+        //cout<< "\n max size is "<<rrSets.at(0).size();
+        cout<<"\n Average size is " << (float)totalSize/(float)R;
     }
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout <<"\n Generated reverse" << R << " RR sets\n";
-    cout << "Elapsed time " << elapsed_secs;
-    cout<< " \n Time per RR Set is " << elapsed_secs/R;
-    cout<< "\n Total Size is " << totalSize<<flush;
-    //std :: sort(rrSets.begin(),rrSets.end(), sortbydegree);
-    //cout<< "\n max size is "<<rrSets.at(0).size();
-    cout<<"\n Average size is " << (float)totalSize/(float)R;
-}
 
 //********** Function only for the influenced graph with modular property********
 void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
@@ -618,6 +633,7 @@ vector<int> Graph::oldRRSetGeneration(int randomVertex, int rrSetID) {
 }
 
 void Graph:: removeOutgoingEdges(int vertex){
+    
     labels[vertex]=false;
     vector<int> outgoingNodes=vector<int>();
     outgoingNodes=graph[vertex];

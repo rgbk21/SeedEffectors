@@ -7,6 +7,7 @@
 //
 
 #include "TIMCoverage.hpp"
+
 TIMCoverage::TIMCoverage(vector<vector<int>> *lookupTable) {
     this->lookupTable = lookupTable;
     this->numberOfRRSetsCovered = 0;
@@ -163,10 +164,14 @@ set<pair<int, int>> TIMCoverage::findTopKNodesWithInfluence(int k, vector<vector
 
 set<int> TIMCoverage::findTopKNodes(int k, vector<vector<int>> *rrSets,unordered_set<int> activatedNodes) {
     set<int> topKNodes;
+    vector<int> seedOrder=vector<int>(k,-1);
+    cout<< "\n Order of Submod seed set ";
     for(int i=0; i< k;) {
         int node=findMaxInfluentialNodeAndUpdateModel(rrSets).first;
-        if(activatedNodes.count(node)==1){
+        if(activatedNodes.size()==0 || activatedNodes.count(node)==1){
             topKNodes.insert(node);
+            seedOrder[i]=node;
+            cout<<" "<<node;
             i++;
         }
     }

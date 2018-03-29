@@ -117,6 +117,8 @@ inline set<int> dagDiffusion(Graph *graph, set<int> seedSet) {
 }
 */
 
+
+
 inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string graphFileName) {
     string influenceFile;
     vector<int> visitMark;
@@ -280,6 +282,23 @@ inline pair<pair<int, int>, set<int>> findActivatedSetAndInfluenceUsingDiffusion
         activated.insert(activeNode);
     }
     return make_pair(make_pair(targetsActivated, nonTargetsActivated), activated);
+}
+
+inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> activatedSet){
+    //again diffusion on old graph after node removal
+    vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
+    
+    //find intersection of new and old activated set
+    std::vector<int> intersect;
+    std::sort(NewactivatedSet.begin(), NewactivatedSet.end());
+    std::sort(activatedSet.begin(), activatedSet.end());
+    std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
+    
+    cout << "\n Old Targets activated = " << activatedSet.size();
+    cout << "\n New Targets activated = " << NewactivatedSet.size();
+    cout << "\n intersection size "<<intersect.size();
+    cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
+    
 }
 
 #endif /* Diffusion_hpp */
