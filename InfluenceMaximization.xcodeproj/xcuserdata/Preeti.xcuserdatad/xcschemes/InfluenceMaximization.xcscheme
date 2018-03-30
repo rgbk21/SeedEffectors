@@ -86,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 10"
+            argument = "--budget 20"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

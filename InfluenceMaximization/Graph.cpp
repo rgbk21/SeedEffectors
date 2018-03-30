@@ -50,6 +50,40 @@ bool Graph:: flipCoinOnEdge(int u, int v) {
     return randomNumber==0;
 }
 
+void Graph::readReverseGraph(string fileName, float percentage){
+    this->graphName = fileName;
+    this->percentageTargets = percentage;
+    cout << "\n Reading Reverse Influence graph: ";
+    
+    ifstream myFile("graphs/" + fileName);
+    string s;
+    if(myFile.is_open()) {
+        myFile >> n >> m;
+        for(int i =0;i<n;i++) {
+            graph.push_back(vector<int>());
+            visited.push_back(false);
+            inDegree.push_back(0);
+            labels.push_back(true);
+        }
+
+        int from, to;
+        int maxDegree = 0;
+        while (myFile >> from >> to) {
+            graph[to].push_back(from);
+            inDegree[to] = inDegree[to]+1;
+            if(inDegree[to] > maxDegree) {
+                maxDegree = inDegree[to];
+            }
+        }
+        myFile.close();
+    }
+    
+    graphTranspose = constructTranspose(graph);
+    visitMark = vector<int>(n);
+    this->numberOfTargets = this->getNumberOfVertices();
+    this->numberOfNonTargets = (int)nonTargets.size();
+}
+
 //********** Function for generating half graph ********
 void Graph::readHalfGraph(string fileName, float percentage){
     this->graphName = fileName;
@@ -290,9 +324,7 @@ vector<int>* Graph::getNonTargets() {
 void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,string modular) {
     clock_t begin = clock();
     visitMark = vector<int>(n);
-    coverage=vector<int>(n,0);
     //associatedSet=vector<vector<set<int>>>();
-    
     
     /*for(int i=0;i<n;i++){
      //NodeinRRsetsWithCounts.push_back(0);
@@ -305,8 +337,6 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
     }
-    
-    //to do... random RR sets from activated nodes in Influenced graph
     
     if(modular.compare("modular")==0){
         NodeinRRsetsWithCounts=vector<int>(n,0);
@@ -332,6 +362,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
             }
         }
         else{
+            coverage=vector<int>(n,0);
             pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
             int t=(int)activatedSet.size();
             for(int i=0;i<R;i++) {
@@ -341,14 +372,13 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
                 totalSize+=rrSets[i].size();
             }
         }
+        visitMark.clear();
         clock_t end = clock();
         double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
         cout <<"\n Generated reverse" << R << " RR sets\n";
         cout << "Elapsed time " << elapsed_secs;
         cout<< " \n Time per RR Set is " << elapsed_secs/R;
         cout<< "\n Total Size is " << totalSize<<flush;
-        //std :: sort(rrSets.begin(),rrSets.end(), sortbydegree);
-        //cout<< "\n max size is "<<rrSets.at(0).size();
         cout<<"\n Average size is " << (float)totalSize/(float)R;
     }
 
@@ -440,7 +470,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
-    
+    //creation of associated set matrix
     for(int i=0;i<nodeAS.size();i++){
         if(nodeAS[i].size()>0){
             for(int j:nodeAS[i]){
@@ -474,6 +504,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
 
 
 void Graph::generateRandomRRSets(int R, bool label) {
+    NodeinRRsetsWithCounts=vector<int>(n,0);
     this->rrSets = vector<vector<int>>();
     long totalSize = 0;
     clock_t begin = clock();
@@ -487,8 +518,9 @@ void Graph::generateRandomRRSets(int R, bool label) {
         while(!labels[randomVertex]) {
             randomVertex = rand() % n;
         }
-        if(label)
+        if(label){
             generateRandomRRSet(randomVertex, i);
+        }
         else
             generateRandomRRSetwithCount(randomVertex, i);
         totalSize+=rrSets[i].size();
@@ -533,6 +565,13 @@ vector<int> Graph::generateRandomRRSet(int randomVertex, int rrSetID) {
             }
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
+            // get the count of the node
+            int count=1;
+            if(NodeinRRsetsWithCounts[v]!=0){
+                count=NodeinRRsetsWithCounts[v];
+                count+=1;
+            }
+            NodeinRRsetsWithCounts[v]=count;
         }
     }
     for(int i=0;i<nVisitMark;i++) {
@@ -633,7 +672,7 @@ vector<int> Graph::oldRRSetGeneration(int randomVertex, int rrSetID) {
 }
 
 void Graph:: removeOutgoingEdges(int vertex){
-    
+    inDegree[vertex]=0;
     labels[vertex]=false;
     vector<int> outgoingNodes=vector<int>();
     outgoingNodes=graph[vertex];
@@ -646,7 +685,7 @@ void Graph:: removeOutgoingEdges(int vertex){
                 outgoingEdges.push_back(j);
         }
          graphTranspose[i]=outgoingEdges;
-        
+        inDegree[i]--;
         for(int j:graph[i]){
             if(j!=vertex)
                 incomingEdges.push_back(j);
