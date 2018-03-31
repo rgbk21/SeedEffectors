@@ -57,7 +57,7 @@ public:
     void readReverseGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
     vector<int> writeInfluencedGraph(string fileName, float percentage, string influenceFile);
-    void readHalfGraph(string fileName, float percentage);
+    void readHalfGraph(string fileName, float percentage,int graphCutValue);
     void readLabels(string fileName);
     void writeLabels();
     void setLabels(vector<bool> labels, float percentageTargets);
