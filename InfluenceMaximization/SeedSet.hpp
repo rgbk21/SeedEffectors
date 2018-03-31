@@ -23,8 +23,10 @@ class SeedSet {
     
     public:
     SeedSet(Graph *graph, int budget);
-    
+
     set<int> getCompletelyRandom(set<int> modNodes,set<int> subModNodes);
+    
+    set<int> gethalfRandom(set<int> modNodes,set<int> subModNodes);
     
     set<int> outdegreeRandom(int topBestThreshold,set<int> modNodes,set<int> subModNodes);
     

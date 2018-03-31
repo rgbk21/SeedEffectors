@@ -59,12 +59,10 @@ void Graph::readReverseGraph(string fileName, float percentage){
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
-        for(int i =0;i<n;i++) {
-            graph.push_back(vector<int>());
-            visited.push_back(false);
-            inDegree.push_back(0);
-            labels.push_back(true);
-        }
+        graph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,true);
+        inDegree=vector<int>(n,0);
 
         int from, to;
         int maxDegree = 0;
@@ -85,39 +83,50 @@ void Graph::readReverseGraph(string fileName, float percentage){
 }
 
 //********** Function for generating half graph ********
-void Graph::readHalfGraph(string fileName, float percentage){
+void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue){
     this->graphName = fileName;
     this->percentageTargets = percentage;
-    cout << "\n Generating half graph: ";
-    
+    cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
     ifstream myFile("graphs/" + fileName);
+    
+    vector<vector<int>> oldGraph;
+    
+    
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
-        n=n/2;
-        for(int i =0;i<n;i++) {
-            graph.push_back(vector<int>());
-            visited.push_back(false);
-            inDegree.push_back(0);
-            labels.push_back(true);
-        }
+        graph=vector<vector<int>>(n,vector<int>());
+        oldGraph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,false);
+        inDegree=vector<int>(n,0);
+        
         int from, to;
         int maxDegree = 0;
         while (myFile >> from >> to) {
-            if(from< n && to < n){
-                graph[from].push_back(to);
-                inDegree[to] = inDegree[to]+1;
-                if(inDegree[to] > maxDegree) {
-                    maxDegree = inDegree[to];
+            oldGraph[from].push_back(to);
+        }
+        
+        int X=n-(n*(float)graphCutValue/100);
+        for(int i=0;i<X;i++){
+            int randomNum=rand()%n;
+            labels[randomNum]=true;
+            graph[randomNum]=oldGraph[randomNum];
+            for(int j:graph[randomNum]){
+                inDegree[j] = inDegree[j]+1;
+                if(inDegree[j] > maxDegree) {
+                    maxDegree = inDegree[j];
                 }
+                labels[j]=true;
             }
         }
+        vector<vector<int>>().swap(oldGraph);
         myFile.close();
     }
     
     graphTranspose = constructTranspose(graph);
     visitMark = vector<int>(n);
-    this->numberOfTargets = this->getNumberOfVertices();
+    this->numberOfTargets = n;
     this->numberOfNonTargets = (int)nonTargets.size();
 }
 
@@ -131,13 +140,10 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
-
-        for(int i =0;i<n;i++) {
-            graph.push_back(vector<int>());
-            visited.push_back(false);
-            inDegree.push_back(0);
-            labels.push_back(false);
-        }
+        graph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,false);
+        inDegree=vector<int>(n,0);
         
         int from, to;
         int maxDegree = 0;
@@ -169,7 +175,6 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
 
 
 //********** Function only for the influenced graph ********
-
 void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> activatedSet) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
@@ -179,14 +184,11 @@ void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> a
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
-        
-        //cout<<"value of n in graph "<<n<<flush;
-        for(int i =0;i<n;i++) {
-            graph.push_back(vector<int>());
-            visited.push_back(false);
-            inDegree.push_back(0);
-            labels.push_back(false);
-        }
+        graph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,false);
+        inDegree=vector<int>(n,0);
+
         for(int i:activatedSet) {
             labels[i]=true;
         }
@@ -218,12 +220,11 @@ void Graph::readGraph(string fileName, float percentage) {
     string s;
     if(myFile.is_open()) {
         myFile >> n >> m;
-        for(int i =0;i<n;i++) {
-            graph.push_back(vector<int>());
-            visited.push_back(false);
-            inDegree.push_back(0);
-            labels.push_back(true);
-        }
+        graph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,true);
+        inDegree=vector<int>(n,0);
+
         int from, to;
         int maxDegree = 0;
         while (myFile >> from >> to) {
@@ -240,14 +241,6 @@ void Graph::readGraph(string fileName, float percentage) {
     visitMark = vector<int>(n);
     this->numberOfTargets = this->getNumberOfVertices();
     this->numberOfNonTargets = (int)nonTargets.size();
-    
-    /*labels = vector<bool>(n);
-    stringstream stream;
-    stream << fixed << setprecision(2) << percentage;
-    s = stream.str();
-    cout << "\n Reading graph: " << fileName;
-    cout << "\n Reading labels file name: " << "graphs/" + fileName + "_" + s + "_labels.txt";
-    readLabels("graphs/" + fileName + "_" + s + "_labels.txt");*/
 }
 
 
@@ -384,6 +377,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
 
 //********** Function only for the influenced graph with modular property********
 void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
+    NodeinRRsetsWithCounts[randomVertex]++;
     q.clear();
     rrSets[rrSetID].push_back(randomVertex);
     q.push_back(randomVertex);
@@ -409,13 +403,7 @@ void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
             
-            // get the count of the node
-            int count=1;
-            if(NodeinRRsetsWithCounts[v]!=0){
-                count=NodeinRRsetsWithCounts[v];
-                count+=1;
-            }
-            NodeinRRsetsWithCounts[v]=count;
+            NodeinRRsetsWithCounts[v]++;
         }
     }
     for(int i=0;i<nVisitMark;i++) {
@@ -504,7 +492,6 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
 
 
 void Graph::generateRandomRRSets(int R, bool label) {
-    NodeinRRsetsWithCounts=vector<int>(n,0);
     this->rrSets = vector<vector<int>>();
     long totalSize = 0;
     clock_t begin = clock();
@@ -554,6 +541,8 @@ vector<int> Graph::generateRandomRRSet(int randomVertex, int rrSetID) {
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
+            if(!labels[v])
+                continue;
             if(!this->flipCoinOnEdge(v, expand))
                 continue;
             if(visited[v])
@@ -565,13 +554,6 @@ vector<int> Graph::generateRandomRRSet(int randomVertex, int rrSetID) {
             }
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
-            // get the count of the node
-            int count=1;
-            if(NodeinRRsetsWithCounts[v]!=0){
-                count=NodeinRRsetsWithCounts[v];
-                count+=1;
-            }
-            NodeinRRsetsWithCounts[v]=count;
         }
     }
     for(int i=0;i<nVisitMark;i++) {
@@ -726,65 +708,12 @@ void Graph:: removeNodeFromRRset(int vertex){
                         it->second.erase(RRi);
                         coverage[j]--;
                     }
-                   /* set<int> temp = pairAssociatedSet[j].find(RRpair.first)->second;
-                    if(temp.size()>0 && temp.count(RRi)==1){
-                        temp.erase(RRi);
-                        coverage[j]--;
-                        pairAssociatedSet[j].at(RRpair.first)=temp;
-                    }  */
                 }
             }
         }
     }
     pairAssociatedSet[vertex].clear();
     coverage[vertex]=0;
-   
-    /*vector<vector<set<int>>> newassociatedSet= vector<vector<set<int>>>(associatedSet);
-    for(int i=0;i<n;i++){
-        set<int> RRid3 = associatedSet[vertex][i];
-        if(RRid3.size()>0){
-            for(int j=0;j<n;j++){
-                set<int> RRid4=associatedSet[j][i];
-                if(RRid4.size()>0){
-                    for(int r:RRid3){
-                        if(RRid4.count(r)==1){
-                            RRid4.erase(r);
-                            //coverage[j]--;
-                        }
-                    }
-                    associatedSet[j][i]=RRid4;
-                }
-            }
-            associatedSet[vertex][i].clear();
-        }
-    }
-    //coverage[vertex]=0;
-    */
-    
-    /*for(int i=0;i<n;i++){
-        set<int> RRid1 = associatedSet[vertex][i];
-        if(RRid1.size()>0){
-            for(int r:RRid1){
-                for(int j:rrSets[r]){
-                set<int> RRid2=associatedSet[j][i];
-                    if(RRid2.count(r)==1){
-                        RRid2.erase(r);
-                        coverage[j]--;
-                    }
-                   associatedSet[j][i]=RRid2;
-                }
-            }
-        }
-        associatedSet[vertex][i].clear();
-    }
-    coverage[vertex]=0;*/
-    
-    /*for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(associatedSet[j][i]!=newassociatedSet[j][i])
-                cout<<"false"<<associatedSet[j][i].size()<<" "<<newassociatedSet[j][i].size();
-        }
-    }*/
 }
 
 
