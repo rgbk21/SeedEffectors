@@ -441,6 +441,8 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                  std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::back_inserter(intersect));
                 nodeAS[v]=intersect;
                 nodeAS[v].push_back(v);
+                nodeAS[expand]=intersect;
+                nodeAS[expand].push_back(expand);
                 continue;
             }
             

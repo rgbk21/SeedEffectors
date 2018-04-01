@@ -25,6 +25,7 @@
 #include "InfluenceMaximization/BaselineGreedy.hpp"
 #include "InfluenceMaximization/BaselineGreedyTIM.hpp"
 #include <stdio.h>
+
 #include <iomanip>
 #include <ctime>
 #include <sstream>
@@ -502,10 +503,10 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         influencedGraph->setPropogationProbability(probability);
     }
-    
+
+
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
-    
     
     //get node to be removed
     set<int> modNodesToremove;
@@ -527,6 +528,10 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         subInfluencedGraph->setPropogationProbability(probability);
     }
+    if( std::remove(influenceFile.c_str( )) != 0 )
+        perror( "Error deleting file" );
+    else
+        puts( "File successfully deleted" );
     set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet);
     delete subInfluencedGraph;
 
