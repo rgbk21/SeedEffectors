@@ -70,6 +70,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--Diffusion 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--newSeedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
@@ -82,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 1"
+            argument = "--seedset 0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -99,7 +103,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--probability .01"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--nodesRemove 40"

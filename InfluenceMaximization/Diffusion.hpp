@@ -119,7 +119,7 @@ inline set<int> dagDiffusion(Graph *graph, set<int> seedSet) {
 
 
 
-inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string graphFileName) {
+inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string graphFileName,int budget,float probability) {
     string influenceFile;
     vector<int> visitMark;
     vector<bool> visited;
@@ -132,9 +132,12 @@ inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string gra
     deque<int> *queue = new deque<int>();
     influenceFile=graphFileName;
     influenceFile+="_influenceFile.txt";
+    influenceFile+="_" + to_string(budget);
+    influenceFile+="_" + to_string(probability);
     ofstream myfile;
     influenceFile = "graphs/" + influenceFile;
     myfile.open (influenceFile);
+
     myfile <<graph->n<<" "<<graph->m<<"\n";
     int nVisitMark = 0;
 
@@ -162,6 +165,10 @@ inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string gra
                 }
             }
         }
+    }
+    myfile <<-1<<" "<<-1<<"\n";
+    for(int i:seedSet){
+        myfile<<i<<" ";
     }
     myfile.close();
     for(int i=0; i<nVisitMark; i++) {
