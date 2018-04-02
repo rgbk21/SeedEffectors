@@ -353,6 +353,13 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         removeNodes--;
     }
     //}
+    vector<vector<int>>().swap(influencedGraph->rrSets);
+    for(int i:subModNodesToremove){
+        influencedGraph->removeOutgoingEdges(i);
+        assert(influencedGraph->graph[i].size()==0);
+        assert(influencedGraph->graphTranspose[i].size()==0);
+    }
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular");
     int subModStrength=0;
     for(int i=0;i<influencedGraph->coverage.size();i++){
         subModStrength+=influencedGraph->coverage[i];
