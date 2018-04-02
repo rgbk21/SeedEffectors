@@ -254,7 +254,7 @@ set<int> getSeed(Graph *graph,int budget,vector<int> activatedSet,set<int>modNod
     return seedSet;
 }
 
-void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>subModNodes,vector<int> activatedSet,int budget,int topBestThreshold,int newSeed,string graphFileName, float percentageTargetsFloat,bool useIndegree, float probability){
+void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>subModNodes,vector<int> activatedSet,int budget,int topBestThreshold,int newSeed,string graphFileName, float percentageTargetsFloat,bool useIndegree, float probability, string influenceFile){
     
     cout<< "\n nodes To remove in mod graph ";
     for(int i:modNodes){
@@ -283,7 +283,8 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
                 break;
             case 1:// best first Half Graph
                 graph = new Graph;
-                graph->readHalfGraph(graphFileName, percentageTargetsFloat,8*k);
+                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,influenceFile,8*k);
+                //graph->readHalfGraph(graphFileName, percentageTargetsFloat,8*k);
                 if(!useIndegree) {
                     graph->setPropogationProbability(probability);
                 }
@@ -535,29 +536,43 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         subInfluencedGraph->setPropogationProbability(probability);
     }
-    if( std::remove(influenceFile.c_str( )) != 0 )
+    /*if( std::remove(influenceFile.c_str( )) != 0 )
         perror( "Error deleting file" );
     else
-        puts( "File successfully deleted" );
+        puts( "File successfully deleted" );*/
     set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet);
     delete subInfluencedGraph;
 
     
-    //remove modular nodes from original graph
+    /*//remove modular nodes from original graph
     Graph *modNewGraph = new Graph;
     modNewGraph->readGraph(graphFileName, percentageTargetsFloat);
     if(!useIndegree) {
         modNewGraph->setPropogationProbability(probability);
+    }*/
+    
+    Graph *modNewGraph = new Graph;
+    //influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
+    modNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    if(!useIndegree) {
+        modNewGraph->setPropogationProbability(probability);
     }
     
+    Graph *subNewGraph = new Graph;
+    //influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
+    subNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    if(!useIndegree) {
+        subNewGraph->setPropogationProbability(probability);
+    }
+    /*
     //remove submodular nodes from original graph
     Graph *subNewGraph = new Graph;
     subNewGraph->readGraph(graphFileName, percentageTargetsFloat);
     if(!useIndegree) {
         subNewGraph->setPropogationProbability(probability);
-    }
+    }*/
     
-    newDiffusion(modNewGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability);
+    newDiffusion(modNewGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability,influenceFile);
     
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
