@@ -86,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 10"
+            argument = "--budget 40"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -102,7 +102,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 10"
+            argument = "--nodesRemove 40"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -130,6 +130,53 @@ void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue){
     this->numberOfNonTargets = (int)nonTargets.size();
 }
 
+//********** Function for generating half graph ********
+void Graph::readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue){
+    this->graphName = fileName;
+    this->percentageTargets = percentage;
+    cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
+    ifstream myFile(influenceFile);
+    vector<vector<int>> oldGraph;
+    
+    string s;
+    if(myFile.is_open()) {
+        myFile >> n >> m;
+        graph=vector<vector<int>>(n,vector<int>());
+        oldGraph=vector<vector<int>>(n,vector<int>());
+        visited=vector<bool>(n,false);
+        labels=vector<bool>(n,true);
+        inDegree=vector<int>(n,0);
+        
+        int from, to;
+        int maxDegree = 0;
+        while (myFile >> from >> to) {
+            oldGraph[from].push_back(to);
+        }
+        
+        int X=n-(n*(float)graphCutValue/100);
+        for(int i=0;i<X;i++){
+            int randomNum=rand()%n;
+            labels[randomNum]=true;
+            graph[randomNum]=oldGraph[randomNum];
+            for(int j:graph[randomNum]){
+                inDegree[j] = inDegree[j]+1;
+                if(inDegree[j] > maxDegree) {
+                    maxDegree = inDegree[j];
+                }
+                labels[j]=true;
+            }
+        }
+        vector<vector<int>>().swap(oldGraph);
+        myFile.close();
+    }
+    
+    graphTranspose = constructTranspose(graph);
+    visitMark = vector<int>(n);
+    this->numberOfTargets = n;
+    this->numberOfNonTargets = (int)nonTargets.size();
+}
+
+
 
 vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string influenceFile) {
     this->graphName = fileName;
