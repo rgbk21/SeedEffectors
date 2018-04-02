@@ -178,7 +178,7 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string in
 
 
 
-vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string influenceFile) {
+vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string influenceFile, vector<int> *seedNodes) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
     //cout << "\n Reading Reverse targets graph: ";
@@ -194,16 +194,27 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
         
         int from, to;
         int maxDegree = 0;
+
         while (myFile >> from >> to) {
-            labels[from]=true;
-            graph[from].push_back(to);
-            inDegree[to] = inDegree[to]+1;
-            labels[to]=true;
-            if(inDegree[to] > maxDegree) {
-                maxDegree = inDegree[to];
+            if(from ==-1 && to==-1){
+                break;
             }
-            activatedSet.insert(from);
-            activatedSet.insert(to);
+                labels[from]=true;
+                graph[from].push_back(to);
+                inDegree[to] = inDegree[to]+1;
+                labels[to]=true;
+                if(inDegree[to] > maxDegree) {
+                    maxDegree = inDegree[to];
+                }
+                activatedSet.insert(from);
+                activatedSet.insert(to);
+        }
+        int str;
+        int i=0;
+        while (myFile>>str) {
+            (*seedNodes)[i]=str;
+            i++;
+            //seedNodes->insert(str);
         }
         myFile.close();
     }
@@ -392,10 +403,12 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
             }
         }
             else{
+                vector<pair<int,int>> checkRR;
                 int t=(int)activatedSet.size();
                 for(int i=0;i<R;i++) {
                     int randomVertex;
                     randomVertex = activatedSet[rand() % t];
+                    
                     generateRandomRRSetwithCountMod(randomVertex, i);
                     totalSize+=rrSets[i].size();
                 }

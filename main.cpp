@@ -128,66 +128,6 @@ void loadGraphSizeToResults(Graph *graph) {
     IMResults::getInstance().setNumberOfEdges(graph->getNumberOfEdges());
 }
 
-set<int> removeVertices(Graph *influencedGraph,Graph *graph, int removeNodes, set<int> seedSet, vector<int> activatedSet, string modular){
-    //Random RR sets
-    set<int> alreadyinSeed= set<int>();
-    int n = (int)activatedSet.size();
-    double epsilon = (double)EPSILON;
-    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, modular);
-    cout << "\n RRsets done " << flush;
-    int modStrength=0;
-    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
-        modStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
-    }
-    cout<<"\n \n Initial Modular Strength is "<<modStrength;
-    //clearing the memory
-    vector<vector<int>>().swap(influencedGraph->rrSets);
-    
-    //Find nodes to be removed
-    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
-        pair<int,int> node= pair<int,int>();
-        node.first=i;
-        node.second=influencedGraph->NodeinRRsetsWithCounts[i];
-        SortedNodeidCounts.push_back(node);
-    }
-    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
-    
-    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
-    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-    
-    set<int> nodesToRemove;
-    int i=0;
-    int j=0;
-    while(j<removeNodes && j< SortedNodeidCounts.size()){
-        int nodeid=SortedNodeidCounts.at(i).first;
-        if(nodesToRemove.count(nodeid)==0 /*&& seedSet.count(nodeid)==0*/){
-            nodesToRemove.insert(nodeid);
-            j++;
-            if(seedSet.count(nodeid)==1){
-                alreadyinSeed.insert(nodeid);
-            }
-        }
-        i++;
-    }
-    vector<pair<int,int>>().swap(SortedNodeidCounts);
-    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size()<<flush;
-    for(int i:nodesToRemove){
-        influencedGraph->removeOutgoingEdges(i);
-        assert(influencedGraph->graph[i].size()==0);
-        assert(influencedGraph->graphTranspose[i].size()==0);
-    }
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular");
-    modStrength=0;
-    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
-        modStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
-    }
-    cout<<"\n \n After removing Modular Strength is "<<modStrength;
-    vector<vector<int>>().swap(influencedGraph->rrSets);
-    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
-    return  nodesToRemove;
-}
 
 void checkMod(string graphFileName, float percentageTargetsFloat, Graph* graph,set<int> seedSet,int budget,bool useIndegree, float probability){
     //find seed set through modular approach
@@ -254,6 +194,73 @@ set<int> getSeed(Graph *graph,int budget,vector<int> activatedSet,set<int>modNod
     return seedSet;
 }
 
+
+set<int> removeVertices(Graph *influencedGraph, int removeNodes, set<int> seedSet, vector<int> activatedSet, string modular){
+    //Random RR sets
+    set<int> alreadyinSeed= set<int>();
+    int n = (int)activatedSet.size();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, modular);
+    cout << "\n RRsets done " << flush;
+    int modStrength=0;
+    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
+        modStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
+    }
+    cout<<"\n \n Initial Modular Strength is "<<modStrength;
+    //clearing the memory
+    vector<vector<int>>().swap(influencedGraph->rrSets);
+    
+    //Find nodes to be removed
+    vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
+        pair<int,int> node= pair<int,int>();
+        node.first=i;
+        node.second=influencedGraph->NodeinRRsetsWithCounts[i];
+        SortedNodeidCounts.push_back(node);
+    }
+    
+    
+    std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+    assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    
+    set<int> nodesToRemove;
+    int i=0;
+    int j=0;
+    while(j<removeNodes && j< SortedNodeidCounts.size()){
+        int nodeid=SortedNodeidCounts.at(i).first;
+        if(nodesToRemove.count(nodeid)==0 /*&& seedSet.count(nodeid)==0*/){
+            nodesToRemove.insert(nodeid);
+            j++;
+            if(seedSet.count(nodeid)==1){
+                alreadyinSeed.insert(nodeid);
+            }
+        }
+        i++;
+    }
+    vector<pair<int,int>>().swap(SortedNodeidCounts);
+    cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size()<<flush;
+    for(int i:nodesToRemove){
+        influencedGraph->removeOutgoingEdges(i);
+        assert(influencedGraph->graph[i].size()==0);
+        assert(influencedGraph->graphTranspose[i].size()==0);
+    }
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular");
+    modStrength=0;
+    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
+        modStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
+    }
+    cout<<"\n \n After removing Modular Strength is "<<modStrength;
+    vector<vector<int>>().swap(influencedGraph->rrSets);
+    vector<int>().swap(influencedGraph->NodeinRRsetsWithCounts);
+    return  nodesToRemove;
+}
+
+
+
 void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>subModNodes,vector<int> activatedSet,int budget,int topBestThreshold,int newSeed,string graphFileName, float percentageTargetsFloat,bool useIndegree, float probability, string influenceFile){
     
     cout<< "\n nodes To remove in mod graph ";
@@ -275,7 +282,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
     set<int> seedSet=set<int>();
     Graph *graph;
-    int k=1;
+    int k=5;
     while(k<=10){
         switch(1){
             case 0: //bestTim
@@ -353,17 +360,17 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
-    //}
+    
     vector<vector<int>>().swap(influencedGraph->rrSets);
     for(int i:subModNodesToremove){
         influencedGraph->removeOutgoingEdges(i);
         assert(influencedGraph->graph[i].size()==0);
         assert(influencedGraph->graphTranspose[i].size()==0);
     }
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular");
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"modular");
     int subModStrength=0;
-    for(int i=0;i<influencedGraph->coverage.size();i++){
-        subModStrength+=influencedGraph->coverage[i];
+    for(int i=0;i<influencedGraph->NodeinRRsetsWithCounts.size();i++){
+        subModStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
     }
     
     clock_t subModReverseEndTime = clock();
@@ -393,6 +400,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     int topBestThreshold=100;
     int initialSeed;
     int newSeed;
+    int diffusion;
     
     budget = result["budget"].as<int>();
     nonTargetThreshold = result["threshold"].as<int>();
@@ -402,6 +410,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     initialSeed=result["seedset"].as<int>();
     modular=result["modularity"].as<std::string>();
     newSeed=result["newSeedset"].as<int>();
+    diffusion=result["Diffusion"].as<int>();
     
     loadResultsFileFrom(result);
     
@@ -453,66 +462,83 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     //Generate graph
     Graph *graph = new Graph;
-    
-    if(initialSeed==2){
-        graph->readHalfGraph(graphFileName, percentageTargetsFloat,50);
-    }
-    else{
-        graph->readGraph(graphFileName, percentageTargetsFloat);
-    }
-    if(!useIndegree) {
-        graph->setPropogationProbability(probability);
-    }
-    
-    set<int> seedSet;
-    SeedSet *SeedClass = nullptr;
-    switch(initialSeed){
-        case 3: //random
-            SeedClass=new SeedSet(graph , budget);
-            seedSet=SeedClass->getCompletelyRandom(set<int>(),set<int>());
-            break;
-        case 4: //random from OutDegree threshold nodes
-            SeedClass=new SeedSet(graph , budget);
-            seedSet=SeedClass->outdegreeRandom(topBestThreshold,set<int>(),set<int>());
-            break;
-        case 5: //farthest from OutDegree threshold nodes
-            SeedClass=new SeedSet(graph , budget);
-            seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
-            break;
-        default: //bestTim for  case1, besthalfGRaph for case 2
-            seedSet=getSeed(graph,budget,vector<int>(),set<int>(),set<int>());
-            //checkMod(graphFileName,percentageTargetsFloat,graph,seedSet,budget,useIndegree,probability);
-            if(initialSeed==2){
-                graph->readGraph(graphFileName, percentageTargetsFloat);
-                if(!useIndegree) {
-                    graph->setPropogationProbability(probability);
-                }
-            }
-            break;
-    }
-    delete SeedClass;
-    
-    cout<<"\n Selected original SeedSet: " << flush;
-    for(auto item:seedSet)
-        cout<< item << " ";
+    int half_seed=initialSeed;
+     if(initialSeed==2){
+     graph->readHalfGraph(graphFileName, percentageTargetsFloat,50);
+         initialSeed=1;
+     }
+     else{
+     graph->readGraph(graphFileName, percentageTargetsFloat);
+     }
+     if(!useIndegree) {
+     graph->setPropogationProbability(probability);
+     }
+     
+     set<int> seedSet;
+     SeedSet *SeedClass = nullptr;
+     switch(initialSeed){
+     case 1://bestTim for  case1, besthalfGRaph for case 2
+        seedSet=getSeed(graph,budget,vector<int>(),set<int>(),set<int>());
+         //checkMod(graphFileName,percentageTargetsFloat,graph,seedSet,budget,useIndegree,probability);
+         if(initialSeed==2){
+             graph->readGraph(graphFileName, percentageTargetsFloat);
+             if(!useIndegree) {
+                 graph->setPropogationProbability(probability);
+             }
+         }
+         break;
+     case 3: //random
+     SeedClass=new SeedSet(graph , budget);
+     seedSet=SeedClass->getCompletelyRandom(set<int>(),set<int>());
+     break;
+     case 4: //random from OutDegree threshold nodes
+     SeedClass=new SeedSet(graph , budget);
+     seedSet=SeedClass->outdegreeRandom(topBestThreshold,set<int>(),set<int>());
+     break;
+     case 5: //farthest from OutDegree threshold nodes
+     SeedClass=new SeedSet(graph , budget);
+     seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
+     break;
+         default: break;
+     }
+     delete SeedClass;
     
     //Start Diffusion
     cout<< "\n Diffusion on graph started"<< flush;
-    string influenceFile=singleDiffusionInfluence(graph, seedSet, graphFileName);
-    //vector<int> activatedSet=performDiffusion(graph,seedSet,NULL);
-    //set<int> active=dagDiffusion(graph,seedSet);
-    vector<vector<int>>().swap(graph->rrSets);
-    delete graph;
+    vector<int> activatedSet;
+    string influenceFile;
     
+    switch(diffusion){
+        case 1:activatedSet=performDiffusion(graph,seedSet,NULL);
+            break;
+        case 2:influenceFile=singleDiffusionInfluence(graph, seedSet, graphFileName,budget, probability);
+            vector<vector<int>>().swap(graph->rrSets);
+            break;
+        /*case 3:set<int> active=dagDiffusion(graph,seedSet);
+            break;*/
+        default: influenceFile="graphs/"+graphFileName+"_influenceFile.txt"+"_"+to_string(budget)+"_"+to_string(probability);
+            break;
+    }
+
+    
+     delete graph;
+
     cout<< "\n Creating Influenced Graph "<< flush;
     Graph *influencedGraph = new Graph;
     //influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
-    vector<int> activatedSet=influencedGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    vector<int> *seedNodes= new vector<int>(budget);
+    activatedSet=influencedGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile,seedNodes);
     if(!useIndegree) {
         influencedGraph->setPropogationProbability(probability);
     }
 
-
+    for(int i: *seedNodes){
+        seedSet.insert(i);
+    }
+    cout<<"\n Selected original SeedSet: " << flush;
+    for(auto item:seedSet)
+        cout<< item << " ";
+    
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
     
@@ -522,7 +548,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         cout << "\n ******* Running modular approach ******** \n" <<flush;
         clock_t ModReverseStartTime = clock();
         
-        modNodesToremove= removeVertices(influencedGraph,graph, removeNodes, seedSet, activatedSet,modular);
+        modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,modular);
         
         clock_t ModReverseEndTime = clock();
         double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
@@ -532,204 +558,35 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     //else{
     cout << "\n ******* Running Sub Modular approach ******** \n" <<flush;
     Graph *subInfluencedGraph = new Graph;
-    vector<int> SubactivatedSet=subInfluencedGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    vector<int> SubactivatedSet=subInfluencedGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile,seedNodes);
     if(!useIndegree) {
         subInfluencedGraph->setPropogationProbability(probability);
     }
-    /*if( std::remove(influenceFile.c_str( )) != 0 )
-        perror( "Error deleting file" );
-    else
-        puts( "File successfully deleted" );*/
+    
     set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet);
     delete subInfluencedGraph;
-
-    
-    /*//remove modular nodes from original graph
-    Graph *modNewGraph = new Graph;
-    modNewGraph->readGraph(graphFileName, percentageTargetsFloat);
-    if(!useIndegree) {
-        modNewGraph->setPropogationProbability(probability);
-    }*/
     
     Graph *modNewGraph = new Graph;
-    //influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
-    modNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    modNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile,seedNodes);
     if(!useIndegree) {
         modNewGraph->setPropogationProbability(probability);
     }
     
     Graph *subNewGraph = new Graph;
-    //influencedGraph->readInfluencedGraph(graphFileName, percentageTargetsFloat,activatedSet);
-    subNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile);
+    subNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile,seedNodes);
     if(!useIndegree) {
         subNewGraph->setPropogationProbability(probability);
-    }
-    /*
-    //remove submodular nodes from original graph
-    Graph *subNewGraph = new Graph;
-    subNewGraph->readGraph(graphFileName, percentageTargetsFloat);
-    if(!useIndegree) {
-        subNewGraph->setPropogationProbability(probability);
-    }*/
-    
-    newDiffusion(modNewGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability,influenceFile);
+    }newDiffusion(modNewGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability,influenceFile);
     
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
     cout << "\n Elapsed time in minutes " << totalExecutionTime;
+    /*if( std::remove(influenceFile.c_str( )) != 0 )
+     perror( "Error deleting file" );
+     else
+     puts( "File successfully deleted" );*/
 }
 
-
-string constructResultFileName(string graphFileName, int budget, int nonTargetThreshold, int percentageTargets, ApproximationSetting setting) {
-    string resultFileName = "results/" + graphFileName;
-    resultFileName+="_" + to_string(budget);
-    resultFileName+="_" + to_string(nonTargetThreshold);
-    resultFileName+="_" + to_string(percentageTargets);
-    resultFileName+="_" + to_string(rand() % 1000000);
-    resultFileName+="_" + to_string(setting);
-    resultFileName+=".json";
-    return resultFileName;
-}
-
-void executeDifferenceAlgorithms(cxxopts::ParseResult result) {
-    cout << "\n Executing difference" << flush;
-    int budget = result["budget"].as<int>();
-    string graphFileName = result["graph"].as<std::string>();
-    int percentageTargets = result["percentage"].as<int>();
-    float percentageTargetsFloat = (float)percentageTargets/(float)100;
-    ApproximationSetting setting = static_cast<ApproximationSetting>(result["approximation"].as<int>());
-    bool extendPermutation = false;
-    if(result.count("extend")>0) {
-        extendPermutation = result["extend"].as<bool>();
-    }
-    cout << "\n Conducting experiments for:\n";
-    cout <<" Graph: " << graphFileName;
-    cout << "\t Budget: " << budget;
-    cout << "\t Percentage:  " << percentageTargets;
-    cout << "\t Approximation setting: " << setting;
-    cout << "\t Extend: " << extendPermutation;
-    cout << flush;
-    
-    Graph *graph = new Graph;
-    graph->readGraph(graphFileName, percentageTargetsFloat);
-    //    Begin f-g
-    clock_t differenceStartTime = clock();
-    
-    
-    testApprox(graph, budget, setting, extendPermutation);
-    clock_t differenceEndTime = clock();
-    double differenceTimeTaken = double(differenceEndTime - differenceStartTime) / CLOCKS_PER_SEC;
-    IMResults::getInstance().setApproximationTime(differenceTimeTaken);
-    IMResults::getInstance().setApproximationSetting(setting);
-    IMResults::getInstance().setExtendingPermutation(extendPermutation);
-    // Setting 1000 as NT threshold. Actually not applicable. TODO: do this better.
-    string resultFile = constructResultFileName(graphFileName, budget, 1000, percentageTargets, setting);
-    IMResults::getInstance().writeToFile(resultFile);
-}
-
-void executeTIMOnLabelledGraph(cxxopts::ParseResult result) {
-    int budget = result["budget"].as<int>();
-    string graphFileName = result["graph"].as<std::string>();
-    int percentageTargets = result["percentage"].as<int>();
-    float percentageTargetsFloat = (float)percentageTargets/(float)100;
-    Graph *unlabelledGraph = new Graph;
-    unlabelledGraph->readGraph(graphFileName, 1.0f);
-    int n = unlabelledGraph->n;
-    double epsilon = (double)EPSILON;
-    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
-    //    R = 23648871;
-    unlabelledGraph->generateRandomRRSets(R, true);
-    vector<vector<int>>* rrSets = unlabelledGraph->getRandomRRSets();
-    
-    vector<vector<int>> lookupTable;
-    TIMCoverage *timCoverage = new TIMCoverage(&lookupTable);
-    timCoverage->initializeLookupTable(rrSets, n);
-    timCoverage->initializeDataStructures(R, n);
-    timCoverage->offsetCoverage(0, -10);
-    // 0 should not be the top
-    set<int> topNodes = timCoverage->findTopKNodes(budget, rrSets,unordered_set<int>(),set<int>(),set<int>());
-    delete timCoverage;
-    
-    Graph *labelledGraph = new Graph;
-    labelledGraph->readGraph(graphFileName, percentageTargetsFloat);
-    pair<int, int> influence = findInfluenceUsingDiffusion(labelledGraph, topNodes);
-    int targetsActivated = influence.first;
-    int nonTargetsActivated = influence.second;
-    
-    cout << "\n Targets activated = " << targetsActivated;
-    cout << "\n Non targets activated = " << nonTargetsActivated;
-    IMResults::getInstance().setExpectedTargets(influence);
-    string resultFile = constructResultFileName(graphFileName, budget, 1000, percentageTargets, setting1);
-    IMResults::getInstance().writeToFile(resultFile);
-}
-
-void executeBaselineGreedy(cxxopts::ParseResult result) {
-    cout << "\n Executing baseline greedy" << flush;
-    int budget = result["budget"].as<int>();
-    string graphFileName = result["graph"].as<std::string>();
-    int percentageTargets = result["percentage"].as<int>();
-    float percentageTargetsFloat = (float)percentageTargets/(float)100;
-    int nonTargetThreshold = result["threshold"].as<int>();
-    
-    loadResultsFileFrom(result);
-    
-    Graph *graph = new Graph;
-    graph->readGraph(graphFileName, percentageTargetsFloat);
-    if(result.count("p")>0) {
-        double probability = result["p"].as<double>();
-        graph->setPropogationProbability(probability);
-    }
-    loadGraphSizeToResults(graph);
-    
-    clock_t baselineStartTime = clock();
-    BaselineGreedyTIM baselineGreedyTIM;
-    set<int> seedSet = baselineGreedyTIM.findSeedSet(graph, budget, nonTargetThreshold);
-    clock_t baselineEndTime = clock();
-    double baselineTimeTaken = double(baselineEndTime - baselineStartTime) / CLOCKS_PER_SEC;
-    
-    
-    TIMInfluenceCalculator  timInfluenceCalculator(graph, 2);
-    pair<int, int> influence = timInfluenceCalculator.findInfluence(seedSet);
-    cout <<"\n Results after Diffusion: ";
-    cout << "\nInfluence Targets: " << influence.first;
-    cout << "\nInfluence NT: " << influence.second;
-    FILE_LOG(logDEBUG) << "\n Time Taken: " << baselineTimeTaken;
-    vector<int> orderedSeed = baselineGreedyTIM.getOrderedSeed();
-    set<int> greedySeedSet;
-    vector<IMSeedSet> allSeedSets;
-    for (int i=(int)(orderedSeed.size()-1); i<orderedSeed.size(); i++) {
-        greedySeedSet.insert(orderedSeed[i]);
-        TIMInfluenceCalculator  timInfluenceCalculatorGreedy(graph, 2);
-        pair<int, int> seedSetInfluence = timInfluenceCalculatorGreedy.findInfluence(greedySeedSet);
-        IMSeedSet imSeedSet;
-        vector<int> seedVector(orderedSeed.begin(), orderedSeed.begin() + i + 1);
-        // Reverse this before adding so the last seed is first
-        reverse(seedVector.begin(), seedVector.end());
-        for (int s: seedVector) {
-            imSeedSet.addSeed(s);
-        }
-        imSeedSet.setTargets(seedSetInfluence.first);
-        imSeedSet.setNonTargets(seedSetInfluence.second);
-        allSeedSets.push_back(imSeedSet);
-    }
-    IMResults::getInstance().addSeedSets(allSeedSets);
-    IMResults::getInstance().addBestSeedSet(allSeedSets[0]);
-    
-    IMResults::getInstance().setTotalTimeTaken(baselineTimeTaken);
-    string resultFile = constructResultFileName(graphFileName, budget, nonTargetThreshold, percentageTargets, setting1);
-    IMResults::getInstance().setExpectedTargets(influence);
-    IMResults::getInstance().writeToFile(resultFile);
-    delete graph;
-}
-
-void generateGraphLabels(cxxopts::ParseResult result) {
-    string graphFileName = result["graph"].as<std::string>();
-    int percentageTargets = result["percentage"].as<int>();
-    float percentageTargetsFloat = (float)percentageTargets/(float)100;
-    Graph *graph = new Graph;
-    graph->readGraph(graphFileName, percentageTargetsFloat);
-    GenerateGraphLabels(graph, percentageTargetsFloat);
-}
 
 int main(int argc, char **argv) {
     cout << "Starting program\n";
@@ -750,23 +607,12 @@ int main(int argc, char **argv) {
     ("r,nodesRemove", " Remove nodes number", cxxopts::value<int>())
     ("w,modularity", " Modular selection", cxxopts::value<std::string>())
     ("s,seedset", " Seed set selection", cxxopts::value<int>())
+    ("d,Diffusion", " Diffusion selection", cxxopts::value<int>())
     ("x,newSeedset", " New Seed set selection", cxxopts::value<int>())
     ("e,extend", "Extend the permutation");
     auto result = options.parse(argc, argv);
     string algorithm = result["algorithm"].as<string>();
-    if(result["algorithm"].count()>0 && algorithm.compare("generate")==0) {
-        generateGraphLabels(result);
-    } else if(result["algorithm"].count()>0 && algorithm.compare("timtim")==0) {
-        executeTIMTIM(result);
-    } else if(result["algorithm"].count()>0 && algorithm.compare("tim")==0) {
-        cout << "\n Executing just TIM";
-        executeTIMOnLabelledGraph(result);
-        
-    } else if(result["algorithm"].count()>0 && algorithm.compare("baseline")==0 ) {
-        executeBaselineGreedy(result);
-    }else {
-        executeDifferenceAlgorithms(result);
-    }
+    executeTIMTIM(result);
     
     disp_mem_usage("");
     return 0;
