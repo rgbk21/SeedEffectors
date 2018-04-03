@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--Diffusion 0"
+            argument = "--Diffusion 2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -86,11 +86,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 0"
+            argument = "--seedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 40"
+            argument = "--budget 20"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -106,7 +106,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 40"
+            argument = "--nodesRemove 20"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
