@@ -150,6 +150,9 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string in
         int from, to;
         int maxDegree = 0;
         while (myFile >> from >> to) {
+            if(from==-1 && to==-1){
+                break;
+            }
             oldGraph[from].push_back(to);
         }
         
