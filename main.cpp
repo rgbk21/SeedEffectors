@@ -336,7 +336,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular");
-    
+
     while(removeNodes!=0){
         vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
         for(int i=0;i<influencedGraph->coverage.size();i++){
@@ -360,6 +360,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
+    clock_t subModReverseEndTime = clock();
     
     vector<vector<int>>().swap(influencedGraph->rrSets);
     for(int i:subModNodesToremove){
@@ -373,7 +374,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         subModStrength+=influencedGraph->NodeinRRsetsWithCounts[i];
     }
     
-    clock_t subModReverseEndTime = clock();
+    
     
     cout << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     cout << "\n sub modular strength = "<<subModStrength;
@@ -565,6 +566,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet);
     delete subInfluencedGraph;
+   
     
     Graph *modNewGraph = new Graph;
     modNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,influenceFile,seedNodes);
@@ -585,6 +587,7 @@ void executeTIMTIM(cxxopts::ParseResult result) {
      perror( "Error deleting file" );
      else
      puts( "File successfully deleted" );*/
+    
 }
 
 

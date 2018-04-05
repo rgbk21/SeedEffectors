@@ -420,6 +420,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         else{
             coverage=vector<int>(n,0);
             pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+            nodeAS=vector<vector<int>>(n);
             int t=(int)activatedSet.size();
             for(int i=0;i<R;i++) {
                 int randomVertex;
@@ -476,8 +477,7 @@ void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
 
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
-    
-    nodeAS=vector<vector<int>>(n);
+
     pair<int,unordered_set<int>> node;
     
     q.clear();
@@ -488,7 +488,8 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     visited[randomVertex] = true;
     while(!q.empty()) {
         int expand=q.front();
-        nodeAS[expand].push_back(expand);
+        //nodeAS[expand].push_back(expand);
+        
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -523,6 +524,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
+    
     //creation of associated set matrix
     for(int i=0;i<nodeAS.size();i++){
         if(nodeAS[i].size()>0){
@@ -550,9 +552,9 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                     }
                 }
             }
+            nodeAS[i].clear();
         }
     }
-    vector<vector<int>>().swap(nodeAS);
 }
 
 
@@ -780,6 +782,7 @@ void Graph:: removeNodeFromRRset(int vertex){
     pairAssociatedSet[vertex].clear();
     coverage[vertex]=0;
 }
+
 
 
     
