@@ -131,20 +131,20 @@ void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue){
 }
 
 //********** Function for generating half graph ********
-void Graph::readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue){
+void Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue){
     this->graphName = fileName;
     this->percentageTargets = percentage;
     cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
-    ifstream myFile(influenceFile);
+    ifstream myFile(convertedFile);
     vector<vector<int>> oldGraph;
     
     string s;
     if(myFile.is_open()) {
-        myFile >> n >> m;
+        myFile>>n;
         graph=vector<vector<int>>(n,vector<int>());
         oldGraph=vector<vector<int>>(n,vector<int>());
         visited=vector<bool>(n,false);
-        labels=vector<bool>(n,true);
+        labels=vector<bool>(n,false);
         inDegree=vector<int>(n,0);
         
         int from, to;
@@ -181,18 +181,18 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string in
 
 
 
-vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string influenceFile, vector<int> *seedNodes) {
+vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
     //cout << "\n Reading Reverse targets graph: ";
     unordered_set<int> activatedSet;
-    ifstream myFile(influenceFile);
+    ifstream myFile(convertedFile);
     string s;
     if(myFile.is_open()) {
-        myFile >> n >> m;
+        myFile >>n;
         graph=vector<vector<int>>(n,vector<int>());
         visited=vector<bool>(n,false);
-        labels=vector<bool>(n,false);
+        labels=vector<bool>(n,true);
         inDegree=vector<int>(n,0);
         
         int from, to;
@@ -202,10 +202,8 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
             if(from ==-1 && to==-1){
                 break;
             }
-                labels[from]=true;
                 graph[from].push_back(to);
                 inDegree[to] = inDegree[to]+1;
-                labels[to]=true;
                 if(inDegree[to] > maxDegree) {
                     maxDegree = inDegree[to];
                 }
@@ -488,7 +486,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     visited[randomVertex] = true;
     while(!q.empty()) {
         int expand=q.front();
-        //nodeAS[expand].push_back(expand);
+        nodeAS[expand].push_back(expand);
         
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){

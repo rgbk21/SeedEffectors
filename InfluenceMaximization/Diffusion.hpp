@@ -137,10 +137,8 @@ inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string gra
     ofstream myfile;
     influenceFile = "graphs/" + influenceFile;
     myfile.open (influenceFile);
-
-    myfile <<graph->n<<" "<<graph->m<<"\n";
     int nVisitMark = 0;
-
+    
     for(int seed: seedSet) {
         if(activatedSet->find(seed)==activatedSet->end()) {
             if(!(visited)[seed]) {
@@ -166,10 +164,7 @@ inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string gra
             }
         }
     }
-    myfile <<-1<<" "<<-1<<"\n";
-    for(int i:seedSet){
-        myfile<<i<<" ";
-    }
+
     myfile.close();
     for(int i=0; i<nVisitMark; i++) {
         visited[visitMark[i]] = false;
