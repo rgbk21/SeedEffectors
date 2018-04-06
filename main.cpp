@@ -277,16 +277,32 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         assert(subNewGraph->graph[i].size()==0);
         assert(subNewGraph->graphTranspose[i].size()==0);
     }
-    
+    cout<< "\n intersection of mod and submod nodes to remove "<<j;
     cout<< "\n nodes To remove in mod Impact graph "<<flush;
+    j=0;
     for(int i: *removalModImpact){
         cout<< i << " ";
+        if(subModNodes.count(i)==1)
+            j++;
         modImpactGraph->removeOutgoingEdges(i);
         assert(modImpactGraph->graph[i].size()==0);
         assert(modImpactGraph->graphTranspose[i].size()==0);
     }
+     cout<< "\n intersection of submod and modImpact nodes to remove "<<j;
     
-    cout<< "\n intersection of mod and submod nodes to remove "<<j;
+    //Random RR sets
+    int n = (int)activatedSet.size();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    cout<< "RR sets are: "<<R;
+    modImpactGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular");
+    int modImapactStrength=0;
+    for(int i=0;i<modImpactGraph->NodeinRRsetsWithCounts.size();i++){
+        modImapactStrength+=modImpactGraph->NodeinRRsetsWithCounts[i];
+    }
+    cout<<"\n \n After removing mod Impact Modular Strength is "<<modImapactStrength;
+    vector<vector<int>>().swap(modImpactGraph->rrSets);
+    vector<int>().swap(modImpactGraph->NodeinRRsetsWithCounts);
     
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
     set<int> seedSet=set<int>();
@@ -364,10 +380,15 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         
         if(!filled){
             cout << "\n ******* Running Mod Impact approach ******** \n" <<flush;
+            int k=0;
             for(int i=0;i<removalNum;i++){
+                if(seedSet.count(SortedNodeidCounts.at(i).first)==1){
+                    k++;
+                }
                 removalModImpact->insert(SortedNodeidCounts.at(i).first);
                 filled=true;
             }
+            cout << "\n Number of nodes for mod impact Already present in seed set = " <<k;
         }
         int h=0;
         /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
