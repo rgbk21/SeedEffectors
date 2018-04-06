@@ -282,15 +282,15 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
     set<int> seedSet=set<int>();
     Graph *graph;
-    int k=5;
-    while(k<=10){
+    int k=2;
+    while(k<=15){
         switch(1){
             case 0: //bestTim
                 seedSet=getSeed(newGraph, budget,activatedSet,modNodes,subModNodes);
                 break;
             case 1:// best first Half Graph
                 graph = new Graph;
-                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,8*k);
+                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,6*k);
                 //graph->readHalfGraph(graphFileName, percentageTargetsFloat,8*k);
                 if(!useIndegree) {
                     graph->setPropogationProbability(probability);
