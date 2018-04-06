@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--Diffusion 0"
+            argument = "--Diffusion 2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -82,15 +82,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-CondMat.txt"
+            argument = "--graph graph_ic_75k.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 0"
+            argument = "--seedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 20"
+            argument = "--budget 40"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

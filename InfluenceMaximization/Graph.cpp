@@ -180,7 +180,6 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string co
 }
 
 
-
 vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
@@ -732,7 +731,7 @@ void Graph:: removeOutgoingEdges(int vertex){
                 outgoingEdges.push_back(j);
         }
          graphTranspose[i]=outgoingEdges;
-        inDegree[i]--;
+       
         for(int j:graph[i]){
             if(j!=vertex)
                 incomingEdges.push_back(j);
