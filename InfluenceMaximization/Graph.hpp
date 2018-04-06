@@ -56,7 +56,7 @@ public:
     void readGraph(string fileName, float percentage);
     void readReverseGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
-    vector<int> writeInfluencedGraph(string fileName, float percentage, string influenceFile,vector<int> *seedNodes);
+    vector<int> writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes);
     void readHalfGraph(string fileName, float percentage,int graphCutValue);
     void readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue);
     void readLabels(string fileName);
