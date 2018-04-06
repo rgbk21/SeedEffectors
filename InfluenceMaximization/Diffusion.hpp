@@ -291,15 +291,15 @@ inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> act
     vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
     
     //find intersection of new and old activated set
-    std::vector<int> intersect;
+    /*std::vector<int> intersect;
     std::sort(NewactivatedSet.begin(), NewactivatedSet.end());
     std::sort(activatedSet.begin(), activatedSet.end());
-    std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));
+    std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));*/
     
     cout << "\n Old Targets activated = " << activatedSet.size();
     cout << "\n New Targets activated = " << NewactivatedSet.size();
-    cout << "\n intersection size "<<intersect.size();
-    cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
+    //cout << "\n intersection size "<<intersect.size();
+    //cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
     
 }
 

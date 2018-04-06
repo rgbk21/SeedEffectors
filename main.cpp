@@ -261,7 +261,7 @@ set<int> removeVertices(Graph *influencedGraph, int removeNodes, set<int> seedSe
 
 
 
-void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>subModNodes,vector<int> activatedSet,int budget,int topBestThreshold,int newSeed,string graphFileName, float percentageTargetsFloat,bool useIndegree, float probability, string convertedFile){
+void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<int>modNodes,set<int>subModNodes,set<int> *removalModImpact,vector<int> activatedSet,int budget,int topBestThreshold,int newSeed,string graphFileName, float percentageTargetsFloat,bool useIndegree, float probability, string convertedFile){
     
     cout<< "\n nodes To remove in mod graph ";
     for(int i:modNodes){
@@ -277,20 +277,29 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
         assert(subNewGraph->graph[i].size()==0);
         assert(subNewGraph->graphTranspose[i].size()==0);
     }
+    
+    cout<< "\n nodes To remove in mod Impact graph "<<flush;
+    for(int i: *removalModImpact){
+        cout<< i << " ";
+        modImpactGraph->removeOutgoingEdges(i);
+        assert(modImpactGraph->graph[i].size()==0);
+        assert(modImpactGraph->graphTranspose[i].size()==0);
+    }
+    
     cout<< "\n intersection of mod and submod nodes to remove "<<j;
     
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
     set<int> seedSet=set<int>();
     Graph *graph;
-    int k=2;
-    while(k<=15){
+    int k=0;
+    while(k<=20){
         switch(1){
             case 0: //bestTim
                 seedSet=getSeed(newGraph, budget,activatedSet,modNodes,subModNodes);
                 break;
             case 1:// best first Half Graph
                 graph = new Graph;
-                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,6*k);
+                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,4*k);
                 //graph->readHalfGraph(graphFileName, percentageTargetsFloat,8*k);
                 if(!useIndegree) {
                     graph->setPropogationProbability(probability);
@@ -317,15 +326,18 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph, set<int>modNodes,set<int>s
             assert(newGraph->graph[i].size()==0);
             assert(newGraph->graphTranspose[i].size()==0);
         }
+        cout<<"\n Mod Results: " << flush;
         oldNewIntersection(newGraph, seedSet,activatedSet);
-        
+        cout<<"\n Sub Mod Results: " << flush;
         oldNewIntersection(subNewGraph, seedSet,activatedSet);
+        cout<<"\n Mod Impact Results: " << flush;
+        oldNewIntersection(modImpactGraph, seedSet,activatedSet);
         k++;
     }
     delete SeedClass;
 }
 
-set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet, int removeNodes, set<int> seedSet){
+set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet, int removeNodes, set<int> seedSet,set<int> *removalModImpact){
     set<int> alreadyinSeed= set<int>();
     
     clock_t subModReverseStartTime = clock();
@@ -336,7 +348,9 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular");
-
+    
+    int removalNum=removeNodes;
+    bool filled=false;
     while(removeNodes!=0){
         vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
         for(int i=0;i<influencedGraph->coverage.size();i++){
@@ -347,6 +361,14 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         }
         std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
         assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+        
+        if(!filled){
+            cout << "\n ******* Running Mod Impact approach ******** \n" <<flush;
+            for(int i=0;i<removalNum;i++){
+                removalModImpact->insert(SortedNodeidCounts.at(i).first);
+                filled=true;
+            }
+        }
         int h=0;
         /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
          h++;
@@ -616,8 +638,11 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     if(!useIndegree) {
         subInfluencedGraph->setPropogationProbability(probability);
     }
-    set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet);
+    set<int> *removalModImpact=new set<int>();
+    set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,SubactivatedSet,removeNodes, seedSet,removalModImpact);
     delete subInfluencedGraph;
+    
+    cout << "\n ******* Running Sub Modular get top approach ******** \n" <<flush;
     
     Graph *modNewGraph = new Graph;
     modNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,convertedFile,seedNodes);
@@ -625,11 +650,17 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         modNewGraph->setPropogationProbability(probability);
     }
     
+    Graph *modImpactGraph = new Graph;
+    modImpactGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,convertedFile,seedNodes);
+    if(!useIndegree) {
+        modImpactGraph->setPropogationProbability(probability);
+    }
+    
     Graph *subNewGraph = new Graph;
     subNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,convertedFile,seedNodes);
     if(!useIndegree) {
         subNewGraph->setPropogationProbability(probability);
-    }newDiffusion(modNewGraph,subNewGraph,modNodesToremove,subModNodesToremove,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability,convertedFile);
+    }newDiffusion(modNewGraph,subNewGraph,modImpactGraph,modNodesToremove,subModNodesToremove,removalModImpact,activatedSet,budget,topBestThreshold,newSeed,graphFileName,percentageTargetsFloat,useIndegree,probability,convertedFile);
     
     clock_t executionTimeEnd = clock();
     double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
