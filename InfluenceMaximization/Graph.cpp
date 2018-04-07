@@ -180,7 +180,7 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string co
 }
 
 
-vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes) {
+vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes,vector<int> *seedOrder) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
     //cout << "\n Reading Reverse targets graph: ";
@@ -209,12 +209,20 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
                 activatedSet.insert(from);
                 activatedSet.insert(to);
         }
-        int str;
-        int i=0;
-        while (myFile>>str) {
-            (*seedNodes)[i]=str;
-            i++;
-            //seedNodes->insert(str);
+        if(seedNodes!=NULL && seedOrder!=NULL){
+            int str;
+            int i=0;
+            while (myFile>>str) {
+                if(str==-1)
+                    break;
+                (*seedNodes)[i]=str;
+                i++;
+            }
+            //just to skip one more -1
+            myFile>>str;
+            while (myFile>>str) {
+                (*seedOrder)[i]=str;
+            }
         }
         myFile.close();
     }
