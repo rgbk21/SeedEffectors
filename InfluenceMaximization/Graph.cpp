@@ -220,8 +220,10 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
             }
             //just to skip one more -1
             myFile>>str;
+            i=0;
             while (myFile>>str) {
                 (*seedOrder)[i]=str;
+                i++;
             }
         }
         myFile.close();

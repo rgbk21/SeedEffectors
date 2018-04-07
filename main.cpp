@@ -594,10 +594,9 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         seedSet.insert(i);
         cout<< i << " ";
     }
-    
     cout<<"\n Selected Order of SeedSet: " << flush;
-    for(int i: *seedOrder){
-        cout<< i << " ";
+    for(int j: *seedOrder){
+        cout<< j << " ";
     }
     
     cout << "\n Targets activated = " << activatedSet.size();
