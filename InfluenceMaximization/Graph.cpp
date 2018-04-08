@@ -7,6 +7,7 @@
 //
 
 #include "Graph.hpp"
+
 #include <assert.h>
 #include <sstream>
 #include <iomanip>
@@ -23,7 +24,12 @@ bool sortbydegree(const set<int> &a,const set<int> &b)
 Graph::Graph() {
     this->standardProbability = false;
 }
-
+/*
+AS::AS(int value, AS* n)
+{
+    data=value;
+    count=0;
+}*/
 void Graph::setPropogationProbability(float p) {
     this->propogationProbability = p;
     this->standardProbability = true;
@@ -426,6 +432,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         }
         else{
             coverage=vector<int>(n,0);
+            //AStree=vector<unordered_map<AS,vector<AS>>>(n);
+            //match= new vector<AS>(n);
             pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
             nodeAS=vector<vector<int>>(n);
             int t=(int)activatedSet.size();
@@ -531,6 +539,38 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
+    /*
+    //test
+    for(int i=0;i<nodeAS.size();i++){
+        if(nodeAS[i].size()>0){
+            for(int j:nodeAS[i]){
+                //AS temp= match->at(j);
+                AS *Rval;
+                AS *node;
+                if(AStree[i].count(rrSetID)==0){
+                    Rval= new AS;
+                    node= new AS;
+                    //struct AS *Rval= (struct AS*) malloc(sizeof(struct AS));
+                    //struct AS *node= (struct AS*) malloc(sizeof(struct AS));
+                    node->next->push_back(*Rval) ;
+                    node->count++;
+                    Rval->next->push_back(*node);
+                    (*match)[j]= (*Rval);
+                    
+                    pair<AS,vector<AS>> h=pair<AS,vector<AS>>();
+                    h.first= *Rval;
+                    h.second.push_back(*node);
+                    AStree[i].insert(h);
+                }
+                else{
+                    //temp.next->next.insert(j);
+                    AS *node= new AS;
+                    vector<AS> Rval=AStree[i].find(rrSetID)->second;
+                }
+            }
+        }
+    }
+    */
     
     //creation of associated set matrix
     for(int i=0;i<nodeAS.size();i++){
