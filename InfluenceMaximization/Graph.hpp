@@ -22,7 +22,18 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <algorithm>
+
 using namespace std;
+
+/*
+class AS{
+public:
+    int data;
+    int count;
+    vector<AS> *next=new vector<AS>();
+    AS(int=0, AS* =NULL);
+};*/
+
 
 class Graph {
 private:
@@ -39,6 +50,10 @@ private:
 public:
     Graph();
     int n, m;
+    
+    //vector<unordered_map<AS,vector<AS>>> AStree;
+    //vector<AS> *match;
+    
     vector<vector<int> > graph;
     vector<vector<int> > graphTranspose;
     vector<vector<int>> rrSets;

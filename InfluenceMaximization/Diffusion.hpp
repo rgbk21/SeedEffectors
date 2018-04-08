@@ -22,6 +22,7 @@
 using namespace std;
 
 #define NUMBER_OF_SIMULATIONS 20000
+#define EPSILON 2
 
 /*bool sortmap(const int &a,const int &b)
 {
@@ -288,7 +289,24 @@ inline pair<pair<int, int>, set<int>> findActivatedSetAndInfluenceUsingDiffusion
 
 inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> activatedSet){
     //again diffusion on old graph after node removal
-    vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
+   // vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
+
+    int diffusionNum=0;
+    //diffusion with RR approach
+    int n = (int)activatedSet.size();
+    double epsilon = (double)EPSILON;
+    int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+    cout<< "RR sets are: "<<R;
+    newGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular");
+    for(vector<int> v:newGraph->rrSets){
+        for(int j:v){
+            if(seedSet.count(j)==1){
+                diffusionNum++;
+                break;
+            }
+        }
+    }
+    diffusionNum=((double)diffusionNum/R)*n;
     
     //find intersection of new and old activated set
     /*std::vector<int> intersect;
@@ -296,8 +314,10 @@ inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> act
     std::sort(activatedSet.begin(), activatedSet.end());
     std::set_intersection(activatedSet.begin(), activatedSet.end(),NewactivatedSet.begin(), NewactivatedSet.end(),std::back_inserter(intersect));*/
     
-    cout << "\n Old Targets activated = " << activatedSet.size();
-    cout << "\n New Targets activated = " << NewactivatedSet.size();
+    //cout << "\n Old Targets activated = " << activatedSet.size();
+    //cout << "\n New Targets activated = " << NewactivatedSet.size();
+    
+     cout << "\n New Targets activated = " << diffusionNum;
     //cout << "\n intersection size "<<intersect.size();
     //cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
     
