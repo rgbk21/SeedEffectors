@@ -287,7 +287,7 @@ inline pair<pair<int, int>, set<int>> findActivatedSetAndInfluenceUsingDiffusion
     return make_pair(make_pair(targetsActivated, nonTargetsActivated), activated);
 }
 
-inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> activatedSet){
+inline int oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> activatedSet,std::ofstream& resultLogFile){
     //again diffusion on old graph after node removal
    // vector<int> NewactivatedSet=performDiffusion(newGraph,seedSet,NULL);
 
@@ -297,7 +297,7 @@ inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> act
     double epsilon = (double)EPSILON;
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
-    newGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular");
+    newGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular", resultLogFile);
     for(vector<int> v:newGraph->rrSets){
         for(int j:v){
             if(seedSet.count(j)==1){
@@ -318,9 +318,10 @@ inline void oldNewIntersection(Graph *newGraph, set<int> seedSet,vector<int> act
     //cout << "\n New Targets activated = " << NewactivatedSet.size();
     
      cout << "\n New Targets activated = " << diffusionNum;
+    resultLogFile<< "\n New Targets activated = " << diffusionNum;
     //cout << "\n intersection size "<<intersect.size();
     //cout << "\n Percentage of intersect with old " <<double((intersect.size()*100)/activatedSet.size())<<"%";
-    
+    return diffusionNum;
 }
 
 #endif /* Diffusion_hpp */

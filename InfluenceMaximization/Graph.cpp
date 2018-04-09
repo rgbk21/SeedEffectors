@@ -13,8 +13,8 @@
 #include <iomanip>
 
 using namespace std;
-void Graph::readGraph(string fileName) {
-    readGraph(fileName, 0.8);
+void Graph::readGraph(string fileName,std::ofstream& resultLogFile) {
+    readGraph(fileName, 0.8,resultLogFile);
 }
 bool sortbydegree(const set<int> &a,const set<int> &b)
 {
@@ -29,7 +29,8 @@ AS::AS(int value, AS* n)
 {
     data=value;
     count=0;
-}*/
+}
+ */
 void Graph::setPropogationProbability(float p) {
     this->propogationProbability = p;
     this->standardProbability = true;
@@ -89,10 +90,12 @@ void Graph::readReverseGraph(string fileName, float percentage){
 }
 
 //********** Function for generating half graph ********
-void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue){
+void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream& resultLogFile){
     this->graphName = fileName;
     this->percentageTargets = percentage;
     cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
+    resultLogFile<< "\n Generating graph: "<<100-graphCutValue<<"%";
+    
     ifstream myFile("graphs/" + fileName);
     
     vector<vector<int>> oldGraph;
@@ -137,7 +140,7 @@ void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue){
 }
 
 //********** Function for generating half graph ********
-void Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue){
+void Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue,std::ofstream& resultLogFile){
     this->graphName = fileName;
     this->percentageTargets = percentage;
     cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
@@ -285,7 +288,7 @@ void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> a
 }
 
 
-void Graph::readGraph(string fileName, float percentage) {
+void Graph::readGraph(string fileName, float percentage,std::ofstream& resultLogFile) {
     this->graphName = fileName;
     this->percentageTargets = percentage;
     cout << "\n Reading all targets graph: ";
@@ -337,7 +340,7 @@ void Graph::readLabels(string fileName) {
     this->numberOfNonTargets = (int)nonTargets.size();
 }
 
-void Graph::writeLabels() {
+void Graph::writeLabels(std::ofstream& resultLogFile) {
     string s;
     stringstream stream;
     stream << fixed << setprecision(2) << this->percentageTargets;
@@ -388,7 +391,7 @@ vector<int>* Graph::getNonTargets() {
 }
 
 //********** Function only for the influenced graph ********
-void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,string modular) {
+void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,string modular,std::ofstream& resultLogFile) {
     clock_t begin = clock();
     visitMark = vector<int>(n);
     //associatedSet=vector<vector<set<int>>>();
@@ -452,6 +455,12 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         cout<< " \n Time per RR Set is " << elapsed_secs/R;
         cout<< "\n Total Size is " << totalSize<<flush;
         cout<<"\n Average size is " << (float)totalSize/(float)R;
+    
+    resultLogFile <<"\n Generated reverse" << R << " RR sets\n";
+    resultLogFile << "Elapsed time " << elapsed_secs;
+    resultLogFile<< " \n Time per RR Set is " << elapsed_secs/R;
+    resultLogFile<< "\n Total Size is " << totalSize<<flush;
+    resultLogFile<<"\n Average size is " << (float)totalSize/(float)R;
     }
 
 //********** Function only for the influenced graph with modular property********
@@ -605,7 +614,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
 }
 
 
-void Graph::generateRandomRRSets(int R, bool label) {
+void Graph::generateRandomRRSets(int R, bool label,std::ofstream& resultLogFile) {
     this->rrSets = vector<vector<int>>();
     long totalSize = 0;
     clock_t begin = clock();
@@ -633,6 +642,12 @@ void Graph::generateRandomRRSets(int R, bool label) {
     cout<< " \n Time per RR Set is " << elapsed_secs/R;
     cout<< "\n Total Size is " << totalSize;
     cout<<"\n Average size is " << (float)totalSize/(float)R;
+    
+    resultLogFile <<"\n Generated " << R << " RR sets\n";
+    resultLogFile << "Elapsed time " << elapsed_secs;
+    resultLogFile<< " \n Time per RR Set is " << elapsed_secs/R;
+    resultLogFile<< "\n Total Size is " << totalSize;
+    resultLogFile<<"\n Average size is " << (float)totalSize/(float)R;
 }
 
 vector<vector<int>>* Graph::getRandomRRSets() {
