@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.245279"
+            timestampString = "544944270.350227"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "289"
-            endingLineNumber = "289"
-            landmarkName = "Graph::readGraph(string fileName, float percentage)"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "Graph::readGraph(string fileName, float percentage,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.24649"
+            timestampString = "544944270.351052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "213"
-            endingLineNumber = "213"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.247121"
+            timestampString = "544944270.352266"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "791"
-            endingLineNumber = "791"
+            startingLineNumber = "811"
+            endingLineNumber = "811"
             landmarkName = "Graph:: removeOutgoingEdges(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.247843"
+            timestampString = "544944270.352815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "662"
-            endingLineNumber = "662"
+            startingLineNumber = "746"
+            endingLineNumber = "746"
             landmarkName = "main(int argc, char **argv)"
             landmarkType = "9">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.248209"
+            timestampString = "544944270.354216"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
             landmarkName = "loadGraphSizeToResults(Graph *graph)"
             landmarkType = "9">
          </BreakpointContent>
@@ -120,7 +120,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/SeedSet.cpp"
-            timestampString = "544911377.248539"
+            timestampString = "544944270.355474"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
@@ -136,7 +136,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/SeedSet.cpp"
-            timestampString = "544911377.249171"
+            timestampString = "544944270.35631"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
@@ -152,11 +152,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.249452"
+            timestampString = "544944270.356781"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "778"
-            endingLineNumber = "778"
+            startingLineNumber = "798"
+            endingLineNumber = "798"
             landmarkName = "Graph:: removeOutgoingEdges(int vertex)"
             landmarkType = "7">
             <Locations>
@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.250515"
+            timestampString = "544944270.357538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "799"
-            endingLineNumber = "799"
+            startingLineNumber = "819"
+            endingLineNumber = "819"
             landmarkName = "Graph:: removeOutgoingEdges(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -216,7 +216,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/SeedSet.cpp"
-            timestampString = "544911377.251227"
+            timestampString = "544944270.35834"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "83"
@@ -232,7 +232,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/SeedSet.cpp"
-            timestampString = "544911377.2514811"
+            timestampString = "544944270.358956"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "89"
@@ -248,7 +248,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Phase2.cpp"
-            timestampString = "543352113.920205"
+            timestampString = "544944270.359326"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "23"
@@ -264,11 +264,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.251744"
+            timestampString = "544944270.35975"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "515"
-            endingLineNumber = "515"
+            startingLineNumber = "574"
+            endingLineNumber = "574"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -280,12 +280,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.252118"
+            timestampString = "544944270.361093"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
-            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular)"
+            startingLineNumber = "443"
+            endingLineNumber = "443"
+            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -296,11 +296,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.252808"
+            timestampString = "544944270.361822"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "797"
-            endingLineNumber = "797"
+            startingLineNumber = "817"
+            endingLineNumber = "817"
             landmarkName = "Graph:: removeOutgoingEdges(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -312,11 +312,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.253443"
+            timestampString = "544944270.36256"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "606"
-            endingLineNumber = "606"
+            startingLineNumber = "678"
+            endingLineNumber = "678"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -328,12 +328,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.2538511"
+            timestampString = "544944270.3633749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
-            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular)"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
+            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -344,11 +344,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.254455"
+            timestampString = "544944270.363816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "492"
-            endingLineNumber = "492"
+            startingLineNumber = "501"
+            endingLineNumber = "501"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -360,11 +360,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.255118"
+            timestampString = "544944270.364213"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "802"
-            endingLineNumber = "802"
+            startingLineNumber = "822"
+            endingLineNumber = "822"
             landmarkName = "Graph:: removeOutgoingEdges(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -376,11 +376,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.255694"
+            timestampString = "544944270.364604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "820"
-            endingLineNumber = "820"
+            startingLineNumber = "840"
+            endingLineNumber = "840"
             landmarkName = "Graph:: removeNodeFromRRset(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -392,11 +392,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.256256"
+            timestampString = "544944270.365021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "822"
-            endingLineNumber = "822"
+            startingLineNumber = "842"
+            endingLineNumber = "842"
             landmarkName = "Graph:: removeNodeFromRRset(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -408,11 +408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.2568099"
+            timestampString = "544944270.3654881"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "823"
-            endingLineNumber = "823"
+            startingLineNumber = "843"
+            endingLineNumber = "843"
             landmarkName = "Graph:: removeNodeFromRRset(int vertex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -424,12 +424,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.257364"
+            timestampString = "544944270.36588"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "444"
-            endingLineNumber = "444"
-            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular)"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
+            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -440,11 +440,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.257917"
+            timestampString = "544944270.366266"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "387"
-            endingLineNumber = "387"
+            startingLineNumber = "390"
+            endingLineNumber = "390"
             landmarkName = "Graph::getNonTargets()"
             landmarkType = "7">
          </BreakpointContent>
@@ -456,11 +456,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.258449"
+            timestampString = "544944270.366643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "520"
-            endingLineNumber = "520"
+            startingLineNumber = "529"
+            endingLineNumber = "529"
             landmarkName = "Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -472,12 +472,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.259041"
+            timestampString = "544944270.367023"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "408"
-            endingLineNumber = "408"
-            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular)"
+            startingLineNumber = "411"
+            endingLineNumber = "411"
+            landmarkName = "Graph::generateRandomRRSetsFromTargets(int R, vector&lt;int&gt; activatedSet,string modular,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -488,11 +488,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.259618"
+            timestampString = "544944270.367404"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "265"
+            endingLineNumber = "265"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -568,7 +568,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Diffusion.hpp"
-            timestampString = "544911377.260021"
+            timestampString = "544944270.368176"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "162"
@@ -584,11 +584,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.260618"
+            timestampString = "544944270.369117"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -600,11 +600,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.261238"
+            timestampString = "544944270.369714"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "519"
-            endingLineNumber = "519"
+            startingLineNumber = "578"
+            endingLineNumber = "578"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -616,11 +616,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.261593"
+            timestampString = "544944270.370451"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "535"
-            endingLineNumber = "535"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -632,11 +632,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.261919"
+            timestampString = "544944270.371453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "331"
-            endingLineNumber = "331"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set&lt;int&gt;modNodes,set&lt;int&gt;subModNodes,set&lt;int&gt; *removalModImpact,vector&lt;int&gt; activatedSet,int newSeed,float percentageTargetsFloat,string convertedFile)"
             landmarkType = "9">
          </BreakpointContent>
@@ -648,11 +648,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.262233"
+            timestampString = "544944270.372749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -664,11 +664,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.262538"
+            timestampString = "544944270.373866"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "262"
-            endingLineNumber = "262"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
             <Locations>
@@ -712,11 +712,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.26284"
+            timestampString = "544944270.374981"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -728,11 +728,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.263136"
+            timestampString = "544944270.376367"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -744,11 +744,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.263431"
+            timestampString = "544944270.377336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "272"
-            endingLineNumber = "272"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -760,11 +760,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.263725"
+            timestampString = "544944270.378031"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -776,11 +776,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.264021"
+            timestampString = "544944270.379239"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "610"
-            endingLineNumber = "610"
+            startingLineNumber = "684"
+            endingLineNumber = "684"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -792,11 +792,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.264325"
+            timestampString = "544944270.38052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -808,11 +808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.264616"
+            timestampString = "544944270.381739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "339"
-            endingLineNumber = "339"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set&lt;int&gt;modNodes,set&lt;int&gt;subModNodes,set&lt;int&gt; *removalModImpact,vector&lt;int&gt; activatedSet,int newSeed,float percentageTargetsFloat,string convertedFile)"
             landmarkType = "9">
          </BreakpointContent>
@@ -824,11 +824,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.264913"
+            timestampString = "544944270.382973"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "511"
-            endingLineNumber = "511"
+            startingLineNumber = "570"
+            endingLineNumber = "570"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -840,11 +840,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.265269"
+            timestampString = "544944270.384102"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -856,11 +856,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.266188"
+            timestampString = "544944270.384752"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "624"
-            endingLineNumber = "624"
+            startingLineNumber = "702"
+            endingLineNumber = "702"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -872,12 +872,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.266811"
+            timestampString = "544944270.385851"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
-            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue)"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -888,12 +888,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.267521"
+            timestampString = "544944270.3865401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue)"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
+            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -904,12 +904,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.268151"
+            timestampString = "544944270.387195"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue)"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
+            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -920,12 +920,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.268748"
+            timestampString = "544944270.3878469"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
-            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue)"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -936,12 +936,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.269456"
+            timestampString = "544944270.388505"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue)"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -984,11 +984,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.270103"
+            timestampString = "544944270.389172"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "641"
-            endingLineNumber = "641"
+            startingLineNumber = "661"
+            endingLineNumber = "661"
             landmarkName = "Graph::generateRandomRRSet(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1000,12 +1000,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.270725"
+            timestampString = "544944270.389792"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "618"
-            endingLineNumber = "618"
-            landmarkName = "Graph::generateRandomRRSets(int R, bool label)"
+            startingLineNumber = "632"
+            endingLineNumber = "632"
+            landmarkName = "Graph::generateRandomRRSets(int R, bool label,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1016,12 +1016,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.271315"
+            timestampString = "544944270.390274"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "614"
-            endingLineNumber = "614"
-            landmarkName = "Graph::generateRandomRRSets(int R, bool label)"
+            startingLineNumber = "628"
+            endingLineNumber = "628"
+            landmarkName = "Graph::generateRandomRRSets(int R, bool label,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1032,12 +1032,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.271885"
+            timestampString = "544944270.390702"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue)"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue,std::ofstream&amp; resultLogFile)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1048,11 +1048,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.272481"
+            timestampString = "544944270.391755"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
+            startingLineNumber = "370"
+            endingLineNumber = "370"
             landmarkName = "newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set&lt;int&gt;modNodes,set&lt;int&gt;subModNodes,set&lt;int&gt; *removalModImpact,vector&lt;int&gt; activatedSet,int newSeed,float percentageTargetsFloat,string convertedFile)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1064,11 +1064,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.27284"
+            timestampString = "544944270.393369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "510"
-            endingLineNumber = "510"
+            startingLineNumber = "569"
+            endingLineNumber = "569"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -1080,11 +1080,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.273172"
+            timestampString = "544944270.394664"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "629"
-            endingLineNumber = "629"
+            startingLineNumber = "707"
+            endingLineNumber = "707"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1096,11 +1096,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.273491"
+            timestampString = "544944270.3957109"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "341"
-            endingLineNumber = "341"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
             landmarkName = "newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set&lt;int&gt;modNodes,set&lt;int&gt;subModNodes,set&lt;int&gt; *removalModImpact,vector&lt;int&gt; activatedSet,int newSeed,float percentageTargetsFloat,string convertedFile)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1112,11 +1112,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.273802"
+            timestampString = "544944270.3966531"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "360"
-            endingLineNumber = "360"
+            startingLineNumber = "395"
+            endingLineNumber = "395"
             landmarkName = "newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set&lt;int&gt;modNodes,set&lt;int&gt;subModNodes,set&lt;int&gt; *removalModImpact,vector&lt;int&gt; activatedSet,int newSeed,float percentageTargetsFloat,string convertedFile)"
             landmarkType = "9">
             <Locations>
@@ -1160,11 +1160,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.27411"
+            timestampString = "544944270.3974169"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1176,11 +1176,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.274685"
+            timestampString = "544944270.397904"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
+            startingLineNumber = "468"
+            endingLineNumber = "468"
             landmarkName = "Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1192,11 +1192,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.275262"
+            timestampString = "544944270.398398"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "485"
-            endingLineNumber = "485"
+            startingLineNumber = "494"
+            endingLineNumber = "494"
             landmarkName = "Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1208,11 +1208,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.275836"
+            timestampString = "544944270.398815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "removeVertices(Graph *influencedGraph, int removeNodes, set&lt;int&gt; seedSet, vector&lt;int&gt; activatedSet, string modular)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1224,7 +1224,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Diffusion.hpp"
-            timestampString = "544911377.276186"
+            timestampString = "544944270.399619"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "173"
@@ -1240,11 +1240,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.276439"
+            timestampString = "544944270.4002841"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1256,11 +1256,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.277022"
+            timestampString = "544944270.400725"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1272,11 +1272,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.277578"
+            timestampString = "544944270.401252"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1288,11 +1288,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.27819"
+            timestampString = "544944270.4019229"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1304,11 +1304,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.278754"
+            timestampString = "544944270.402583"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1320,11 +1320,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.279305"
+            timestampString = "544944270.403329"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "591"
-            endingLineNumber = "591"
+            startingLineNumber = "654"
+            endingLineNumber = "654"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
             <Locations>
@@ -1368,11 +1368,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.279642"
+            timestampString = "544944270.40455"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "602"
-            endingLineNumber = "602"
+            startingLineNumber = "671"
+            endingLineNumber = "671"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1384,11 +1384,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.279958"
+            timestampString = "544944270.405727"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "563"
-            endingLineNumber = "563"
+            startingLineNumber = "622"
+            endingLineNumber = "622"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1400,11 +1400,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.280268"
+            timestampString = "544944270.406626"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1416,11 +1416,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.280821"
+            timestampString = "544944270.407441"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "496"
-            endingLineNumber = "496"
+            startingLineNumber = "505"
+            endingLineNumber = "505"
             landmarkName = "Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1432,11 +1432,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.281383"
+            timestampString = "544944270.4083149"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "494"
-            endingLineNumber = "494"
+            startingLineNumber = "503"
+            endingLineNumber = "503"
             landmarkName = "Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1448,11 +1448,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.281996"
+            timestampString = "544944270.4092799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "488"
-            endingLineNumber = "488"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
             landmarkName = "convertInfluenceFile(string convertedFile, string influenceFile, set&lt;int&gt; seedSet,int n,int newVertices,vector&lt;int&gt; *seedOrder)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1464,11 +1464,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.282375"
+            timestampString = "544944270.410502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
+            startingLineNumber = "522"
+            endingLineNumber = "522"
             landmarkName = "convertInfluenceFile(string convertedFile, string influenceFile, set&lt;int&gt; seedSet,int n,int newVertices,vector&lt;int&gt; *seedOrder)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1480,11 +1480,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.2830499"
+            timestampString = "544944270.412061"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "479"
-            endingLineNumber = "479"
+            startingLineNumber = "538"
+            endingLineNumber = "538"
             landmarkName = "convertInfluenceFile(string convertedFile, string influenceFile, set&lt;int&gt; seedSet,int n,int newVertices,vector&lt;int&gt; *seedOrder)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1496,11 +1496,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.283501"
+            timestampString = "544944270.413325"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
+            startingLineNumber = "519"
+            endingLineNumber = "519"
             landmarkName = "convertInfluenceFile(string convertedFile, string influenceFile, set&lt;int&gt; seedSet,int n,int newVertices,vector&lt;int&gt; *seedOrder)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1512,11 +1512,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.2838531"
+            timestampString = "544944270.4142621"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "575"
-            endingLineNumber = "575"
+            startingLineNumber = "636"
+            endingLineNumber = "636"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1528,11 +1528,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.284193"
+            timestampString = "544944270.415596"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "521"
-            endingLineNumber = "521"
+            startingLineNumber = "580"
+            endingLineNumber = "580"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1544,11 +1544,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.284525"
+            timestampString = "544944270.416832"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "586"
-            endingLineNumber = "586"
+            startingLineNumber = "649"
+            endingLineNumber = "649"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1560,11 +1560,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.284843"
+            timestampString = "544944270.417955"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1576,11 +1576,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.285465"
+            timestampString = "544944270.418505"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1592,11 +1592,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.286199"
+            timestampString = "544944270.41903"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "Graph::writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector&lt;int&gt; *seedNodes,vector&lt;int&gt; *seedOrder)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1608,11 +1608,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.286808"
+            timestampString = "544944270.419426"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "597"
-            endingLineNumber = "597"
+            startingLineNumber = "663"
+            endingLineNumber = "663"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1624,11 +1624,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "544911377.287149"
+            timestampString = "544944270.420138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "594"
-            endingLineNumber = "594"
+            startingLineNumber = "659"
+            endingLineNumber = "659"
             landmarkName = "executeTIMTIM(cxxopts::ParseResult result)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1640,12 +1640,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Diffusion.hpp"
-            timestampString = "544911377.287468"
+            timestampString = "544944270.420831"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "305"
             endingLineNumber = "305"
-            landmarkName = "oldNewIntersection(Graph *newGraph, set&lt;int&gt; seedSet,vector&lt;int&gt; activatedSet)"
+            landmarkName = "oldNewIntersection(Graph *newGraph, set&lt;int&gt; seedSet,vector&lt;int&gt; activatedSet,std::ofstream&amp; resultLogFile)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1656,12 +1656,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Diffusion.hpp"
-            timestampString = "544911377.287719"
+            timestampString = "544944270.421335"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "304"
             endingLineNumber = "304"
-            landmarkName = "oldNewIntersection(Graph *newGraph, set&lt;int&gt; seedSet,vector&lt;int&gt; activatedSet)"
+            landmarkName = "oldNewIntersection(Graph *newGraph, set&lt;int&gt; seedSet,vector&lt;int&gt; activatedSet,std::ofstream&amp; resultLogFile)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1672,11 +1672,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.287957"
+            timestampString = "544944270.421816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "544"
-            endingLineNumber = "544"
+            startingLineNumber = "553"
+            endingLineNumber = "553"
             landmarkName = "Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1688,13 +1688,77 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InfluenceMaximization/Graph.cpp"
-            timestampString = "544911377.288546"
+            timestampString = "544944270.422199"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "548"
-            endingLineNumber = "548"
+            startingLineNumber = "559"
+            endingLineNumber = "559"
             landmarkName = "Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "main.cpp"
+            timestampString = "544944270.422515"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "841"
+            endingLineNumber = "841"
+            landmarkName = "main(int argc, char **argv)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "InfluenceMaximization/Graph.cpp"
+            timestampString = "544944270.423426"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "Graph::Graph()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Graph::Graph()"
+                  moduleName = "InfluenceMaximization"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Preeti/git/SeedEffectors/InfluenceMaximization/Graph.cpp"
+                  timestampString = "544944141.5769"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "43">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Graph::Graph()"
+                  moduleName = "InfluenceMaximization"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Preeti/git/SeedEffectors/InfluenceMaximization/Graph.cpp"
+                  timestampString = "544944141.580242"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "16">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

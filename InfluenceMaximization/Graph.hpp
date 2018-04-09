@@ -67,15 +67,15 @@ public:
     vector<vector<int>>nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
     vector<int> coverage;
-    void readGraph(string fileName);
-    void readGraph(string fileName, float percentage);
+    void readGraph(string fileName,std::ofstream& resultLogFile);
+    void readGraph(string fileName, float percentage,std::ofstream& resultLogFile);
     void readReverseGraph(string fileName, float percentage);
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
     vector<int> writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes,vector<int> *seedOrder);
-    void readHalfGraph(string fileName, float percentage,int graphCutValue);
-    void readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue);
+    void readHalfGraph(string fileName, float percentage,int graphCutValue,std::ofstream& resultLogFile);
+    void readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue,std::ofstream& resultLogFile);
     void readLabels(string fileName);
-    void writeLabels();
+    void writeLabels(std::ofstream& resultLogFile);
     void setLabels(vector<bool> labels, float percentageTargets);
     
     //Numbers
@@ -88,8 +88,8 @@ public:
     vector<int> *getNonTargets();
     
     vector<vector<int>> constructTranspose(vector<vector<int> > aGraph);
-    void generateRandomRRSets(int R, bool label);
-    void generateRandomRRSetsFromTargets(int R, vector<int> activatedSet, string modular);
+    void generateRandomRRSets(int R, bool label,std::ofstream& resultLogFile);
+    void generateRandomRRSetsFromTargets(int R, vector<int> activatedSet, string modular,std::ofstream& resultLogFile);
     
     vector<int> generateRandomRRSet(int randomVertex, int rrSetID);
     void generateRandomRRSetwithCount(int randomVertex, int rrSetID);

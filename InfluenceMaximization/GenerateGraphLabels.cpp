@@ -65,5 +65,6 @@ void GenerateGraphLabels::generate() {
     cout << "\n Sanity count: " << sanityCount;
     cout << "\n Value of n: " << n;
     this->graph->setLabels(labels, this->percentage);
-    this->graph->writeLabels();
+    ofstream a;
+    this->graph->writeLabels(a);
 }
