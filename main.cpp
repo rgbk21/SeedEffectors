@@ -728,14 +728,87 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     resultLogFile << "\n Elapsed time in minutes " << totalExecutionTime;
 }
 
+void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
+    clock_t executionTimeBegin = clock();
+    
+    IMResults::getInstance().setFromFile(fromFile);
+    // insert code here...
+    float percentageTargetsFloat = (float)percentageTargets/(float)100;
+    
+    
+    Graph *influencedGraph = new Graph;
+    influencedGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    if(!useIndegree) {
+        influencedGraph->setPropogationProbability(probability);
+    }
+    vector<int> activatedSet=vector<int>(influencedGraph->n);
+    for(int i=0;i<influencedGraph->n;i++){
+        activatedSet[i]=i;
+    }
+    set<int> seedSet;
+
+    cout << "\n Targets activated = " << activatedSet.size();
+    cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
+    
+    //get node to be removed
+    set<int> modNodesToremove;
+    if(modular.compare("modular")==0){
+        cout << "\n ******* Running modular approach ******** \n" <<flush;
+        resultLogFile << "\n ******* Running modular approach ******** \n";
+        
+        clock_t ModReverseStartTime = clock();
+        modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,modular);
+        clock_t ModReverseEndTime = clock();
+        double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
+        cout << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime<<flush;
+        resultLogFile << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime;
+        
+        myfile <<totalAlgorithmTime<<" ";
+        delete influencedGraph;
+    }
+    //else{
+    cout << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
+    resultLogFile << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
+    Graph *subInfluencedGraph = new Graph;
+    subInfluencedGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    if(!useIndegree) {
+        subInfluencedGraph->setPropogationProbability(probability);
+    }
+    set<int> *removalModImpact=new set<int>();
+    set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,activatedSet,removeNodes, seedSet,removalModImpact);
+    delete subInfluencedGraph;
+    
+    cout << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
+    resultLogFile << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
+    Graph *modNewGraph = new Graph;
+    modNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    if(!useIndegree) {
+        modNewGraph->setPropogationProbability(probability);
+    }
+    
+    Graph *modImpactGraph = new Graph;
+    modImpactGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    if(!useIndegree) {
+        modImpactGraph->setPropogationProbability(probability);
+    }
+    string convertedFile="graphs/"+graphFileName;
+    Graph *subNewGraph = new Graph;
+    subNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    if(!useIndegree) {
+        subNewGraph->setPropogationProbability(probability);
+    }newDiffusion(modNewGraph,subNewGraph,modImpactGraph,modNodesToremove,subModNodesToremove,removalModImpact,activatedSet,newSeed,percentageTargetsFloat,convertedFile);
+    
+    clock_t executionTimeEnd = clock();
+    double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
+    cout << "\n Elapsed time in minutes " << totalExecutionTime;
+    resultLogFile << "\n Elapsed time in minutes " << totalExecutionTime;
+}
+
 
 int main(int argc, char **argv) {
     cout << "Starting program\n";
     
     string resultDataFile;
-    
-    
-    
     srand(time(0));
     setupLogger();
     cout << "Setup logger \n";
@@ -837,12 +910,12 @@ int main(int argc, char **argv) {
     
     string resultFile;
     resultFile=graphFileName;
-    resultFile+="_results.txt";
+    resultFile+="_FullGraph_results.txt";
     resultFile = "results/" + resultFile;
     myfile.open (resultFile,std::ios::app);
     myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
     
-    executeTIMTIM(result);
+    executeTIMTIMfullGraph(result);
     disp_mem_usage("");
     return 0;
 }
