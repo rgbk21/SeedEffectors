@@ -433,7 +433,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
     resultLogFile<< "RR sets are: "<<R;
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular",resultLogFile);
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular2",resultLogFile);
     
     int removalNum=removeNodes;
     bool SubImpact=false;
@@ -910,12 +910,12 @@ int main(int argc, char **argv) {
     
     string resultFile;
     resultFile=graphFileName;
-    resultFile+="_FullGraph_results.txt";
+    resultFile+="_results.txt";
     resultFile = "results/" + resultFile;
     myfile.open (resultFile,std::ios::app);
     myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
     
-    executeTIMTIMfullGraph(result);
+    executeTIMTIM(result);
     disp_mem_usage("");
     return 0;
 }

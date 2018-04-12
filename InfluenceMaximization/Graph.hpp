@@ -63,6 +63,10 @@ public:
     vector<bool> visited;
     vector<int> visitMark;
     vector<int> NodeinRRsetsWithCounts;
+    vector<vector<int>> RRgraph;
+    
+    vector<int> outdegree;
+    
     vector<vector<set<int>>> associatedSet;
     vector<vector<int>>nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
@@ -94,6 +98,8 @@ public:
     vector<int> generateRandomRRSet(int randomVertex, int rrSetID);
     void generateRandomRRSetwithCount(int randomVertex, int rrSetID);
     void generateRandomRRSetwithCountMod(int randomVertex, int rrSetID);
+    void BFSonRRgraphs(int Rid,int rrSetID);
+    void generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID);
     void clearRandomRRSets();
     vector<vector<int>>* getRandomRRSets();
     
