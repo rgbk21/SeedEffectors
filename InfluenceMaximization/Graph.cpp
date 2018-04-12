@@ -21,6 +21,7 @@ bool sortbydegree(const set<int> &a,const set<int> &b)
     return (a.size() > b.size());
 }
 
+
 Graph::Graph() {
     this->standardProbability = false;
 }
@@ -149,16 +150,16 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string co
     
     string s;
     if(myFile.is_open()) {
-        //myFile>>n;
+        myFile>>n;
         //modified
-        myFile>>n>>m;
+        //myFile>>n>>m;
         //
         graph=vector<vector<int>>(n,vector<int>());
         oldGraph=vector<vector<int>>(n,vector<int>());
         visited=vector<bool>(n,false);
-        //labels=vector<bool>(n,false);
+        labels=vector<bool>(n,false);
         //modified
-        labels=vector<bool>(n,true);
+        //labels=vector<bool>(n,true);
         //
         inDegree=vector<int>(n,0);
         
@@ -439,19 +440,37 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
                 }
             }
         }
-        else{
+        else if(modular.compare("submodular")==0){
             coverage=vector<int>(n,0);
             //AStree=vector<unordered_map<AS,vector<AS>>>(n);
             //match= new vector<AS>(n);
+
             pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
             nodeAS=vector<vector<int>>(n);
             int t=(int)activatedSet.size();
             for(int i=0;i<R;i++) {
+                RRgraph=vector<vector<int>>(n) ;
                 int randomVertex;
                 randomVertex = activatedSet[rand() % t];
                 generateRandomRRSetwithCount(randomVertex, i);
                 totalSize+=rrSets[i].size();
             }
+        }
+    
+        else{
+            int t=(int)activatedSet.size();
+            nodeAS=vector<vector<int>>(n);
+            pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+            coverage=vector<int>(n,0);
+            for(int i=0;i<R;i++) {
+                RRgraph=vector<vector<int>>(n) ;
+                outdegree=vector<int>(n);
+                int randomVertex;
+                randomVertex = activatedSet[rand() % t];
+                generateRandomRRSetwithRRgraphs(randomVertex, i);
+                totalSize+=rrSets[i].size();
+            }
+            
         }
         visitMark.clear();
         clock_t end = clock();
@@ -468,6 +487,103 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     resultLogFile<< "\n Total Size is " << totalSize<<flush;
     resultLogFile<<"\n Average size is " << (float)totalSize/(float)R;
     }
+
+
+//********** Function only for the influenced graph ********
+void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
+    
+    q.clear();
+    rrSets[rrSetID].push_back(randomVertex);
+    q.push_back(randomVertex);
+    int nVisitMark = 0;
+    visitMark[nVisitMark++] = randomVertex;
+    visited[randomVertex] = true;
+    outdegree[randomVertex]=0;
+    
+    while(!q.empty()) {
+        int expand=q.front();
+        q.pop_front();
+        nodeAS[expand].push_back(expand);
+        for(int j=0; j<(int)graphTranspose[expand].size(); j++){
+            int v=graphTranspose[expand][j];
+            if(!labels[v])
+                continue;
+            
+            if(visited[v]){
+                continue;
+            }
+            
+            if(!this->flipCoinOnEdge(v, expand))
+                continue;
+            
+            if(!visited[v])
+            {
+                visitMark[nVisitMark++]=v;
+                visited[v]=true;
+            }
+            q.push_back(v);
+            rrSets[rrSetID].push_back(v);
+            RRgraph[expand].push_back(v);
+            outdegree[v]++;
+        }
+    }
+    for(int i=0;i<nVisitMark;i++) {
+        visited[visitMark[i]] = false;
+    }
+    
+    BFSonRRgraphs(randomVertex,rrSetID);
+}
+
+
+void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
+    
+    priority_queue<int, vector<int>, greater<int>> workQueue;
+    workQueue.push(randomVertex);
+    
+    while(!workQueue.empty()) {
+        int expand=workQueue.top();
+        workQueue.pop();
+        
+        for(int v:RRgraph[expand]){
+            outdegree[v]--;
+            workQueue.push(v);
+            pair<int,unordered_set<int>> node;
+            nodeAS[v].insert(nodeAS[v].end(), nodeAS[expand].begin(),nodeAS[expand].end());
+        }
+    }
+    pair<int,unordered_set<int>> node;
+    //creation of associated set matrix
+    for(int i=0;i<nodeAS.size();i++){
+        if(nodeAS[i].size()>0){
+            for(int j:nodeAS[i]){
+                if(pairAssociatedSet[j].empty()){
+                    node=pair<int,unordered_set<int>>();
+                    node.first=i;
+                    node.second.insert(rrSetID);
+                    pairAssociatedSet[j].insert(node);
+                    coverage[j]++;
+                }
+                
+                else{
+                    std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[j].find(i);
+                    if (it != pairAssociatedSet[j].end()){
+                        it->second.insert(rrSetID);
+                        coverage[j]++;
+                    }
+                    else{
+                        node=pair<int,unordered_set<int>>();
+                        node.first=i;
+                        node.second.insert(rrSetID);
+                        pairAssociatedSet[j].insert(node);
+                        coverage[j]++;
+                    }
+                }
+            }
+            nodeAS[i].clear();
+        }
+    }
+}
+
 
 //********** Function only for the influenced graph with modular property********
 void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
@@ -493,6 +609,7 @@ void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
             {
                 visitMark[nVisitMark++]=v;
                 visited[v]=true;
+                
             }
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
@@ -525,10 +642,9 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             int v=graphTranspose[expand][j];
             if(!labels[v])
                 continue;
-            if(!this->flipCoinOnEdge(v, expand))
-                continue;
+            
             if(visited[v]){
-                //find differnce here
+                //find difference here
                 std::vector<int> intersect;
                 std::sort(nodeAS[expand].begin(), nodeAS[expand].end());
                 std::sort(nodeAS[v].begin(), nodeAS[v].end());
@@ -537,19 +653,35 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 nodeAS[v].push_back(v);
                 nodeAS[expand]=intersect;
                 nodeAS[expand].push_back(expand);
+                deque<int> qu;
+                qu.push_back(v);
+                while(!qu.empty()){
+                    int explore=qu.front();
+                    qu.pop_front();
+                    for(int i:RRgraph[explore]){
+                        qu.push_back(i);
+                        nodeAS[i]=intersect;
+                        nodeAS[i].push_back(i);
+                    }
+                }
                 continue;
             }
+            
+            if(!this->flipCoinOnEdge(v, expand))
+                continue;
             
             if(!visited[v])
             {
                 visitMark[nVisitMark++]=v;
                 visited[v]=true;
+                RRgraph[expand].push_back(v);
             }
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
             
             nodeAS[v].insert(nodeAS[v].end(), nodeAS[expand].begin(),nodeAS[expand].end());
-        }
+
+            }
     }
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
