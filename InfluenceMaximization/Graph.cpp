@@ -470,7 +470,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         coverage=vector<int>(n,0);
         RRgraph=vector<vector<int>>(n) ;
-        outdegree=vector<int>(n,INT_MAX);
+        outdegree=vector<int>(n,n);
         for(int i=0;i<R;i++) {
             int randomVertex;
             randomVertex = activatedSet[rand() % t];
@@ -533,7 +533,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
             RRgraph[expand].push_back(v);
-            if(outdegree[v]==INT_MAX)
+            if(outdegree[v]==n)
                 outdegree[v]=0;
             outdegree[v]++;
         }
@@ -544,7 +544,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         visited[visitMark[i]] = false;
         vector<int>().swap(nodeAS[visitMark[i]]);
         vector<int>().swap(RRgraph[visitMark[i]]);
-        outdegree[visitMark[i]]= INT_MAX;
+        outdegree[visitMark[i]]= n;
     }
 }
 
