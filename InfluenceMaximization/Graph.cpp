@@ -26,11 +26,11 @@ Graph::Graph() {
     this->standardProbability = false;
 }
 /*
-AS::AS(int value, AS* n)
-{
-    data=value;
-    count=0;
-}
+ AS::AS(int value, AS* n)
+ {
+ data=value;
+ count=0;
+ }
  */
 void Graph::setPropogationProbability(float p) {
     this->propogationProbability = p;
@@ -71,7 +71,7 @@ void Graph::readReverseGraph(string fileName, float percentage){
         visited=vector<bool>(n,false);
         labels=vector<bool>(n,true);
         inDegree=vector<int>(n,0);
-
+        
         int from, to;
         int maxDegree = 0;
         while (myFile >> from >> to) {
@@ -212,18 +212,18 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
         
         int from, to;
         int maxDegree = 0;
-
+        
         while (myFile >> from >> to) {
             if(from ==-1 && to==-1){
                 break;
             }
-                graph[from].push_back(to);
-                inDegree[to] = inDegree[to]+1;
-                if(inDegree[to] > maxDegree) {
-                    maxDegree = inDegree[to];
-                }
-                activatedSet.insert(from);
-                activatedSet.insert(to);
+            graph[from].push_back(to);
+            inDegree[to] = inDegree[to]+1;
+            if(inDegree[to] > maxDegree) {
+                maxDegree = inDegree[to];
+            }
+            activatedSet.insert(from);
+            activatedSet.insert(to);
         }
         if(seedNodes!=NULL && seedOrder!=NULL){
             int str;
@@ -272,7 +272,7 @@ void Graph::readInfluencedGraph(string fileName, float percentage, vector<int> a
         visited=vector<bool>(n,false);
         labels=vector<bool>(n,false);
         inDegree=vector<int>(n,0);
-
+        
         for(int i:activatedSet) {
             labels[i]=true;
         }
@@ -308,7 +308,7 @@ void Graph::readGraph(string fileName, float percentage,std::ofstream& resultLog
         visited=vector<bool>(n,false);
         labels=vector<bool>(n,true);
         inDegree=vector<int>(n,0);
-
+        
         int from, to;
         int maxDegree = 0;
         while (myFile >> from >> to) {
@@ -428,65 +428,66 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
                 totalSize+=rrSets[i].size();
             }
         }
-            else{
-                vector<pair<int,int>> checkRR;
-                int t=(int)activatedSet.size();
-                for(int i=0;i<R;i++) {
-                    int randomVertex;
-                    randomVertex = activatedSet[rand() % t];
-                    
-                    generateRandomRRSetwithCountMod(randomVertex, i);
-                    totalSize+=rrSets[i].size();
-                }
-            }
-        }
-        else if(modular.compare("submodular")==0){
-            coverage=vector<int>(n,0);
-            //AStree=vector<unordered_map<AS,vector<AS>>>(n);
-            //match= new vector<AS>(n);
-
-            pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
-            nodeAS=vector<vector<int>>(n);
-            int t=(int)activatedSet.size();
-            for(int i=0;i<R;i++) {
-                RRgraph=vector<vector<int>>(n) ;
-                int randomVertex;
-                randomVertex = activatedSet[rand() % t];
-                generateRandomRRSetwithCount(randomVertex, i);
-                totalSize+=rrSets[i].size();
-            }
-        }
-    
         else{
+            vector<pair<int,int>> checkRR;
             int t=(int)activatedSet.size();
-            nodeAS=vector<vector<int>>(n);
-            pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
-            coverage=vector<int>(n,0);
             for(int i=0;i<R;i++) {
-                RRgraph=vector<vector<int>>(n) ;
-                outdegree=vector<int>(n);
                 int randomVertex;
                 randomVertex = activatedSet[rand() % t];
-                generateRandomRRSetwithRRgraphs(randomVertex, i);
+                
+                generateRandomRRSetwithCountMod(randomVertex, i);
                 totalSize+=rrSets[i].size();
             }
-            
         }
-        visitMark.clear();
-        clock_t end = clock();
-        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        cout <<"\n Generated reverse" << R << " RR sets\n";
-        cout << "Elapsed time " << elapsed_secs;
-        cout<< " \n Time per RR Set is " << elapsed_secs/R;
-        cout<< "\n Total Size is " << totalSize<<flush;
-        cout<<"\n Average size is " << (float)totalSize/(float)R;
+    }
+    //for submodular
+    else if(modular.compare("submodular")==0){
+        coverage=vector<int>(n,0);
+        //AStree=vector<unordered_map<AS,vector<AS>>>(n);
+        //match= new vector<AS>(n);
+        
+        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        nodeAS=vector<vector<int>>(n);
+        int t=(int)activatedSet.size();
+        for(int i=0;i<R;i++) {
+            RRgraph=vector<vector<int>>(n) ;
+            int randomVertex;
+            randomVertex = activatedSet[rand() % t];
+            generateRandomRRSetwithCount(randomVertex, i);
+            totalSize+=rrSets[i].size();
+        }
+    }
+    //for modular Impact
+    else{
+        int t=(int)activatedSet.size();
+        nodeAS=vector<vector<int>>(n);
+        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        coverage=vector<int>(n,0);
+        for(int i=0;i<R;i++) {
+            RRgraph=vector<vector<int>>(n) ;
+            outdegree=vector<int>(n);
+            int randomVertex;
+            randomVertex = activatedSet[rand() % t];
+            generateRandomRRSetwithRRgraphs(randomVertex, i);
+            totalSize+=rrSets[i].size();
+        }
+        
+    }
+    visitMark.clear();
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout <<"\n Generated reverse" << R << " RR sets\n";
+    cout << "Elapsed time " << elapsed_secs;
+    cout<< " \n Time per RR Set is " << elapsed_secs/R;
+    cout<< "\n Total Size is " << totalSize<<flush;
+    cout<<"\n Average size is " << (float)totalSize/(float)R;
     
     resultLogFile <<"\n Generated reverse" << R << " RR sets\n";
     resultLogFile << "Elapsed time " << elapsed_secs;
     resultLogFile<< " \n Time per RR Set is " << elapsed_secs/R;
     resultLogFile<< "\n Total Size is " << totalSize<<flush;
     resultLogFile<<"\n Average size is " << (float)totalSize/(float)R;
-    }
+}
 
 
 //********** Function only for the influenced graph ********
@@ -504,6 +505,8 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         int expand=q.front();
         q.pop_front();
         nodeAS[expand].push_back(expand);
+        addSetintoASmatrix(expand, expand, rrSetID);
+        coverage[expand]++;
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
             if(!labels[v])
@@ -534,25 +537,9 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
     BFSonRRgraphs(randomVertex,rrSetID);
 }
 
-
-void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
-    
-    priority_queue<int, vector<int>, greater<int>> workQueue;
-    workQueue.push(randomVertex);
-    
-    while(!workQueue.empty()) {
-        int expand=workQueue.top();
-        workQueue.pop();
-        
-        for(int v:RRgraph[expand]){
-            outdegree[v]--;
-            workQueue.push(v);
-            pair<int,unordered_set<int>> node;
-            nodeAS[v].insert(nodeAS[v].end(), nodeAS[expand].begin(),nodeAS[expand].end());
-        }
-    }
-    pair<int,unordered_set<int>> node;
+void Graph:: UpdateAssociatedSetMatrix(int rrSetID){
     //creation of associated set matrix
+    pair<int,unordered_set<int>> node;
     for(int i=0;i<nodeAS.size();i++){
         if(nodeAS[i].size()>0){
             for(int j:nodeAS[i]){
@@ -582,6 +569,69 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
             nodeAS[i].clear();
         }
     }
+}
+
+void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
+    
+    priority_queue<int, vector<int>, greater<int>> workQueue;
+    unordered_set<int> alreadyVisited;
+    workQueue.push(randomVertex);
+    
+    while(!workQueue.empty()) {
+        int expand=workQueue.top();
+        workQueue.pop();
+        
+        for(int v:RRgraph[expand]){
+            outdegree[v]--;
+            if(alreadyVisited.count(v)==0){
+                alreadyVisited.insert(v);
+                workQueue.push(v);
+                for(int i:nodeAS[expand]){
+                    nodeAS[v].insert(nodeAS[v].end(),i);
+                    addSetintoASmatrix(i, v, rrSetID);
+                    coverage[i]++;
+                }
+            }
+            else{
+                std::unordered_set<int> intersect;
+                std::sort(nodeAS[expand].begin(), nodeAS[expand].end());
+                std::sort(nodeAS[v].begin(), nodeAS[v].end());
+                std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
+                for(int i:nodeAS[v]){
+                    if(i!=v){
+                        if(intersect.count(i)==0){
+                            coverage[i]--;
+                            removeSetFromASmatrix(i, v, rrSetID);
+                        }
+                        else{
+                            nodeAS[v].push_back(i);
+                        }
+                    }
+                }
+                for(int i:nodeAS[expand]){
+                    if(i!=expand){
+                        if(intersect.count(i)==0){
+                            coverage[i]--;
+                            removeSetFromASmatrix(i, v, rrSetID);
+                        }
+                        else{
+                            nodeAS[expand].push_back(i);
+                        }
+                    }
+                }
+                //nodeAS[v]=intersect;
+                nodeAS[v].push_back(v);
+                //nodeAS[expand]=intersect;
+                nodeAS[expand].push_back(expand);
+            }
+        }
+    }
+    for(int i=0;i<nodeAS.size();i++) {
+        if(nodeAS[i].size()>0)
+            nodeAS[i].clear();
+    }
+    
+    //UpdateAssociatedSetMatrix(rrSetID);
 }
 
 
@@ -624,7 +674,7 @@ void Graph::generateRandomRRSetwithCountMod(int randomVertex, int rrSetID) {
 
 //********** Function only for the influenced graph ********
 void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
-
+    
     pair<int,unordered_set<int>> node;
     
     q.clear();
@@ -636,7 +686,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
     while(!q.empty()) {
         int expand=q.front();
         nodeAS[expand].push_back(expand);
-        
+        coverage[expand]++;
         q.pop_front();
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -648,7 +698,7 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
                 std::vector<int> intersect;
                 std::sort(nodeAS[expand].begin(), nodeAS[expand].end());
                 std::sort(nodeAS[v].begin(), nodeAS[v].end());
-                 std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::back_inserter(intersect));
+                std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::back_inserter(intersect));
                 nodeAS[v]=intersect;
                 nodeAS[v].push_back(v);
                 nodeAS[expand]=intersect;
@@ -680,75 +730,13 @@ void Graph::generateRandomRRSetwithCount(int randomVertex, int rrSetID) {
             rrSets[rrSetID].push_back(v);
             
             nodeAS[v].insert(nodeAS[v].end(), nodeAS[expand].begin(),nodeAS[expand].end());
-
-            }
+        }
     }
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
     }
-    /*
-    //test
-    for(int i=0;i<nodeAS.size();i++){
-        if(nodeAS[i].size()>0){
-            for(int j:nodeAS[i]){
-                //AS temp= match->at(j);
-                AS *Rval;
-                AS *node;
-                if(AStree[i].count(rrSetID)==0){
-                    Rval= new AS;
-                    node= new AS;
-                    //struct AS *Rval= (struct AS*) malloc(sizeof(struct AS));
-                    //struct AS *node= (struct AS*) malloc(sizeof(struct AS));
-                    node->next->push_back(*Rval) ;
-                    node->count++;
-                    Rval->next->push_back(*node);
-                    (*match)[j]= (*Rval);
-                    
-                    pair<AS,vector<AS>> h=pair<AS,vector<AS>>();
-                    h.first= *Rval;
-                    h.second.push_back(*node);
-                    AStree[i].insert(h);
-                }
-                else{
-                    //temp.next->next.insert(j);
-                    AS *node= new AS;
-                    vector<AS> Rval=AStree[i].find(rrSetID)->second;
-                }
-            }
-        }
-    }
-    */
     
-    //creation of associated set matrix
-    for(int i=0;i<nodeAS.size();i++){
-        if(nodeAS[i].size()>0){
-            for(int j:nodeAS[i]){
-                if(pairAssociatedSet[j].empty()){
-                    node=pair<int,unordered_set<int>>();
-                    node.first=i;
-                    node.second.insert(rrSetID);
-                    pairAssociatedSet[j].insert(node);
-                    coverage[j]++;
-                }
-                
-                else{
-                    std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[j].find(i);
-                    if (it != pairAssociatedSet[j].end()){
-                        it->second.insert(rrSetID);
-                        coverage[j]++;
-                    }
-                    else{
-                        node=pair<int,unordered_set<int>>();
-                        node.first=i;
-                        node.second.insert(rrSetID);
-                        pairAssociatedSet[j].insert(node);
-                        coverage[j]++;
-                    }
-                }
-            }
-            nodeAS[i].clear();
-        }
-    }
+    UpdateAssociatedSetMatrix(rrSetID);
 }
 
 
@@ -789,7 +777,7 @@ void Graph::generateRandomRRSets(int R, bool label,std::ofstream& resultLogFile)
 }
 
 vector<vector<int>>* Graph::getRandomRRSets() {
-     return &rrSets;
+    return &rrSets;
 }
 
 void Graph::clearRandomRRSets() {
@@ -879,7 +867,7 @@ vector<int> Graph::oldRRSetGeneration(int randomVertex, int rrSetID) {
     //Most of this code is used from the source code of TIM - Influence Maximization: Near-Optimal Time Complexity Meets Practical Efficiency by Tang et al.
     // Source code - https://sourceforge.net/projects/timplus/
     // License GNU GENERAL PUBLIC LICENSE Version 3
-
+    
     int n_visit_edge=0;
     int uStart = randomVertex;
     int hyperiiid = rrSetID;
@@ -933,8 +921,8 @@ void Graph:: removeOutgoingEdges(int vertex){
             if(j!=vertex)
                 outgoingEdges.push_back(j);
         }
-         graphTranspose[i]=outgoingEdges;
-       
+        graphTranspose[i]=outgoingEdges;
+        
         for(int j:graph[i]){
             if(j!=vertex)
                 incomingEdges.push_back(j);
@@ -983,9 +971,39 @@ void Graph:: removeNodeFromRRset(int vertex){
     coverage[vertex]=0;
 }
 
+void Graph:: removeSetFromASmatrix(int row, int vertex, int rrSetID){
+    std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[row].find(vertex);
+    if (it != pairAssociatedSet[row].end()){
+        it->second.erase(rrSetID);
+    }
+}
+
+void Graph:: addSetintoASmatrix(int row, int vertex, int rrSetID){
+    pair<int,unordered_set<int>> node;
+    if(pairAssociatedSet[row].empty()){
+        node=pair<int,unordered_set<int>>();
+        node.first=vertex;
+        node.second.insert(rrSetID);
+        pairAssociatedSet[row].insert(node);
+    }
+    
+    else{
+        std::unordered_map<int, unordered_set<int>>::iterator it = pairAssociatedSet[row].find(vertex);
+        if (it != pairAssociatedSet[row].end()){
+            it->second.insert(rrSetID);
+        }
+        else{
+            node=pair<int,unordered_set<int>>();
+            node.first=vertex;
+            node.second.insert(rrSetID);
+            pairAssociatedSet[row].insert(node);
+        }
+    }
+}
 
 
-    
-        
-    
-    
+
+
+
+
+

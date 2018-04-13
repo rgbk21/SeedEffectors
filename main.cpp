@@ -433,7 +433,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
     cout<< "RR sets are: "<<R;
     resultLogFile<< "RR sets are: "<<R;
-    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,"submodular2",resultLogFile);
+    influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular,resultLogFile);
     
     int removalNum=removeNodes;
     bool SubImpact=false;
@@ -676,20 +676,19 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     
     //get node to be removed
     set<int> modNodesToremove;
-    if(modular.compare("modular")==0){
-        cout << "\n ******* Running modular approach ******** \n" <<flush;
-        resultLogFile << "\n ******* Running modular approach ******** \n";
-        
-        clock_t ModReverseStartTime = clock();
-        modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,modular);
-        clock_t ModReverseEndTime = clock();
-        double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
-        cout << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime<<flush;
-        resultLogFile << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime;
-        
-        myfile <<totalAlgorithmTime<<" ";
-        delete influencedGraph;
-    }
+    cout << "\n ******* Running modular approach ******** \n" <<flush;
+    resultLogFile << "\n ******* Running modular approach ******** \n";
+    
+    clock_t ModReverseStartTime = clock();
+    modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,"modular");
+    clock_t ModReverseEndTime = clock();
+    double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
+    cout << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime<<flush;
+    resultLogFile << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime;
+    
+    myfile <<totalAlgorithmTime<<" ";
+    delete influencedGraph;
+
     //else{
     cout << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
     resultLogFile << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
@@ -752,21 +751,19 @@ void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
     
     //get node to be removed
     set<int> modNodesToremove;
-    if(modular.compare("modular")==0){
-        cout << "\n ******* Running modular approach ******** \n" <<flush;
-        resultLogFile << "\n ******* Running modular approach ******** \n";
-        
-        clock_t ModReverseStartTime = clock();
-        modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,modular);
-        clock_t ModReverseEndTime = clock();
-        double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
-        cout << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime<<flush;
-        resultLogFile << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime;
-        
-        myfile <<totalAlgorithmTime<<" ";
-        delete influencedGraph;
-    }
-    //else{
+    cout << "\n ******* Running modular approach ******** \n" <<flush;
+    resultLogFile << "\n ******* Running modular approach ******** \n";
+    
+    clock_t ModReverseStartTime = clock();
+    modNodesToremove= removeVertices(influencedGraph, removeNodes, seedSet, activatedSet,"modular");
+    clock_t ModReverseEndTime = clock();
+    double totalAlgorithmTime = double(ModReverseEndTime-ModReverseStartTime) / (CLOCKS_PER_SEC*60);
+    cout << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime<<flush;
+    resultLogFile << "\n Reverse algorithm time in minutes \n" << totalAlgorithmTime;
+    
+    myfile <<totalAlgorithmTime<<" ";
+    delete influencedGraph;
+    
     cout << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
     resultLogFile << "\n \n ******* Running Sub Modular approach ******** \n" <<flush;
     Graph *subInfluencedGraph = new Graph;
@@ -846,7 +843,7 @@ int main(int argc, char **argv) {
     resultDataFile=graphFileName;
     resultDataFile+="_Budget_"+ to_string(budget);
     resultDataFile+="_Removal_"+ to_string(removeNodes);
-    resultDataFile+="_Log.txt";
+    resultDataFile+="__RRapproach_Log.txt";
     resultDataFile = "ResultData/" + resultDataFile;
     resultLogFile.open(resultDataFile);
     
@@ -910,7 +907,7 @@ int main(int argc, char **argv) {
     
     string resultFile;
     resultFile=graphFileName;
-    resultFile+="_results.txt";
+    resultFile+="_RRapproach_results.txt";
     resultFile = "results/" + resultFile;
     myfile.open (resultFile,std::ios::app);
     myfile <<"\n"<<budget<<" "<<removeNodes<<" ";

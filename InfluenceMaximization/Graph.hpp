@@ -99,6 +99,7 @@ public:
     void generateRandomRRSetwithCount(int randomVertex, int rrSetID);
     void generateRandomRRSetwithCountMod(int randomVertex, int rrSetID);
     void BFSonRRgraphs(int Rid,int rrSetID);
+    void UpdateAssociatedSetMatrix(int rrSetID);
     void generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID);
     void clearRandomRRSets();
     vector<vector<int>>* getRandomRRSets();
@@ -113,6 +114,8 @@ public:
     int getPropogationProbabilityNumber();
     void removeOutgoingEdges(int v);
     void removeNodeFromRRset(int v);
+    void removeSetFromASmatrix(int row, int vertex, int rrSetID);
+    void addSetintoASmatrix(int row, int vertex, int rrSetID);
 };
 
 #endif /* Graph_hpp */
