@@ -471,6 +471,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         coverage=vector<int>(n,0);
         RRgraph=vector<vector<int>>(n) ;
         outdegree=vector<int>(n,n);
+        modImpactTime=0;
         for(int i=0;i<R;i++) {
             int randomVertex;
             randomVertex = activatedSet[rand() % t];
@@ -511,7 +512,12 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         int expand=q.front();
         q.pop_front();
         nodeAS[expand].push_back(expand);
+        
+        clock_t startMOD = clock();
         addSetintoASmatrix(expand, expand, rrSetID);
+        clock_t endMOD = clock();
+        modImpactTime += double(endMOD - startMOD);
+        
         coverage[expand]++;
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -599,7 +605,12 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 workQueue.push(pair<int,int>(v,outdegree[v]));
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(nodeAS[v].end(),i);
+                    
+                    clock_t startMOD = clock();
                     addSetintoASmatrix(i, v, rrSetID);
+                    clock_t endMOD = clock();
+                    modImpactTime += double(endMOD - startMOD);
+                    
                     coverage[i]++;
                 }
             }
@@ -614,7 +625,11 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                     if(i!=v){
                         if(intersection.count(i)==0){
                             coverage[i]--;
+                            
+                            clock_t startMOD = clock();
                             removeSetFromASmatrix(i, v, rrSetID);
+                            clock_t endMOD = clock();
+                            modImpactTime += double(endMOD - startMOD);
                         }
                         else{
                             nodeAS[v].push_back(i);
@@ -625,7 +640,10 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                     if(i!=expand){
                         if(intersection.count(i)==0){
                             coverage[i]--;
+                            clock_t startMOD = clock();
                             removeSetFromASmatrix(i, v, rrSetID);
+                            clock_t endMOD = clock();
+                            modImpactTime += double(endMOD - startMOD);
                         }
                         else{
                             nodeAS[expand].push_back(i);

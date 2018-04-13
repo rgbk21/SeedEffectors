@@ -462,7 +462,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             cout << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
             resultLogFile << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
             clock_t subModImapctEndTime = clock();
-            double totalModImapctTime = double(subModImapctEndTime-subModReverseStartTime) / (CLOCKS_PER_SEC*60);
+            double totalModImapctTime = double(subModImapctEndTime-subModReverseStartTime-influencedGraph->modImpactTime) / (CLOCKS_PER_SEC*60);
             cout << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             resultLogFile << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             myfile <<totalModImapctTime<<" ";

@@ -50,7 +50,7 @@ private:
 public:
     Graph();
     int n, m;
-    
+    int modImpactTime;
     //vector<unordered_map<AS,vector<AS>>> AStree;
     //vector<AS> *match;
     
