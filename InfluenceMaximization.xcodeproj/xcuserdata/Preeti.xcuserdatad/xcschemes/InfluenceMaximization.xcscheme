@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--Diffusion 0"
+            argument = "--Diffusion 2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -78,15 +78,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--modularity modular"
+            argument = "--modularity modular2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-GrQc-processed.txt"
+            argument = "--graph graph_ic_75k.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 0"
+            argument = "--seedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
