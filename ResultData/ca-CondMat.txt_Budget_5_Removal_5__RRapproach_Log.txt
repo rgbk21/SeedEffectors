@@ -1,0 +1,36 @@
+
+ Conducting experiments for:
+ Graph: ca-CondMat.txt	 Budget: 5	 Non Target Threshod: 10	 Percentage:  100	 Method: 1	 Nodes removed: 5	 Seed selection case: 1	 Top best outdegree threshold : 100	 Probability: Indegree
+ Generated 1442886 RR sets
+Elapsed time 7.24105 
+ Time per RR Set is 5.01845e-06
+ Total Size is 7637483
+ Average size is 5.2932
+ Diffusion on graph started
+ Creating Influenced Graph 
+ Selected original SeedSet: 349 949 1369 3073 3880 
+ Selected Order of SeedSet: 349 949 3073 1369 3880 
+ Targets activated = 524
+ Non targets are = 0
+ ******* Running modular approach ******** 
+
+ Generated reverse20775 RR sets
+Elapsed time 0.038135 
+ Time per RR Set is 1.83562e-06
+ Total Size is 101479
+ Average size is 4.88467
+ RRsets done 
+ 
+ Initial Strength is 101479
+ Number of nodes Already present in seed set = 0
+ Generated reverse20775 RR sets
+Elapsed time 0.034017 
+ Time per RR Set is 1.6374e-06
+ Total Size is 79532
+ Average size is 3.82826
+ 
+ After removing Modular Strength is 79532
+ Reverse algorithm time in minutes 
+0.0013412
+ 
+ ******* Running Sub Modular approach ******** 

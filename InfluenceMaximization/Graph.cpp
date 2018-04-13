@@ -20,7 +20,13 @@ bool sortbydegree(const set<int> &a,const set<int> &b)
 {
     return (a.size() > b.size());
 }
-
+class CompareOutdegree {
+public:
+    bool operator()(const pair<int,int> &a,const pair<int,int> &b)
+    {
+        return (a.second < b.second);
+    }
+};
 
 Graph::Graph() {
     this->standardProbability = false;
@@ -463,9 +469,9 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         nodeAS=vector<vector<int>>(n);
         pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         coverage=vector<int>(n,0);
+        RRgraph=vector<vector<int>>(n) ;
+        outdegree=vector<int>(n,INT_MAX);
         for(int i=0;i<R;i++) {
-            RRgraph=vector<vector<int>>(n) ;
-            outdegree=vector<int>(n);
             int randomVertex;
             randomVertex = activatedSet[rand() % t];
             generateRandomRRSetwithRRgraphs(randomVertex, i);
@@ -527,14 +533,19 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
             q.push_back(v);
             rrSets[rrSetID].push_back(v);
             RRgraph[expand].push_back(v);
+            if(outdegree[v]==INT_MAX)
+                outdegree[v]=0;
             outdegree[v]++;
         }
     }
-    for(int i=0;i<nVisitMark;i++) {
-        visited[visitMark[i]] = false;
-    }
     
     BFSonRRgraphs(randomVertex,rrSetID);
+    for(int i=0;i<nVisitMark;i++) {
+        visited[visitMark[i]] = false;
+        vector<int>().swap(nodeAS[visitMark[i]]);
+        vector<int>().swap(RRgraph[visitMark[i]]);
+        outdegree[visitMark[i]]= INT_MAX;
+    }
 }
 
 void Graph:: UpdateAssociatedSetMatrix(int rrSetID){
@@ -573,19 +584,19 @@ void Graph:: UpdateAssociatedSetMatrix(int rrSetID){
 
 void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
     
-    priority_queue<int, vector<int>, greater<int>> workQueue;
+    priority_queue<pair<int,int>,vector<pair<int,int>>,CompareOutdegree> workQueue;
     unordered_set<int> alreadyVisited;
-    workQueue.push(randomVertex);
+    workQueue.push(pair<int,int>(randomVertex,0));
     
     while(!workQueue.empty()) {
-        int expand=workQueue.top();
+        int expand=workQueue.top().first;
         workQueue.pop();
         
         for(int v:RRgraph[expand]){
             outdegree[v]--;
             if(alreadyVisited.count(v)==0){
                 alreadyVisited.insert(v);
-                workQueue.push(v);
+                workQueue.push(pair<int,int>(v,outdegree[v]));
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(nodeAS[v].end(),i);
                     addSetintoASmatrix(i, v, rrSetID);
@@ -593,13 +604,15 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 }
             }
             else{
-                std::unordered_set<int> intersect;
+                std::vector<int> intersect;
                 std::sort(nodeAS[expand].begin(), nodeAS[expand].end());
                 std::sort(nodeAS[v].begin(), nodeAS[v].end());
-                std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
+                std::set_intersection(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::back_inserter(intersect));
+                unordered_set<int> intersection;
+                intersection.insert(intersect.begin(),intersect.end());
                 for(int i:nodeAS[v]){
                     if(i!=v){
-                        if(intersect.count(i)==0){
+                        if(intersection.count(i)==0){
                             coverage[i]--;
                             removeSetFromASmatrix(i, v, rrSetID);
                         }
@@ -610,7 +623,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 }
                 for(int i:nodeAS[expand]){
                     if(i!=expand){
-                        if(intersect.count(i)==0){
+                        if(intersection.count(i)==0){
                             coverage[i]--;
                             removeSetFromASmatrix(i, v, rrSetID);
                         }
@@ -626,10 +639,11 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
             }
         }
     }
+    /*
     for(int i=0;i<nodeAS.size();i++) {
         if(nodeAS[i].size()>0)
             nodeAS[i].clear();
-    }
+    }*/
     
     //UpdateAssociatedSetMatrix(rrSetID);
 }
