@@ -24,7 +24,13 @@
 #include <algorithm>
 
 using namespace std;
-
+class CompareOutdegree {
+public:
+    bool operator()(const pair<int,int> &a,const pair<int,int> &b)
+    {
+        return (a.second < b.second);
+    }
+};
 /*
 class AS{
 public:
@@ -50,7 +56,9 @@ private:
 public:
     Graph();
     int n, m;
-    int modImpactTime;
+    double modImpactTime;
+    double testtime1;
+    double testtime2;
     //vector<unordered_map<AS,vector<AS>>> AStree;
     //vector<AS> *match;
     
@@ -66,9 +74,9 @@ public:
     vector<vector<int>> RRgraph;
     
     vector<int> outdegree;
-    
+    priority_queue<pair<int,int>,vector<pair<int,int>>,CompareOutdegree> workQueue;
     vector<vector<set<int>>> associatedSet;
-    vector<vector<int>>nodeAS;
+    vector<set<int>>nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
     vector<int> coverage;
     void readGraph(string fileName,std::ofstream& resultLogFile);

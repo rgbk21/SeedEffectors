@@ -903,8 +903,7 @@ int main(int argc, char **argv) {
     if(fromFile) {
         FILE_LOG(logDEBUG) << "\n Reading Non targets from file: " << nonTargetsFileName;
     }
-
-    
+ 
     string resultFile;
     resultFile=graphFileName;
     resultFile+="_RRapproach_results.txt";
