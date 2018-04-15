@@ -484,7 +484,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         //AStree=vector<unordered_map<AS,vector<AS>>>(n);
         //match= new vector<AS>(n);
         
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>();
         nodeAS=vector<set<int>>(n);
         RRgraph=vector<vector<int>>(n) ;
         int t=(int)activatedSet.size();
@@ -501,8 +501,13 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         modImpactTime=0;
         testtime1=0;
         testtime2=0;
+        int j=1;
         for(int i=0;i<R;i++) {
             int randomVertex;
+            if(i==j*200000){
+                cout<<" "<< i <<" ";
+                j++;
+            }
             randomVertex = activatedSet[rand() % t];
             generateRandomRRSetwithRRgraphs(randomVertex, i);
             totalSize+=rrSets[i].size();
@@ -612,7 +617,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    addSetintoASmatrix(i, v, rrSetID);
+                    //addSetintoASmatrix(i, v, rrSetID);
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
                     coverage[i]++;
@@ -635,7 +640,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        removeSetFromASmatrix(i, e, rrSetID);
+                        //removeSetFromASmatrix(i, e, rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
