@@ -209,11 +209,7 @@ vector<int> Graph::writeInfluencedGraph(string fileName, float percentage, strin
         visited=vector<bool>(n,false);
         labels=vector<bool>(n,true);
         inDegree=vector<int>(n,0);
-        nodeAS=vector<set<int>>(n);
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
-        coverage=vector<int>(n,0);
-        RRgraph=vector<vector<int>>(n) ;
-        outdegree=vector<int>(n,n);
+
         
         int from, to;
         int maxDegree = 0;
@@ -497,17 +493,17 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     }
     //for modular Impact
     else{
+        nodeAS=vector<set<int>>(n);
+        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        coverage=vector<int>(n,0);
+        RRgraph=vector<vector<int>>(n) ;
+        outdegree=vector<int>(n,n);
         int t=(int)activatedSet.size();
         modImpactTime=0;
-        testtime1=0;
-        testtime2=0;
-        int j=1;
+        //testtime1=0;
+        //testtime2=0;
         for(int i=0;i<R;i++) {
             int randomVertex;
-            if(i==j*200000){
-                cout<<" "<< i <<" ";
-                j++;
-            }
             randomVertex = activatedSet[rand() % t];
             generateRandomRRSetwithRRgraphs(randomVertex, i);
             totalSize+=rrSets[i].size();
@@ -515,8 +511,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         
     }
     visitMark.clear();
-    cout << "test time 1 " << double(testtime1)/ (CLOCKS_PER_SEC*60);
-    cout << "test time 2 " << double(testtime2)/ (CLOCKS_PER_SEC*60);
+    //cout << "test time 1 " << double(testtime1)/ (CLOCKS_PER_SEC*60);
+    //cout << "test time 2 " << double(testtime2)/ (CLOCKS_PER_SEC*60);
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout <<"\n Generated reverse" << R << " RR sets\n";
@@ -548,12 +544,12 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         int expand=q.front();
         q.pop_front();
         nodeAS[expand].insert(expand);
-        /*
+        
         clock_t startMOD = clock();
         addSetintoASmatrix(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
-        coverage[expand]++;*/
+        coverage[expand]++;
         
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -580,10 +576,10 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         }
     }
     
-    clock_t stest1 = clock();
+    //clock_t stest1 = clock();
     BFSonRRgraphs(randomVertex,rrSetID);
-    clock_t etest1 = clock();
-    testtime1+= double(etest1 - stest1);
+    //clock_t etest1 = clock();
+    //testtime1+= double(etest1 - stest1);
     
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
@@ -591,8 +587,6 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         vector<int>().swap(RRgraph[visitMark[i]]);
         outdegree[visitMark[i]]= n;
     }
-    
-    
 }
 
 
@@ -617,7 +611,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    //addSetintoASmatrix(i, v, rrSetID);
+                    addSetintoASmatrix(i, v, rrSetID);
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
                     coverage[i]++;
@@ -640,7 +634,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        //removeSetFromASmatrix(i, e, rrSetID);
+                        removeSetFromASmatrix(i, e, rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
