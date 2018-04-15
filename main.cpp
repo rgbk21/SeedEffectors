@@ -467,7 +467,6 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             resultLogFile << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             myfile <<totalModImapctTime<<" ";
         }
-        exit(0);
         int h=0;
         /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
          h++;
