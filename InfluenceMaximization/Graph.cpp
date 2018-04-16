@@ -548,7 +548,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         nodeAS[expand].insert(expand);
         
         clock_t startMOD = clock();
-        addSetintoASmatrix(expand, expand, rrSetID);
+        //addSetintoASmatrix(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
         coverage[expand]++;
@@ -622,7 +622,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    addSetintoASmatrix(i, v, rrSetID);
+                    //addSetintoASmatrix(i, v, rrSetID);
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
                     coverage[i]++;
@@ -652,7 +652,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        removeSetFromASmatrix(i, e, rrSetID);
+                        //removeSetFromASmatrix(i, e, rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
