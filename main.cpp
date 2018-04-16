@@ -910,8 +910,8 @@ int main(int argc, char **argv) {
     resultFile = "results/" + resultFile;
     myfile.open (resultFile,std::ios::app);
     myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
-    
-    executeTIMTIM(result);
+    executeTIMTIMfullGraph(result);
+    //executeTIMTIM(result);
     disp_mem_usage("");
     return 0;
 }
