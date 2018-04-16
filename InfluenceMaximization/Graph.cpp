@@ -150,16 +150,16 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string co
     
     string s;
     if(myFile.is_open()) {
-        myFile>>n;
+        //myFile>>n;
         //modified
-        //myFile>>n>>m;
+        myFile>>n>>m;
         //
         graph=vector<vector<int>>(n,vector<int>());
         oldGraph=vector<vector<int>>(n,vector<int>());
         visited=vector<bool>(n,false);
-        labels=vector<bool>(n,false);
+        //labels=vector<bool>(n,false);
         //modified
-        //labels=vector<bool>(n,true);
+        labels=vector<bool>(n,true);
         //
         inDegree=vector<int>(n,0);
         
