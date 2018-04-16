@@ -496,11 +496,13 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         nodeAS=vector<set<int>>(n);
         pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         coverage=vector<int>(n,0);
+        alreadyVisited=vector<bool>(n,false);
         RRgraph=vector<vector<int>>(n) ;
-        outdegree=vector<int>(n,n);
+        outdegree =vector<int>(n,n);
         int t=(int)activatedSet.size();
         modImpactTime=0;
-        //testtime1=0;
+        testtime1=0;
+        //workMap=unordered_map<int,int>();
         //testtime2=0;
         for(int i=0;i<R;i++) {
             int randomVertex;
@@ -511,7 +513,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         
     }
     visitMark.clear();
-    //cout << "test time 1 " << double(testtime1)/ (CLOCKS_PER_SEC*60);
+    cout << "test time 1 " << double(testtime1)/ (CLOCKS_PER_SEC*60);
     //cout << "test time 2 " << double(testtime2)/ (CLOCKS_PER_SEC*60);
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -576,13 +578,14 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         }
     }
     
-    //clock_t stest1 = clock();
+    clock_t stest1 = clock();
     BFSonRRgraphs(randomVertex,rrSetID);
-    //clock_t etest1 = clock();
-    //testtime1+= double(etest1 - stest1);
+    clock_t etest1 = clock();
+    testtime1+= double(etest1 - stest1);
     
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
+        alreadyVisited[visitMark[i]] = false;
         nodeAS[visitMark[i]].clear();
         vector<int>().swap(RRgraph[visitMark[i]]);
         outdegree[visitMark[i]]= n;
@@ -593,19 +596,27 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
 
 void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
     
-    unordered_set<int> alreadyVisited;
-    workQueue.push(pair<int,int>(randomVertex,0));
+    pair<int,int> p=pair<int,int>();
+    p.first=randomVertex;
+    p.second= outdegree[randomVertex];
+    //workQueue.push(p);
+    workMap.insert(p);
     
-    while(!workQueue.empty()) {
-        int expand=workQueue.top().first;
-        workQueue.pop();
+    while(workMap.size()!=0) {
+        //int expand=workQueue.top()->first;
+        int expand= workMap.begin()->first;
+        //workQueue.pop();
+        workMap.erase(workMap.begin());
         
         for(int v:RRgraph[expand]){
             outdegree[v]--;
-            if(alreadyVisited.count(v)==0){
-                alreadyVisited.insert(v);
+            if(!alreadyVisited[v]){
+                alreadyVisited[v]=true;
                 clock_t stest2 = clock();
-                workQueue.push(pair<int,int>(v,outdegree[v]));
+                p= pair<int,int>();
+                p.first=v;
+                p.second= outdegree[v];
+                workMap.insert(p);
                 clock_t etest2 = clock();
                 testtime2+= double(etest2 - stest2);
                 for(int i:nodeAS[expand]){
@@ -620,9 +631,16 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
             else{
                 std::vector<int> intersect;
                 std::set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
- 
+                p= pair<int,int>();
+                p.first=v;
+                p.second= outdegree[v]+1;
+                std::set<std::pair<int,int>>::iterator it=workMap.find(p);
+                    if(it!=workMap.end())
+                        workMap.erase(p);
+                p.second= outdegree[v];
+                workMap.insert(p);
                 for(int i:intersect){
-                   // if(i!=v && i!=expand){
+                    if(i!=v && i!=expand){
                         coverage[i]--;
                         int e;
                         if(nodeAS[v].count(i)==1){
@@ -638,7 +656,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
-                //}
+                }
             }
         }
     }
