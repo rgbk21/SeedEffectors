@@ -494,7 +494,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     //for modular Impact
     else{
         nodeAS=vector<set<int>>(n);
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        //pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         coverage=vector<int>(n,0);
         alreadyVisited=vector<bool>(n,false);
         RRgraph=vector<vector<int>>(n) ;
