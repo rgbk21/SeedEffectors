@@ -59,6 +59,7 @@ public:
     double modImpactTime;
     double testtime1;
     double testtime2;
+    vector<bool> alreadyVisited;
     //vector<unordered_map<AS,vector<AS>>> AStree;
     //vector<AS> *match;
     
@@ -74,11 +75,13 @@ public:
     vector<vector<int>> RRgraph;
     
     vector<int> outdegree;
-    priority_queue<pair<int,int>,vector<pair<int,int>>,CompareOutdegree> workQueue;
+    //priority_queue<pair<int,int>*,vector<pair<int,int>*>,CompareOutdegree> workQueue;
+    set<pair<int,int>,CompareOutdegree> workMap;
     vector<vector<set<int>>> associatedSet;
     vector<set<int>>nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
     vector<int> coverage;
+    
     void readGraph(string fileName,std::ofstream& resultLogFile);
     void readGraph(string fileName, float percentage,std::ofstream& resultLogFile);
     void readReverseGraph(string fileName, float percentage);
