@@ -28,7 +28,7 @@ class CompareOutdegree {
 public:
     bool operator()(const pair<int,int> &a,const pair<int,int> &b)
     {
-        return (a.second < b.second);
+        return (a.second > b.second);
     }
 };
 /*
@@ -75,8 +75,8 @@ public:
     vector<vector<int>> RRgraph;
     
     vector<int> outdegree;
-    //priority_queue<pair<int,int>*,vector<pair<int,int>*>,CompareOutdegree> workQueue;
-    set<pair<int,int>,CompareOutdegree> workMap;
+    priority_queue<pair<int,int>,vector<pair<int,int>>,CompareOutdegree> workQueue;
+    //set<pair<int,int>,CompareOutdegree> workMap;
     vector<vector<set<int>>> associatedSet;
     vector<set<int>>nodeAS;
     vector<unordered_map<int,unordered_set<int>>> pairAssociatedSet;
@@ -88,7 +88,7 @@ public:
     void readInfluencedGraph(string fileName, float percentage,vector<int> activatedSet);
     vector<int> writeInfluencedGraph(string fileName, float percentage, string convertedFile, vector<int> *seedNodes,vector<int> *seedOrder);
     void readHalfGraph(string fileName, float percentage,int graphCutValue,std::ofstream& resultLogFile);
-    void readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue,std::ofstream& resultLogFile);
+    void readInfluencedHalfGraph(string fileName, float percentage, string influenceFile,int graphCutValue,std::ofstream& resultLogFile,bool fullgraph);
     void readLabels(string fileName);
     void writeLabels(std::ofstream& resultLogFile);
     void setLabels(vector<bool> labels, float percentageTargets);

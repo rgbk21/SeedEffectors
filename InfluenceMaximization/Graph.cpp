@@ -141,7 +141,7 @@ void Graph::readHalfGraph(string fileName, float percentage, int graphCutValue, 
 }
 
 //********** Function for generating half graph ********
-void Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue,std::ofstream& resultLogFile){
+void Graph::readInfluencedHalfGraph(string fileName, float percentage, string convertedFile,int graphCutValue,std::ofstream& resultLogFile,bool fullgraph){
     this->graphName = fileName;
     this->percentageTargets = percentage;
     cout << "\n Generating graph: "<<100-graphCutValue<<"%"<<flush;
@@ -150,17 +150,18 @@ void Graph::readInfluencedHalfGraph(string fileName, float percentage, string co
     
     string s;
     if(myFile.is_open()) {
-        //myFile>>n;
-        //modified
-        myFile>>n>>m;
-        //
+        if(fullgraph)
+            myFile>>n>>m;
+        else
+           myFile>>n;
         graph=vector<vector<int>>(n,vector<int>());
         oldGraph=vector<vector<int>>(n,vector<int>());
         visited=vector<bool>(n,false);
-        //labels=vector<bool>(n,false);
-        //modified
-        labels=vector<bool>(n,true);
-        //
+        if(fullgraph)
+            labels=vector<bool>(n,true);
+        else{
+            labels=vector<bool>(n,false);
+        }
         inDegree=vector<int>(n,0);
         
         int from, to;
@@ -494,7 +495,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     //for modular Impact
     else{
         nodeAS=vector<set<int>>(n);
-        //pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         coverage=vector<int>(n,0);
         alreadyVisited=vector<bool>(n,false);
         RRgraph=vector<vector<int>>(n) ;
@@ -502,8 +503,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         int t=(int)activatedSet.size();
         modImpactTime=0;
         testtime1=0;
-        //workMap=unordered_map<int,int>();
-        //testtime2=0;
+        testtime2=0;
         for(int i=0;i<R;i++) {
             int randomVertex;
             randomVertex = activatedSet[rand() % t];
@@ -514,7 +514,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     }
     visitMark.clear();
     cout << "test time 1 " << double(testtime1)/ (CLOCKS_PER_SEC*60);
-    //cout << "test time 2 " << double(testtime2)/ (CLOCKS_PER_SEC*60);
+    cout << "test time 2 " << double(testtime2)/ (CLOCKS_PER_SEC*60);
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout <<"\n Generated reverse" << R << " RR sets\n";
@@ -548,7 +548,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         nodeAS[expand].insert(expand);
         
         clock_t startMOD = clock();
-        //addSetintoASmatrix(expand, expand, rrSetID);
+        addSetintoASmatrix(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
         coverage[expand]++;
@@ -595,34 +595,29 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
 
 
 void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
+    clock_t stest2 = clock();
+    workQueue.push(pair<int,int>(randomVertex,outdegree[randomVertex]));
+    clock_t etest2 = clock();
+    testtime2+= double(etest2 - stest2);
     
-    pair<int,int> p=pair<int,int>();
-    p.first=randomVertex;
-    p.second= outdegree[randomVertex];
-    //workQueue.push(p);
-    workMap.insert(p);
-    
-    while(workMap.size()!=0) {
-        //int expand=workQueue.top()->first;
-        int expand= workMap.begin()->first;
-        //workQueue.pop();
-        workMap.erase(workMap.begin());
+    while(!workQueue.empty()) {
+        int expand=workQueue.top().first;
+        workQueue.pop();
         
         for(int v:RRgraph[expand]){
-            outdegree[v]--;
             if(!alreadyVisited[v]){
+                outdegree[v]--;
                 alreadyVisited[v]=true;
+                
                 clock_t stest2 = clock();
-                p= pair<int,int>();
-                p.first=v;
-                p.second= outdegree[v];
-                workMap.insert(p);
+                workQueue.push(pair<int,int>(v,outdegree[v]));
                 clock_t etest2 = clock();
                 testtime2+= double(etest2 - stest2);
+                
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    //addSetintoASmatrix(i, v, rrSetID);
+                    addSetintoASmatrix(i, v, rrSetID);
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
                     coverage[i]++;
@@ -631,14 +626,22 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
             else{
                 std::vector<int> intersect;
                 std::set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
-                p= pair<int,int>();
-                p.first=v;
-                p.second= outdegree[v]+1;
-                std::set<std::pair<int,int>>::iterator it=workMap.find(p);
-                    if(it!=workMap.end())
-                        workMap.erase(p);
-                p.second= outdegree[v];
-                workMap.insert(p);
+                deque<pair<int,int>> store;
+                while(!workQueue.empty()){
+                    int temp=workQueue.top().first;
+                    workQueue.pop();
+                    
+                    if(temp==v){
+                        outdegree[v]--;
+                        workQueue.push(pair<int,int>(v,outdegree[v]));
+                        break;
+                    }
+                    store.push_front(workQueue.top());
+                }
+                while(!store.empty()){
+                    workQueue.push(store.front());
+                    store.pop_front();
+                }
                 for(int i:intersect){
                     if(i!=v && i!=expand){
                         coverage[i]--;
@@ -652,7 +655,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        //removeSetFromASmatrix(i, e, rrSetID);
+                        removeSetFromASmatrix(i, e, rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }

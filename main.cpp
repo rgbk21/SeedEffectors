@@ -54,6 +54,7 @@ int initialSeed;
 int newSeed;
 int diffusion;
 ofstream myfile;
+bool fullgraph=false;
 
 ofstream resultLogFile;
 
@@ -367,7 +368,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
                 break;
             case 1:// best first Half Graph
                 graph = new Graph;
-                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,8*k,resultLogFile);
+                graph->readInfluencedHalfGraph(graphFileName, percentageTargetsFloat,convertedFile,8*k,resultLogFile,fullgraph);
                 //graph->readHalfGraph(graphFileName, percentageTargetsFloat,8*k);
                 if(!useIndegree) {
                     graph->setPropogationProbability(probability);
@@ -477,11 +478,10 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             alreadyinSeed.insert(node);
         }
         //remove node from RRset
-        //influencedGraph->removeNodeFromRRset(node);
+        influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
     clock_t subModReverseEndTime = clock();
-    exit(0);
     vector<vector<int>>().swap(influencedGraph->rrSets);
     for(int i:subModNodesToremove){
         influencedGraph->removeOutgoingEdges(i);
@@ -822,13 +822,14 @@ int main(int argc, char **argv) {
     ("approximation", " Approximation Settings", cxxopts::value<int>())
     ("r,nodesRemove", " Remove nodes number", cxxopts::value<int>())
     ("w,modularity", " Modular selection", cxxopts::value<std::string>())
+    ("f,fullgraph", " Full Graph selection", cxxopts::value<std::string>())
     ("s,seedset", " Seed set selection", cxxopts::value<int>())
     ("d,Diffusion", " Diffusion selection", cxxopts::value<int>())
     ("x,newSeedset", " New Seed set selection", cxxopts::value<int>())
     ("e,extend", "Extend the permutation");
     auto result = options.parse(argc, argv);
     string algorithm = result["algorithm"].as<string>();
-    
+    string fullgraphvalue;
     budget = result["budget"].as<int>();
     nonTargetThreshold = result["threshold"].as<int>();
     graphFileName = result["graph"].as<std::string>();
@@ -836,6 +837,11 @@ int main(int argc, char **argv) {
     removeNodes=result["nodesRemove"].as<int>();
     initialSeed=result["seedset"].as<int>();
     modular=result["modularity"].as<std::string>();
+    fullgraphvalue=result["fullgraph"].as<std::string>();
+    if(fullgraphvalue.compare("true")==0)
+        fullgraph=true;
+    else
+        fullgraph=false;
     newSeed=result["newSeedset"].as<int>();
     diffusion=result["Diffusion"].as<int>();
     
@@ -906,12 +912,21 @@ int main(int argc, char **argv) {
  
     string resultFile;
     resultFile=graphFileName;
-    resultFile+="_RRapproach_results.txt";
-    resultFile = "results/" + resultFile;
-    myfile.open (resultFile,std::ios::app);
-    myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
-    executeTIMTIMfullGraph(result);
-    //executeTIMTIM(result);
+    
+    if(fullgraph){
+        resultFile+="_FullGraph_results.txt";
+        resultFile = "results/" + resultFile;
+        myfile.open (resultFile,std::ios::app);
+        myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
+        executeTIMTIMfullGraph(result);
+    }
+    else{
+        resultFile+="_RRapproach_results.txt";
+        resultFile = "results/" + resultFile;
+        myfile.open (resultFile,std::ios::app);
+        myfile <<"\n"<<budget<<" "<<removeNodes<<" ";
+        executeTIMTIM(result);
+    }
     disp_mem_usage("");
     return 0;
 }
