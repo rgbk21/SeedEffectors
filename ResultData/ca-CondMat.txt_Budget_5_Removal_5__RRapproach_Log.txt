@@ -1,0 +1,25 @@
+
+ Conducting experiments for:
+ Graph: ca-CondMat.txt	 Budget: 5	 Non Target Threshod: 10	 Percentage:  100	 Method: 1	 Nodes removed: 5	 Seed selection case: 1	 Top best outdegree threshold : 100	 Probability: Indegree
+ ******* Running modular approach ******** 
+
+ Generated reverse1442886 RR sets
+Elapsed time 7.34943 
+ Time per RR Set is 5.09356e-06
+ Total Size is 7644926
+ Average size is 5.29836
+ RRsets done 
+ 
+ Initial Strength is 7644926
+ Number of nodes Already present in seed set = 0
+ Generated reverse1442886 RR sets
+Elapsed time 6.64022 
+ Time per RR Set is 4.60204e-06
+ Total Size is 7414233
+ Average size is 5.13847
+ 
+ After removing Modular Strength is 7414233
+ Reverse algorithm time in minutes 
+0.241631
+ 
+ ******* Running Sub Modular approach ******** 
