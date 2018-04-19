@@ -10,27 +10,27 @@
  ******* Running modular approach ******** 
 
  Generated reverse72950 RR sets
-Elapsed time 0.166276 
- Time per RR Set is 2.27931e-06
- Total Size is 397673
- Average size is 5.45131
+Elapsed time 0.207789 
+ Time per RR Set is 2.84838e-06
+ Total Size is 397474
+ Average size is 5.44858
  RRsets done 
  
- Initial Strength is 397673
+ Initial Strength is 397474
  Number of nodes Already present in seed set = 0
  Generated reverse72950 RR sets
-Elapsed time 0.13684 
- Time per RR Set is 1.87581e-06
- Total Size is 305551
- Average size is 4.1885
+Elapsed time 0.146042 
+ Time per RR Set is 2.00195e-06
+ Total Size is 305391
+ Average size is 4.18631
  
- After removing Modular Strength is 305551
+ After removing Modular Strength is 305391
  Reverse algorithm time in minutes 
-0.00542265
+0.00638007
  
  ******* Running Sub Modular approach ******** 
 RR sets are: 72950
  Generated reverse72950 RR sets
-Elapsed time 6.25481 
- Time per RR Set is 8.5741e-05
- Total Size is 397651
+Elapsed time 6.72629 
+ Time per RR Set is 9.22041e-05
+ Total Size is 397360

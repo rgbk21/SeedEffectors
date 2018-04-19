@@ -1002,34 +1002,21 @@ void Graph:: removeNodeFromRRset(int vertex){
 
 void Graph:: removeVertexFromRRassociatedGraph(int v){
     vertex* node = RRas->vertexMap.at(v);
-    for ( pair<vertex*,std::unordered_set<int>> outgoingNodes : node->getOutBoundNeighbours() ){
-        
-        for(pair<int,vertex*> incomingNodes: outgoingNodes.first->getInBoundNeighbours()){
-            for ( pair<vertex*,std::unordered_set<int>> removalNodes : incomingNodes.second->getOutBoundNeighbours()){
-                if(removalNodes.second.count(<#const key_type &__k#>))
-            }
-        }
-        
-        
-        /*if(RRpair.second.size()>0){
+    for ( pair<vertex*,std::unordered_set<int>> RRpair : node->getOutBoundNeighbours() ){
+        if(RRpair.second.size()>0){
             for(int RRi:RRpair.second){
                 for(int j:rrSets[RRi]){
                     unordered_map<vertex*,unordered_set<int>>::iterator it= RRas->vertexMap.at(j)->getOutBoundNeighbours().find(RRpair.first);
                     if (it != RRas->vertexMap.at(j)->getOutBoundNeighbours().end()){
-                        cout<<it->first<<" "<<&it->second<<" "<<it->second.size();
-                        unordered_set<int> t=it->second;
-                        if(t.count(RRi)==1){
-                            t.erase(RRi);
-                            RRas->vertexMap.at(j)->getOutBoundNeighbours().clear();
-                            RRas->vertexMap.at(j)->outBoundNeighbours.insert(pair<vertex*,unordered_set<int>>(node,t));
-                        //it->second.erase(RRi);
-                        it->first->removeOutBoundNeighbour(node);
-                        coverage[j]--;
+
+                        if(it->second.count(RRi)==1){
+                            it->second.erase(RRi);
+
                         }
                     }
                 }
             }
-        }*/
+        }
     }
     node->deleteOutBoundNeighbour();
 }

@@ -22,13 +22,6 @@ class vertex{
 
 public:
     int id;
-    /*struct EqualFn
-    {
-    public:
-        bool operator()(pair<vertex*,unordered_set<int>> const& t1, pair<vertex*,unordered_set<int>> const& t2) const
-        { return (t1.first->id == t2.first->id);
-        }
-    };*/
     bool operator==(const vertex &obj) const
     {
         return id==obj.id;
@@ -39,7 +32,6 @@ public:
     std::unordered_map<int,vertex*>  inBoundNeighbours;
     std::unordered_map<vertex*,std::unordered_set<int>>  outBoundNeighbours;
     std::unordered_map<int,vertex*>  labels;
-    //unordered_map<int,unordered_set<int>>labels;
     
 public:
     
@@ -59,10 +51,6 @@ public:
     void addInBoundNeighbour(vertex* v);
     void addOutBoundNeighbour(vertex *v, int label);
     void deleteOutBoundNeighbour();
-    
-    //unordered_map<int,unordered_set<int>> getLabels();
-    //void setLabels(unordered_map<int,unordered_set<int>> labels);
-    //unordered_set<int> getVertexLabel(vertex neighbour);
 };
 
 namespace std
@@ -77,22 +65,6 @@ namespace std
     };
     
 }
-/*
-    template<>
-    struct hash<pair<vertex*,std::unordered_set<int>>>
-    {
-        std::size_t operator()(const pair<vertex*,std::unordered_set<int>>& k) const
-        {
-            using std::size_t;
-            using std::hash;
-            
-            return hash<int>()(k.first->id);
-        }
-    };
-}*/
-
-
-
 
 
 #endif /* vertex_hpp */
