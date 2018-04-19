@@ -1,0 +1,25 @@
+
+ Conducting experiments for:
+ Graph: ca-GrQc-processed.txt	 Budget: 10	 Non Target Threshod: 10	 Percentage:  100	 Method: 1	 Nodes removed: 20	 Seed selection case: 1	 Top best outdegree threshold : 100	 Probability: Indegree
+ ******* Running modular approach ******** 
+
+ Generated reverse280210 RR sets
+Elapsed time 0.730405 
+ Time per RR Set is 2.60663e-06
+ Total Size is 1530428
+ Average size is 5.46172
+ RRsets done 
+ 
+ Initial Strength is 1530428
+ Number of nodes Already present in seed set = 0
+ Generated reverse280210 RR sets
+Elapsed time 0.562782 
+ Time per RR Set is 2.00843e-06
+ Total Size is 1073339
+ Average size is 3.83048
+ 
+ After removing Modular Strength is 1073339
+ Reverse algorithm time in minutes 
+0.0233118
+ 
+ ******* Running Sub Modular approach ******** 

@@ -460,6 +460,18 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
                 removalModImpact->insert(SortedNodeidCounts.at(i).first);
                 SubImpact=true;
             }
+            int count=0;
+            vector<pair<int,int>> ASdegree=vector<pair<int,int>>();
+            for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
+                pair<int,int> node= pair<int,int>();
+                node.first=it->first;
+                node.second=it->second->getOutDegree();
+                ASdegree.push_back(node);
+            }
+            std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
+            assert(ASdegree.at(0).second>=ASdegree.at(1).second);
+            
+            cout<<"associated value is "<<k<<"\n";
             cout << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
             resultLogFile << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
             clock_t subModImapctEndTime = clock();
@@ -478,7 +490,8 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             alreadyinSeed.insert(node);
         }
         //remove node from RRset
-        influencedGraph->removeNodeFromRRset(node);
+        influencedGraph->removeVertexFromRRassociatedGraph(node);
+        //influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
     clock_t subModReverseEndTime = clock();

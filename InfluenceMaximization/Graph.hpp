@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <algorithm>
+#include "RRassociatedGraph.hpp"
 
 using namespace std;
 class CompareOutdegree {
@@ -52,9 +53,11 @@ private:
     int numberOfTargets;
     int numberOfNonTargets;
     
+    
 
 public:
     Graph();
+    RRassociatedGraph *RRas;
     int n, m;
     double modImpactTime;
     double testtime1;
@@ -92,7 +95,7 @@ public:
     void readLabels(string fileName);
     void writeLabels(std::ofstream& resultLogFile);
     void setLabels(vector<bool> labels, float percentageTargets);
-    
+    void removeVertexFromRRassociatedGraph(int vertex);
     //Numbers
     int getNumberOfVertices();
     int getNumberOfEdges();

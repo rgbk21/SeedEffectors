@@ -1,0 +1,30 @@
+
+ Conducting experiments for:
+ Graph: graph_ic_12k.txt	 Budget: 10	 Non Target Threshod: 10	 Percentage:  100	 Method: 1	 Nodes removed: 20	 Seed selection case: 1	 Top best outdegree threshold : 100	 Probability: Indegree
+ ******* Running modular approach ******** 
+
+ Generated reverse701740 RR sets
+Elapsed time 14.4033 
+ Time per RR Set is 2.05251e-05
+ Total Size is 4979489
+ Average size is 7.09592
+ RRsets done 
+ 
+ Initial Strength is 4979489
+ Number of nodes Already present in seed set = 0
+ Generated reverse701740 RR sets
+Elapsed time 9.12164 
+ Time per RR Set is 1.29986e-05
+ Total Size is 4259607
+ Average size is 6.07006
+ 
+ After removing Modular Strength is 4259607
+ Reverse algorithm time in minutes 
+0.401421
+ 
+ ******* Running Sub Modular approach ******** 
+RR sets are: 701740
+ Generated reverse701740 RR sets
+Elapsed time 101.876 
+ Time per RR Set is 0.000145176
+ Total Size is 5015184

@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fullgraph true"
+            argument = "--fullgraph false"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -86,11 +86,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-CondMat.txt"
+            argument = "--graph ca-GrQc-processed.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 1"
+            argument = "--seedset 0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

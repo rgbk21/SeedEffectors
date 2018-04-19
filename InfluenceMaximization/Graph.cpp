@@ -486,7 +486,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     else{
         
         nodeAS=vector<set<int>>(n);
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        //pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        RRas=new RRassociatedGraph;
         alreadyVisited=vector<bool>(n,false);
         RRgraph=vector<vector<int>>(n) ;
         outdegree =vector<int>(n,n);
@@ -544,7 +545,8 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         nodeAS[expand].insert(expand);
         
         clock_t startMOD = clock();
-        addSetintoASmatrix(expand, expand, rrSetID);
+        //addSetintoASmatrix(expand, expand, rrSetID);
+        RRas->addEdge(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
         coverage[expand]++;
@@ -610,15 +612,16 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    addSetintoASmatrix(i, v, rrSetID);
+                    //addSetintoASmatrix(i, v, rrSetID);
+                    RRas->addEdge(i, v, rrSetID);
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
                     coverage[i]++;
                 }
             }
             else{
-                std::vector<int> intersect;
-                std::set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
+                vector<int> intersect;
+                set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),inserter(intersect,intersect.begin()));
                 deque<pair<int,int>> store;
                 while(!workQueue.empty()){
                     int temp=workQueue.top().first;
@@ -648,7 +651,8 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        removeSetFromASmatrix(i, e, rrSetID);
+                        //removeSetFromASmatrix(i, e, rrSetID);
+                        RRas->removeEdge(i,e);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
@@ -994,6 +998,40 @@ void Graph:: removeNodeFromRRset(int vertex){
     }
     pairAssociatedSet[vertex].clear();
     coverage[vertex]=0;
+}
+
+void Graph:: removeVertexFromRRassociatedGraph(int v){
+    vertex* node = RRas->vertexMap.at(v);
+    for ( pair<vertex*,std::unordered_set<int>> outgoingNodes : node->getOutBoundNeighbours() ){
+        
+        for(pair<int,vertex*> incomingNodes: outgoingNodes.first->getInBoundNeighbours()){
+            for ( pair<vertex*,std::unordered_set<int>> removalNodes : incomingNodes.second->getOutBoundNeighbours()){
+                if(removalNodes.second.count(<#const key_type &__k#>))
+            }
+        }
+        
+        
+        /*if(RRpair.second.size()>0){
+            for(int RRi:RRpair.second){
+                for(int j:rrSets[RRi]){
+                    unordered_map<vertex*,unordered_set<int>>::iterator it= RRas->vertexMap.at(j)->getOutBoundNeighbours().find(RRpair.first);
+                    if (it != RRas->vertexMap.at(j)->getOutBoundNeighbours().end()){
+                        cout<<it->first<<" "<<&it->second<<" "<<it->second.size();
+                        unordered_set<int> t=it->second;
+                        if(t.count(RRi)==1){
+                            t.erase(RRi);
+                            RRas->vertexMap.at(j)->getOutBoundNeighbours().clear();
+                            RRas->vertexMap.at(j)->outBoundNeighbours.insert(pair<vertex*,unordered_set<int>>(node,t));
+                        //it->second.erase(RRi);
+                        it->first->removeOutBoundNeighbour(node);
+                        coverage[j]--;
+                        }
+                    }
+                }
+            }
+        }*/
+    }
+    node->deleteOutBoundNeighbour();
 }
 
 void Graph:: removeSetFromASmatrix(int row, int vertex, int rrSetID){
