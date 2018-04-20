@@ -70,11 +70,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fullgraph false"
+            argument = "--fullgraph true"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--Diffusion 2"
+            argument = "--Diffusion 0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -86,15 +86,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-CondMat.txt"
+            argument = "--graph graph_ic_75k.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 1"
+            argument = "--seedset 0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 5"
+            argument = "--budget 10"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -110,7 +110,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 5"
+            argument = "--nodesRemove 50"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
