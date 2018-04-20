@@ -14,24 +14,27 @@
 #include <unordered_map>
 #include <iostream>
 #include <set>
+#include <vector>
 #include <utility>
+#include <algorithm>
+#include "Edge.hpp"
 
-//using namespace std;
+using namespace std;
 
 class vertex{
 
 public:
     int id;
-    bool operator==(const vertex &obj) const
+    bool operator==(const vertex* &obj) const
     {
-        return id==obj.id;
+        return id==obj->id;
     }
     
     int indDegree;
     int outDegree;
-    std::unordered_map<int,vertex*>  inBoundNeighbours;
-    std::unordered_map<vertex*,std::unordered_set<int>>  outBoundNeighbours;
-    std::unordered_map<int,vertex*>  labels;
+    vector<Edge*> inComingEdges;
+    vector<Edge*> outGoingEdges;
+    unordered_map<int,unordered_set<int>>  labels;
     
 public:
     
@@ -42,29 +45,17 @@ public:
     void setIndDegree(int indDegree);
     int getOutDegree();
     void setOutDegree(int outDegree);
-    std::unordered_map<int,vertex*> getInBoundNeighbours();
-    void setInBoundNeighbours(std::unordered_map<int,vertex*> inBoundNeighbours);
-    std::unordered_map<vertex*,std::unordered_set<int>> getOutBoundNeighbours();
-    void setOutBoundNeighbours(std::unordered_map<vertex*,std::unordered_set<int>> outBoundNeighbours);
-    void removeOutBoundNeighbour(vertex* toVertex);
-    void removeInBoundNeighbour(vertex* fromVertex);
-    void addInBoundNeighbour(vertex* v);
-    void addOutBoundNeighbour(vertex *v, int label);
+    vector<Edge*> getinComingEdges();
+    void setInBoundNeighbours(vector<Edge*> inComingEdges);
+    vector<Edge*> getoutGoingEdges();
+    void setOutBoundNeighbours(vector<Edge*> outGoingEdges);
+    void removeOutgoingEdge(Edge* e,int rrSetID);
+    void removeIncomingEdge(Edge* e,int rrSetID);
+    void addInComingEdges(Edge* v);
+    void addOutGoingEdges(Edge* v);
     void deleteOutBoundNeighbour();
 };
 
-namespace std
-{
-    template<>
-    struct hash<vertex>
-    {
-        size_t operator()(const vertex &obj) const
-        {
-            return hash<int>()(obj.id);
-        }
-    };
-    
-}
 
 
 #endif /* vertex_hpp */

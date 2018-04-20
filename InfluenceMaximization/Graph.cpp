@@ -549,7 +549,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         RRas->addEdge(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
-        coverage[expand]++;
+        //coverage[expand]++;
         
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -596,7 +596,6 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
 
 
 void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
-    
     workQueue.push(pair<int,int>(randomVertex,outdegree[randomVertex]));
     
     while(!workQueue.empty()) {
@@ -613,10 +612,14 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
                     //addSetintoASmatrix(i, v, rrSetID);
-                    RRas->addEdge(i, v, rrSetID);
+                    if(i!=expand){
+                        coverage[i]++;
+                        RRas->addEdge(i, v, rrSetID);
+                    }
+                    
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
-                    coverage[i]++;
+                    
                 }
             }
             else{
@@ -652,7 +655,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                         }
                         clock_t startMOD = clock();
                         //removeSetFromASmatrix(i, e, rrSetID);
-                        RRas->removeEdge(i,e);
+                        RRas->removeEdge(i,e,rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
@@ -1002,20 +1005,14 @@ void Graph:: removeNodeFromRRset(int vertex){
 
 void Graph:: removeVertexFromRRassociatedGraph(int v){
     vertex* node = RRas->vertexMap.at(v);
-    for ( pair<vertex*,std::unordered_set<int>> RRpair : node->getOutBoundNeighbours() ){
-        if(RRpair.second.size()>0){
-            for(int RRi:RRpair.second){
-                for(int j:rrSets[RRi]){
-                    unordered_map<vertex*,unordered_set<int>>::iterator it= RRas->vertexMap.at(j)->getOutBoundNeighbours().find(RRpair.first);
-                    if (it != RRas->vertexMap.at(j)->getOutBoundNeighbours().end()){
-
-                        if(it->second.count(RRi)==1){
-                            it->second.erase(RRi);
-
-                        }
-                    }
-                }
-            }
+    for ( Edge* outEdges : node->getoutGoingEdges() ){
+        vertex* ASnode = RRas->vertexMap.at(outEdges->destid);
+        for(Edge* inEdges:ASnode->getinComingEdges()){
+        std::set<int> intersect;
+        std::set_difference (inEdges->rrids.begin(),inEdges->rrids.end(),outEdges->rrids.begin(),outEdges->rrids.end(), std::inserter(intersect, intersect.end()));
+            vertex* INnode=RRas->vertexMap.at(inEdges->sourceid);
+            INnode->outDegree-= (inEdges->rrids.size()-intersect.size());
+            inEdges->setRRid(intersect);
         }
     }
     node->deleteOutBoundNeighbour();

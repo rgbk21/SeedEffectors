@@ -9,6 +9,7 @@
 #include "RRassociatedGraph.hpp"
 RRassociatedGraph::RRassociatedGraph() {
     //vertices = unordered_set<vertex>();
+    noOfEdges=0;
 }
 /*
 unordered_set<vertex> RRassociatedGraph::getVertices() {
@@ -31,30 +32,63 @@ vertex* RRassociatedGraph::find(int id) {
     return nullptr;
 }
 
+Edge* RRassociatedGraph::findedge(string id){
+    unordered_map<string,Edge*>::const_iterator got=EdgeMap.find(id);
+    if(got != EdgeMap.end() )
+        return got->second;
+    return nullptr;
+}
+
 void RRassociatedGraph::addEdge(int from, int to, int label) {
+    
     vertex* fromVertex = find(from);
-    vertex* toVertex = find(to);
     if (fromVertex == nullptr) {
         fromVertex = new vertex(from);
         vertexMap.insert(pair<int,vertex*>(fromVertex->getId(), fromVertex));
     }
+    
+    vertex* toVertex = find(to);
     if (toVertex == nullptr) {
         toVertex = new vertex(to);
         vertexMap.insert(pair<int,vertex*>(toVertex->getId(), toVertex));
     }
-    fromVertex->addOutBoundNeighbour(toVertex, label);
-    toVertex->addInBoundNeighbour(fromVertex);
-    // noOfEdges++;
+    
+    if(fromVertex==toVertex){
+       // fromVertex->outDegree++;
+        //cout<<fromVertex->getId()<<" "<<toVertex->getId()<<"\n";
+        return;
+    }
+    string eid=std::to_string(from);
+    eid+=std::to_string(to);
+    Edge* edge=findedge(eid);
+    if(edge==nullptr){
+        edge=new Edge(eid,from,to);
+        edge->addRRid(label);
+        fromVertex->addOutGoingEdges(edge);
+        toVertex->addInComingEdges(edge);
+        EdgeMap.insert(pair<string,Edge*>(edge->getId(), edge));
+        noOfEdges++;
+    }
+    else{
+        edge->addRRid(label);
+        fromVertex->outDegree++;
+        toVertex->indDegree++;
+    }
+    
 }
 
 
 
-void RRassociatedGraph::removeEdge(int from, int to) {
+void RRassociatedGraph::removeEdge(int from, int to,int rrSetID) {
     vertex* fromVertex = find(from);
     vertex* toVertex = find(to);
-    fromVertex->removeOutBoundNeighbour(toVertex);
-    //to->removeInBoundNeighbour(from);
-    
+    string eid=std::to_string(from);
+    eid+=std::to_string(to);
+    if(EdgeMap.count(eid)==1){
+        fromVertex->removeOutgoingEdge(EdgeMap.find(eid)->second,rrSetID);
+        toVertex->removeIncomingEdge(EdgeMap.find(eid)->second,rrSetID);
+    }
+    //to->removeInBoundNeighbour(from);    
 }
 /*
  void RRassociatedGraph::print() {

@@ -37,59 +37,58 @@ void vertex:: setOutDegree(int outDegree) {
     this->outDegree = outDegree;
 }
 
-std::unordered_map<int,vertex*> vertex:: getInBoundNeighbours() {
-    return inBoundNeighbours;
+vector<Edge*> vertex:: getinComingEdges() {
+    return inComingEdges;
 }
 
-void vertex::  setInBoundNeighbours(std::unordered_map<int,vertex*>inBoundNeighbours) {
-    this->inBoundNeighbours = inBoundNeighbours;
+void vertex::  setInBoundNeighbours(vector<Edge*>inBoundNeighbours) {
+    this->inComingEdges = inBoundNeighbours;
 }
 
-std::unordered_map<vertex*,std::unordered_set<int>> vertex::getOutBoundNeighbours() {
-    return outBoundNeighbours;
+vector<Edge*> vertex::getoutGoingEdges() {
+    return outGoingEdges;
 }
 
-void vertex::setOutBoundNeighbours(std::unordered_map<vertex*,std::unordered_set<int>> outBoundNeighbours) {
-    this->outBoundNeighbours = outBoundNeighbours;
+void vertex::setOutBoundNeighbours(vector<Edge*> outBoundNeighbours) {
+    this->outGoingEdges = outBoundNeighbours;
 }
 
 
-void vertex::addInBoundNeighbour(vertex *v) {
-    this->inBoundNeighbours.insert(std::pair<int,vertex*>(v->getId(),v));
-    indDegree++;
-}
-
-void vertex::addOutBoundNeighbour(vertex *v, int label) {
+void vertex::addInComingEdges(Edge *e) {
+        this->inComingEdges.push_back(e);
+        this->indDegree++;
     
-    std::unordered_map<vertex*,std::unordered_set<int>>::iterator it=this->outBoundNeighbours.find(v);
-    if(it!=this->outBoundNeighbours.end()){
-        it->second.insert(label);
-    }
-    else{
-        std::pair<vertex*,std::unordered_set<int>> temp= std::pair<vertex*,std::unordered_set<int>>();
-        temp.first=v;
-        temp.second.insert(label);
-        this->outBoundNeighbours.insert(temp);
-    }
-    //this->labels.insert(std::pair<vertex*,unordered_set<int>>(vertex*,new label);
-    this->outDegree++;
 }
 
-void vertex::removeOutBoundNeighbour(vertex* toVertex) {
-    if(this->outBoundNeighbours.count(toVertex)==1){
-        this->outBoundNeighbours.erase(toVertex);
-        outDegree--;
+void vertex::addOutGoingEdges(Edge *e) {
+        this->outGoingEdges.push_back(e);
+        this->outDegree++;
+
+}
+
+void vertex::removeOutgoingEdge(Edge* e, int rrSetID) {
+    for(Edge* z:this->outGoingEdges){
+        if(z ==e){
+            //todo: if only one rrid can delete the whole edge
+            z->removeRRid(rrSetID);
+            outDegree--;
+        }
     }
 }
 
-void vertex::removeInBoundNeighbour(vertex* fromVertex) {
-    this->inBoundNeighbours.clear();
-    indDegree--;
+void vertex::removeIncomingEdge(Edge* e,int rrSetID) {
+    for(Edge* z:this->inComingEdges){
+        if(z ==e){
+            z->removeRRid(rrSetID);
+            indDegree--;
+        }
+    }
 }
 
 void vertex:: deleteOutBoundNeighbour(){
-    this->outBoundNeighbours.clear();
-    this->outDegree=0;
+    this->outGoingEdges.clear();
+    this->setOutDegree(0);
+    this->setIndDegree(0);
 }
 
 /*

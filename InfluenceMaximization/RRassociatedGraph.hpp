@@ -23,7 +23,7 @@
 #include <deque>
 #include <string.h>
 #include <algorithm>
-
+#include "Edge.hpp"
 using namespace std;
 
 class RRassociatedGraph{
@@ -35,6 +35,8 @@ class RRassociatedGraph{
 public:
     //unordered_set<vertex> vertices;
     unordered_map<int,vertex*,KeyHasher> vertexMap;
+    unordered_map<string,Edge*> EdgeMap;
+    int noOfEdges;
     
 public:
     RRassociatedGraph();
@@ -42,8 +44,9 @@ public:
     int getNumberOfVertices();
     void addVertex(vertex v);
     vertex* find(int id);
+    Edge* findedge(string id);
     void addEdge(int from, int to, int label);
-    void removeEdge(int from, int to);
+    void removeEdge(int from, int to,int rrSetID);
 };
 #endif /* RRassociatedGraph_hpp */
 

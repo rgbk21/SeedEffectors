@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E311581208830A400FF3A40 /* RRassociatedGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E31157F208830A400FF3A40 /* RRassociatedGraph.cpp */; };
+		1E3C681A208931E600C8D840 /* Edge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3C6818208931E600C8D840 /* Edge.cpp */; };
 		1E6624592087B6F000565F7E /* vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E6624572087B6F000565F7E /* vertex.cpp */; };
 		1E84640A2040AF9500DF798F /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 313A589C1F4E072300F86148 /* Makefile */; };
 		1E84640B2040AF9500DF798F /* BaselineGreedyTIM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A3201BCE71000C70D9 /* BaselineGreedyTIM.cpp */; };
@@ -50,6 +51,8 @@
 /* Begin PBXFileReference section */
 		1E31157F208830A400FF3A40 /* RRassociatedGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RRassociatedGraph.cpp; sourceTree = "<group>"; };
 		1E311580208830A400FF3A40 /* RRassociatedGraph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RRassociatedGraph.hpp; sourceTree = "<group>"; };
+		1E3C6818208931E600C8D840 /* Edge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Edge.cpp; sourceTree = "<group>"; };
+		1E3C6819208931E600C8D840 /* Edge.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Edge.hpp; sourceTree = "<group>"; };
 		1E6624572087B6F000565F7E /* vertex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vertex.cpp; sourceTree = "<group>"; };
 		1E6624582087B6F000565F7E /* vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vertex.hpp; sourceTree = "<group>"; };
 		1E9A3F30204091CC006580AD /* SeedSet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SeedSet.cpp; sourceTree = "<group>"; };
@@ -214,6 +217,8 @@
 				31A494AB1F56095900745401 /* TIMUtility.hpp */,
 				1E6624572087B6F000565F7E /* vertex.cpp */,
 				1E6624582087B6F000565F7E /* vertex.hpp */,
+				1E3C6818208931E600C8D840 /* Edge.cpp */,
+				1E3C6819208931E600C8D840 /* Edge.hpp */,
 			);
 			path = InfluenceMaximization;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E3C681A208931E600C8D840 /* Edge.cpp in Sources */,
 				1E8464192040AFEA00DF798F /* SeedSet.cpp in Sources */,
 				1E8464162040AFD700DF798F /* main.cpp in Sources */,
 				1E8464172040AFD700DF798F /* BaselineGreedy.cpp in Sources */,

@@ -448,7 +448,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         }
         std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
         assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-        
+        vector<pair<int,int>> ASdegree;
         if(!SubImpact){
             cout << "\n \n ******* Running Mod Impact approach ********" <<flush;
             resultLogFile << "\n \n ******* Running Mod Impact approach ********";
@@ -461,15 +461,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
                 SubImpact=true;
             }
             int count=0;
-            vector<pair<int,int>> ASdegree=vector<pair<int,int>>();
-            for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
-                pair<int,int> node= pair<int,int>();
-                node.first=it->first;
-                node.second=it->second->getOutDegree();
-                ASdegree.push_back(node);
-            }
-            std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
-            assert(ASdegree.at(0).second>=ASdegree.at(1).second);
+            
             
             cout<<"associated value is "<<k<<"\n";
             cout << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
@@ -480,15 +472,26 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             resultLogFile << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             myfile <<totalModImapctTime<<" ";
         }
+        ASdegree=vector<pair<int,int>>();
+        for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
+            pair<int,int> node= pair<int,int>();
+            node.first=it->first;
+            node.second=it->second->getOutDegree();
+            ASdegree.push_back(node);
+        }
+        std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
+        assert(ASdegree.at(0).second>=ASdegree.at(1).second);
         int h=0;
         /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
          h++;
          }*/
-        int node = SortedNodeidCounts.at(h).first;
+        /*int node = SortedNodeidCounts.at(h).first;
         subModNodesToremove.insert(node);
         if(seedSet.count(node)==1){
             alreadyinSeed.insert(node);
-        }
+        }*/
+        int node=ASdegree.at(h).first;
+        subModNodesToremove.insert(node);
         //remove node from RRset
         influencedGraph->removeVertexFromRRassociatedGraph(node);
         //influencedGraph->removeNodeFromRRset(node);
