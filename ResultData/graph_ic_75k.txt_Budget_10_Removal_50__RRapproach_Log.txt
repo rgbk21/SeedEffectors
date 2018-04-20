@@ -23,3 +23,8 @@ Elapsed time 31.091
 1.43857
  
  ******* Running Sub Modular approach ******** 
+RR sets are: 5273652
+ Generated reverse5273652 RR sets
+Elapsed time 1809.95 
+ Time per RR Set is 0.000343205
+ Total Size is 26818136
