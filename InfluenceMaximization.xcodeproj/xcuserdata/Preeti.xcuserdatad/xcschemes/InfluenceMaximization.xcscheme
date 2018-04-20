@@ -86,11 +86,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph graph_ic_75k.txt"
+            argument = "--graph ca-CondMat.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--seedset 2"
+            argument = "--seedset 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
