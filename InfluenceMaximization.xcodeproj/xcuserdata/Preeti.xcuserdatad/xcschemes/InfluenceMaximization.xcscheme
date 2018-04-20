@@ -70,11 +70,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fullgraph true"
+            argument = "--fullgraph false"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--Diffusion 0"
+            argument = "--Diffusion 2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E311581208830A400FF3A40 /* RRassociatedGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E31157F208830A400FF3A40 /* RRassociatedGraph.cpp */; };
+		1E3C681A208931E600C8D840 /* Edge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3C6818208931E600C8D840 /* Edge.cpp */; };
+		1E6624592087B6F000565F7E /* vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E6624572087B6F000565F7E /* vertex.cpp */; };
 		1E84640A2040AF9500DF798F /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 313A589C1F4E072300F86148 /* Makefile */; };
 		1E84640B2040AF9500DF798F /* BaselineGreedyTIM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 310E78A3201BCE71000C70D9 /* BaselineGreedyTIM.cpp */; };
 		1E84640C2040AF9500DF798F /* DifferenceApproximator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3159634B1F9E756C000EB2F4 /* DifferenceApproximator.cpp */; };
@@ -46,6 +49,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E31157F208830A400FF3A40 /* RRassociatedGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RRassociatedGraph.cpp; sourceTree = "<group>"; };
+		1E311580208830A400FF3A40 /* RRassociatedGraph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RRassociatedGraph.hpp; sourceTree = "<group>"; };
+		1E3C6818208931E600C8D840 /* Edge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Edge.cpp; sourceTree = "<group>"; };
+		1E3C6819208931E600C8D840 /* Edge.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Edge.hpp; sourceTree = "<group>"; };
+		1E6624572087B6F000565F7E /* vertex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vertex.cpp; sourceTree = "<group>"; };
+		1E6624582087B6F000565F7E /* vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vertex.hpp; sourceTree = "<group>"; };
 		1E9A3F30204091CC006580AD /* SeedSet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SeedSet.cpp; sourceTree = "<group>"; };
 		1E9A3F31204091CC006580AD /* SeedSet.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SeedSet.hpp; sourceTree = "<group>"; };
 		3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GenerateGraphLabels.cpp; sourceTree = "<group>"; };
@@ -173,37 +182,43 @@
 		31FC36891F354892005CAFEB /* InfluenceMaximization */ = {
 			isa = PBXGroup;
 			children = (
+				315963591FA7B862000EB2F4 /* ApproximationSetting.hpp */,
 				311FFDFA20041C5900F68590 /* BaselineGreedy.cpp */,
 				311FFDFB20041C5900F68590 /* BaselineGreedy.hpp */,
 				310E78A3201BCE71000C70D9 /* BaselineGreedyTIM.cpp */,
+				1E31157F208830A400FF3A40 /* RRassociatedGraph.cpp */,
+				1E311580208830A400FF3A40 /* RRassociatedGraph.hpp */,
 				310E78A4201BCE71000C70D9 /* BaselineGreedyTIM.hpp */,
-				31C4ADA01F787C610077D6BF /* log.h */,
-				31C4ADA11F787C610077D6BF /* log1.h */,
-				311423121F733720001BA3FA /* IMResults */,
-				31279D6F1F63469F00FC4D9B /* TIM-Models */,
-				31FC36911F354E56005CAFEB /* Graph.cpp */,
-				311423111F6F4AA7001BA3FA /* memoryusage.h */,
-				31FC36921F354E56005CAFEB /* Graph.hpp */,
-				31A494991F510CBF00745401 /* IMTree.cpp */,
-				31A4949A1F510CBF00745401 /* IMTree.hpp */,
-				31A494A71F55E92700745401 /* EstimateNonTargets.cpp */,
-				31A494A81F55E92700745401 /* EstimateNonTargets.hpp */,
-				31A494AB1F56095900745401 /* TIMUtility.hpp */,
-				31279D6C1F58EBD900FC4D9B /* Phase2.cpp */,
-				31279D6D1F58EBD900FC4D9B /* Phase2.hpp */,
-				31279D751F6CAB3400FC4D9B /* Diffusion.hpp */,
-				31279D791F6F052C00FC4D9B /* json.hpp */,
 				3159634B1F9E756C000EB2F4 /* DifferenceApproximator.cpp */,
 				3159634C1F9E756C000EB2F4 /* DifferenceApproximator.hpp */,
+				31279D751F6CAB3400FC4D9B /* Diffusion.hpp */,
+				31A494A71F55E92700745401 /* EstimateNonTargets.cpp */,
+				31A494A81F55E92700745401 /* EstimateNonTargets.hpp */,
 				315963541F9EC153000EB2F4 /* FunctionEvaluators.cpp */,
 				315963551F9EC153000EB2F4 /* FunctionEvaluators.hpp */,
-				315963591FA7B862000EB2F4 /* ApproximationSetting.hpp */,
 				3107F09E1FE4661900EA0135 /* GenerateGraphLabels.cpp */,
 				3107F09F1FE4661900EA0135 /* GenerateGraphLabels.hpp */,
-				310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */,
-				310E789D200EB175000C70D9 /* TIMInfluenceCalculator.hpp */,
+				31FC36911F354E56005CAFEB /* Graph.cpp */,
+				31FC36921F354E56005CAFEB /* Graph.hpp */,
+				311423121F733720001BA3FA /* IMResults */,
+				31A494991F510CBF00745401 /* IMTree.cpp */,
+				31A4949A1F510CBF00745401 /* IMTree.hpp */,
+				31279D791F6F052C00FC4D9B /* json.hpp */,
+				31C4ADA01F787C610077D6BF /* log.h */,
+				31C4ADA11F787C610077D6BF /* log1.h */,
+				311423111F6F4AA7001BA3FA /* memoryusage.h */,
+				31279D6C1F58EBD900FC4D9B /* Phase2.cpp */,
+				31279D6D1F58EBD900FC4D9B /* Phase2.hpp */,
 				1E9A3F30204091CC006580AD /* SeedSet.cpp */,
 				1E9A3F31204091CC006580AD /* SeedSet.hpp */,
+				31279D6F1F63469F00FC4D9B /* TIM-Models */,
+				310E789C200EB175000C70D9 /* TIMInfluenceCalculator.cpp */,
+				310E789D200EB175000C70D9 /* TIMInfluenceCalculator.hpp */,
+				31A494AB1F56095900745401 /* TIMUtility.hpp */,
+				1E6624572087B6F000565F7E /* vertex.cpp */,
+				1E6624582087B6F000565F7E /* vertex.hpp */,
+				1E3C6818208931E600C8D840 /* Edge.cpp */,
+				1E3C6819208931E600C8D840 /* Edge.hpp */,
 			);
 			path = InfluenceMaximization;
 			sourceTree = "<group>";
@@ -294,15 +309,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E3C681A208931E600C8D840 /* Edge.cpp in Sources */,
 				1E8464192040AFEA00DF798F /* SeedSet.cpp in Sources */,
 				1E8464162040AFD700DF798F /* main.cpp in Sources */,
 				1E8464172040AFD700DF798F /* BaselineGreedy.cpp in Sources */,
 				1E8464182040AFD700DF798F /* Phase2.cpp in Sources */,
 				1E8464102040AFBF00DF798F /* TIMCoverage.cpp in Sources */,
+				1E311581208830A400FF3A40 /* RRassociatedGraph.cpp in Sources */,
 				1E8464112040AFBF00DF798F /* TIMCoverage.hpp in Sources */,
 				1E8464122040AFBF00DF798F /* Graph.cpp in Sources */,
 				1E8464132040AFBF00DF798F /* IMTree.cpp in Sources */,
 				1E8464142040AFBF00DF798F /* EstimateNonTargets.cpp in Sources */,
+				1E6624592087B6F000565F7E /* vertex.cpp in Sources */,
 				1E8464152040AFBF00DF798F /* FunctionEvaluators.cpp in Sources */,
 				1E84640A2040AF9500DF798F /* Makefile in Sources */,
 				1E84640B2040AF9500DF798F /* BaselineGreedyTIM.cpp in Sources */,

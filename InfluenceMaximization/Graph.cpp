@@ -486,7 +486,8 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     else{
         
         nodeAS=vector<set<int>>(n);
-        pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        //pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
+        RRas=new RRassociatedGraph;
         alreadyVisited=vector<bool>(n,false);
         RRgraph=vector<vector<int>>(n) ;
         outdegree =vector<int>(n,n);
@@ -544,10 +545,11 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         nodeAS[expand].insert(expand);
         
         clock_t startMOD = clock();
-        addSetintoASmatrix(expand, expand, rrSetID);
+        //addSetintoASmatrix(expand, expand, rrSetID);
+        RRas->addEdge(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
-        coverage[expand]++;
+        //coverage[expand]++;
         
         for(int j=0; j<(int)graphTranspose[expand].size(); j++){
             int v=graphTranspose[expand][j];
@@ -594,7 +596,6 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
 
 
 void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
-    
     workQueue.push(pair<int,int>(randomVertex,outdegree[randomVertex]));
     
     while(!workQueue.empty()) {
@@ -610,15 +611,20 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 for(int i:nodeAS[expand]){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
-                    addSetintoASmatrix(i, v, rrSetID);
+                    //addSetintoASmatrix(i, v, rrSetID);
+                    if(i!=expand){
+                        coverage[i]++;
+                        RRas->addEdge(i, v, rrSetID);
+                    }
+                    
                     clock_t endMOD = clock();
                     modImpactTime += double(endMOD - startMOD);
-                    coverage[i]++;
+                    
                 }
             }
             else{
-                std::vector<int> intersect;
-                std::set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),std::inserter(intersect,intersect.begin()));
+                vector<int> intersect;
+                set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),inserter(intersect,intersect.begin()));
                 deque<pair<int,int>> store;
                 while(!workQueue.empty()){
                     int temp=workQueue.top().first;
@@ -648,7 +654,8 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                             nodeAS[expand].erase(i);
                         }
                         clock_t startMOD = clock();
-                        removeSetFromASmatrix(i, e, rrSetID);
+                        //removeSetFromASmatrix(i, e, rrSetID);
+                        RRas->removeEdge(i,e,rrSetID);
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
@@ -994,6 +1001,21 @@ void Graph:: removeNodeFromRRset(int vertex){
     }
     pairAssociatedSet[vertex].clear();
     coverage[vertex]=0;
+}
+
+void Graph:: removeVertexFromRRassociatedGraph(int v){
+    vertex* node = RRas->vertexMap.at(v);
+    for ( Edge* outEdges : node->getoutGoingEdges() ){
+        vertex* ASnode = RRas->vertexMap.at(outEdges->destid);
+        for(Edge* inEdges:ASnode->getinComingEdges()){
+        std::set<int> intersect;
+        std::set_difference (inEdges->rrids.begin(),inEdges->rrids.end(),outEdges->rrids.begin(),outEdges->rrids.end(), std::inserter(intersect, intersect.end()));
+            vertex* INnode=RRas->vertexMap.at(inEdges->sourceid);
+            INnode->outDegree-= (inEdges->rrids.size()-intersect.size());
+            inEdges->setRRid(intersect);
+        }
+    }
+    node->deleteOutBoundNeighbour();
 }
 
 void Graph:: removeSetFromASmatrix(int row, int vertex, int rrSetID){
