@@ -438,14 +438,13 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     clock_t begin = clock();
     visitMark = vector<int>(n);
     long totalSize = 0;
+    
     this->rrSets =vector<vector<int>>();
     while(rrSets.size()<R) {
         rrSets.push_back(vector<int>());
     }
-    
     //for mod influence
     if(modular.compare("modular")==0){
-        
         NodeinRRsetsWithCounts=vector<int>(n,0);
         if(activatedSet.size()==0){
             for(int i=0;i<R;i++) {
@@ -485,12 +484,12 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
     }
     //for modular Impact
     else{
-        rrSets.clear();
+        
         nodeAS=vector<set<int>>(n);
         //pairAssociatedSet=vector<unordered_map<int,unordered_set<int>>>(n);
         RRas=new RRassociatedGraph;
         alreadyVisited=vector<bool>(n,false);
-        //RRgraph=vector<vector<int>>(n) ;
+        RRgraph=vector<vector<int>>(n) ;
         outdegree =vector<int>(n,n);
         
         coverage=vector<int>(n,0);
@@ -533,7 +532,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
 void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
     
     q.clear();
-    //rrSets[rrSetID].push_back(randomVertex);
+    rrSets[rrSetID].push_back(randomVertex);
     q.push_back(randomVertex);
     int nVisitMark = 0;
     visitMark[nVisitMark++] = randomVertex;
@@ -572,7 +571,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
                 visited[v]=true;
             }
             q.push_back(v);
-            //rrSets[rrSetID].push_back(v);
+            rrSets[rrSetID].push_back(v);
             
         }
     }
