@@ -156,10 +156,12 @@ inline string singleDiffusionInfluence(Graph *graph, set<int> seedSet,string gra
             for (int v : graph->graph[u]) {
                 bool activeEdge = graph->flipCoinOnEdge(u, v);
                 if (activeEdge) {
+                    myfile <<u<<" "<<v<<"\n";
                     if(!visited[v])
                         if (activatedSet->find(v)==activatedSet->end()) {
                             queue->push_front(v);
-                            myfile <<u<<" "<<v<<"\n";
+                            //modified
+                           // myfile <<u<<" "<<v<<"\n";
                         }
                 }
             }

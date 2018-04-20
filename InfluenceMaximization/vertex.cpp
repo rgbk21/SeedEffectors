@@ -69,9 +69,9 @@ void vertex::addOutGoingEdges(Edge *e) {
 void vertex::removeOutgoingEdge(Edge* e, int rrSetID) {
     for(Edge* z:this->outGoingEdges){
         if(z ==e){
-            //todo: if only one rrid can delete the whole edge
             z->removeRRid(rrSetID);
             outDegree--;
+            return;
         }
     }
 }
@@ -81,6 +81,7 @@ void vertex::removeIncomingEdge(Edge* e,int rrSetID) {
         if(z ==e){
             z->removeRRid(rrSetID);
             indDegree--;
+            return;
         }
     }
 }

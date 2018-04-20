@@ -581,7 +581,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
     clock_t etest1 = clock();
     testtime1+= double(etest1 - stest1);
     
-    clock_t stest2 = clock();
+
     for(int i=0;i<nVisitMark;i++) {
         visited[visitMark[i]] = false;
         alreadyVisited[visitMark[i]] = false;
@@ -589,8 +589,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         vector<int>().swap(RRgraph[visitMark[i]]);
         outdegree[visitMark[i]]= n;
     }
-    clock_t etest2 = clock();
-    testtime2+= double(etest2 - stest2);
+
 }
 
 
@@ -612,7 +611,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                     nodeAS[v].insert(i);
                     clock_t startMOD = clock();
                     //addSetintoASmatrix(i, v, rrSetID);
-                    if(i!=expand){
+                    if(i!=v){
                         coverage[i]++;
                         RRas->addEdge(i, v, rrSetID);
                     }
@@ -1005,17 +1004,49 @@ void Graph:: removeNodeFromRRset(int vertex){
 
 void Graph:: removeVertexFromRRassociatedGraph(int v){
     vertex* node = RRas->vertexMap.at(v);
+    clock_t start1=clock();
+    int testtimed1=0;
+    int testtimed2=0;
+    int testtimed3=0;
     for ( Edge* outEdges : node->getoutGoingEdges() ){
         vertex* ASnode = RRas->vertexMap.at(outEdges->destid);
         for(Edge* inEdges:ASnode->getinComingEdges()){
-        std::set<int> intersect;
-        std::set_difference (inEdges->rrids.begin(),inEdges->rrids.end(),outEdges->rrids.begin(),outEdges->rrids.end(), std::inserter(intersect, intersect.end()));
-            vertex* INnode=RRas->vertexMap.at(inEdges->sourceid);
-            INnode->outDegree-= (inEdges->rrids.size()-intersect.size());
-            inEdges->setRRid(intersect);
+            string eid=std::to_string(node->getId());
+            eid+="_"+std::to_string(ASnode->getId());
+            if(outEdges!=inEdges){
+                clock_t start3=clock();
+                std::set<int> difference;
+                std::set_difference (inEdges->rrids.begin(),inEdges->rrids.end(),outEdges->rrids.begin(),outEdges->rrids.end(), std::inserter(difference, difference.end()));
+                clock_t end3=clock();
+                testtimed3+= double(end3 - start3);
+                vertex* INnode=RRas->vertexMap.at(inEdges->sourceid);
+                INnode->outDegree-= (inEdges->rrids.size()-difference.size());
+                
+                /*if(difference.size()==0){
+                    RRas->EdgeMap.erase(inEdges->getId());
+                    inEdges->setRRid(difference);
+                    delete inEdges;
+                    continue;
+                }*/
+                clock_t start=clock();
+                inEdges->setRRid(difference);
+                clock_t end = clock();
+                testtimed2+= double(end - start);
+                
+            }
         }
+        /*
+        if(RRas->EdgeMap.count(outEdges->getId())==1){
+            RRas->EdgeMap.erase(outEdges->getId());
+            delete outEdges;
+        }*/
     }
+    clock_t end1 = clock();
+    testtimed1+=double(end1 - start1);
     node->deleteOutBoundNeighbour();
+    cout << "\n"<< "test time 1 " << double(testtimed1)/ (CLOCKS_PER_SEC*60);
+    cout << "test time 2 " << double(testtimed2)/ (CLOCKS_PER_SEC*60);
+    cout << "test time 3 " << double(testtimed3)/ (CLOCKS_PER_SEC*60)<<"\n";
 }
 
 void Graph:: removeSetFromASmatrix(int row, int vertex, int rrSetID){

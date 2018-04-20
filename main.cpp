@@ -494,9 +494,11 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         subModNodesToremove.insert(node);
         //remove node from RRset
         influencedGraph->removeVertexFromRRassociatedGraph(node);
+        
         //influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
+    
     clock_t subModReverseEndTime = clock();
     
     vector<vector<int>>().swap(influencedGraph->rrSets);

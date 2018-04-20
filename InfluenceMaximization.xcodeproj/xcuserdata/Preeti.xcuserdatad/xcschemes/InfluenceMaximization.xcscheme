@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fullgraph true"
+            argument = "--fullgraph false"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -94,7 +94,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 10"
+            argument = "--budget 5"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -110,7 +110,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 50"
+            argument = "--nodesRemove 30"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -32,5 +32,5 @@ void Edge::setRRid(set<int> rrids){
 }
 
 void Edge::removeRRid(int rrid){
-    this->rrids.erase(rrid);
+    this->rrids.erase(rrid);    
 }

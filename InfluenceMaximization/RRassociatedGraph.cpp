@@ -59,7 +59,7 @@ void RRassociatedGraph::addEdge(int from, int to, int label) {
         return;
     }
     string eid=std::to_string(from);
-    eid+=std::to_string(to);
+    eid+="_"+std::to_string(to);
     Edge* edge=findedge(eid);
     if(edge==nullptr){
         edge=new Edge(eid,from,to);
@@ -83,12 +83,23 @@ void RRassociatedGraph::removeEdge(int from, int to,int rrSetID) {
     vertex* fromVertex = find(from);
     vertex* toVertex = find(to);
     string eid=std::to_string(from);
-    eid+=std::to_string(to);
+    eid+="_"+std::to_string(to);
     if(EdgeMap.count(eid)==1){
-        fromVertex->removeOutgoingEdge(EdgeMap.find(eid)->second,rrSetID);
-        toVertex->removeIncomingEdge(EdgeMap.find(eid)->second,rrSetID);
+        Edge* e=EdgeMap.find(eid)->second;
+        fromVertex->removeOutgoingEdge(e,rrSetID);
+        toVertex->removeIncomingEdge(e,rrSetID);
+        /*if(e->rrids.size()==0){
+            EdgeMap.erase(eid);
+            delete e;
+        }
+        if(EdgeMap.count(eid)==1){
+            
+            if(e->rrids.size()==0){
+                EdgeMap.erase(eid);
+                delete e;
+            }
+        }*/
     }
-    //to->removeInBoundNeighbour(from);    
 }
 /*
  void RRassociatedGraph::print() {
