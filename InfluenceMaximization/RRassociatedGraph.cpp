@@ -8,20 +8,10 @@
 
 #include "RRassociatedGraph.hpp"
 RRassociatedGraph::RRassociatedGraph() {
-    //vertices = unordered_set<vertex>();
     noOfEdges=0;
 }
-/*
-unordered_set<vertex> RRassociatedGraph::getVertices() {
-    return vertices;
-}
 
-int RRassociatedGraph::getNumberOfVertices() {
-    return (int)this->vertices.size();
-}
-*/
 void RRassociatedGraph::addVertex(vertex v) {
-    //this->vertices.insert(v);
     vertexMap.insert(pair<int,vertex*>(v.getId(), &v));
 }
 
@@ -65,58 +55,27 @@ void RRassociatedGraph::addEdge(int from, int to, int label) {
         edge=new Edge(eid,from,to);
         edge->addRRid(label);
         fromVertex->addOutGoingEdges(edge);
-        toVertex->addInComingEdges(edge);
         EdgeMap.insert(pair<string,Edge*>(edge->getId(), edge));
         noOfEdges++;
     }
     else{
         edge->addRRid(label);
         fromVertex->outDegree++;
-        toVertex->indDegree++;
     }
     
 }
 
 
-
 void RRassociatedGraph::removeEdge(int from, int to,int rrSetID) {
     vertex* fromVertex = find(from);
-    vertex* toVertex = find(to);
     string eid=std::to_string(from);
     eid+="_"+std::to_string(to);
     if(EdgeMap.count(eid)==1){
         Edge* e=EdgeMap.find(eid)->second;
-        fromVertex->removeOutgoingEdge(e,rrSetID);
-        toVertex->removeIncomingEdge(e,rrSetID);
-        /*if(e->rrids.size()==0){
+        if(fromVertex->removeOutgoingEdge(e,rrSetID)){
             EdgeMap.erase(eid);
             delete e;
         }
-        if(EdgeMap.count(eid)==1){
-            
-            if(e->rrids.size()==0){
-                EdgeMap.erase(eid);
-                delete e;
-            }
-        }*/
     }
 }
-/*
- void RRassociatedGraph::print() {
- System.out.print("Vertices of the graph : ");
- StringBuilder vertexString = new StringBuilder("");
- StringBuilder edgeString = new StringBuilder("");
- for (Vertex vertex : vertices) {
- vertexString.append(vertex.getId() + ",");
- edgeString.append("Edges for the vertex " + vertex.getId() + " are : ");
- for (Vertex neighbour : vertex.getOutBoundNeighbours()) {
- edgeString.append(neighbour.getId() + ",");
- }
- edgeString.deleteCharAt(edgeString.length() - 1);
- edgeString.append("\n");
- }
- 
- System.out.println(vertexString.deleteCharAt(vertexString.length() - 1));
- System.out.println(edgeString);
- }*/
 

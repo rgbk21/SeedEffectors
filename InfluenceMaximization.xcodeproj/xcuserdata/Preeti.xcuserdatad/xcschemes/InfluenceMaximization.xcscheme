@@ -86,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph graph_ic_75k.txt"
+            argument = "--graph ca-GrQc-processed.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -110,7 +110,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 30"
+            argument = "--nodesRemove 5"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

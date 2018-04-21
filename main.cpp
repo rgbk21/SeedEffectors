@@ -296,7 +296,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     
     vector<int> modResults;
     vector<int> SubmodResults;
-    vector<int> SubImapctResults;
+    vector<int> modImpactResults;
     
     cout<< "nodes To remove in mod graph ";
     resultLogFile<< "nodes To remove in mod graph ";
@@ -407,27 +407,33 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         SubmodResults.push_back(oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile));
         cout<<"\n Mod Impact Results: " << flush;
         resultLogFile<<"\n Mod Impact Results: " << flush;
-        SubImapctResults.push_back(oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile));
+        modImpactResults.push_back(oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile));
         k++;
     }
     double subModGain=0;
     double ImapctGain=0;
     for(int i=0;i<k;i++){
         subModGain+= float(modResults[i]-SubmodResults[i])/float(modResults[i]);
-        ImapctGain+=float(modResults[i]-SubImapctResults[i])/float(modResults[i]);
+        ImapctGain+=float(modResults[i]-modImpactResults[i])/float(modResults[i]);
     }
     subModGain=(float)subModGain/k;
     ImapctGain=(float)ImapctGain/k;
     myfile <<subModGain<<" "<<ImapctGain<<"\n";
-    
+    for(int i=0;i<k;i++){
+         myfile <<modResults[i]<<" "<<SubmodResults[i]<<" "<<modImpactResults[i]<<"\n";
+    }
     delete SeedClass;
 }
 
 set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet, int removeNodes, set<int> seedSet,set<int> *removalModImpact){
-    set<int> alreadyinSeed= set<int>();
-    
     clock_t subModReverseStartTime = clock();
+    
+    set<int> alreadyinSeed= set<int>();
     set<int> subModNodesToremove;
+    vector<pair<int,int>> ASdegree;
+    int removalNum=removeNodes;
+    bool SubImpact=false;
+    
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
@@ -435,33 +441,29 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     cout<< "RR sets are: "<<R;
     resultLogFile<< "RR sets are: "<<R;
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular,resultLogFile);
-    
-    int removalNum=removeNodes;
-    bool SubImpact=false;
+
     while(removeNodes!=0){
-        vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
-        for(int i=0;i<influencedGraph->coverage.size();i++){
+        ASdegree=vector<pair<int,int>>();
+        for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
             pair<int,int> node= pair<int,int>();
-            node.first=i;
-            node.second=influencedGraph->coverage[i];
-            SortedNodeidCounts.push_back(node);
+            node.first=it->first;
+            node.second=it->second->getOutDegree();
+            ASdegree.push_back(node);
         }
-        std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
-        assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
-        vector<pair<int,int>> ASdegree;
+        std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
+        assert(ASdegree.at(0).second>=ASdegree.at(1).second);
+        
         if(!SubImpact){
             cout << "\n \n ******* Running Mod Impact approach ********" <<flush;
             resultLogFile << "\n \n ******* Running Mod Impact approach ********";
             int k=0;
             for(int i=0;i<removalNum;i++){
-                if(seedSet.count(SortedNodeidCounts.at(i).first)==1){
+                if(seedSet.count(ASdegree.at(i).first)==1){
                     k++;
                 }
-                removalModImpact->insert(SortedNodeidCounts.at(i).first);
+                removalModImpact->insert(ASdegree.at(i).first);
                 SubImpact=true;
             }
-            int count=0;
-            
             
             cout<<"associated value is "<<k<<"\n";
             cout << "\n Number of nodes for (mod impact) already present in seed set = " <<k;
@@ -472,15 +474,8 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             resultLogFile << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             myfile <<totalModImapctTime<<" ";
         }
-        ASdegree=vector<pair<int,int>>();
-        for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
-            pair<int,int> node= pair<int,int>();
-            node.first=it->first;
-            node.second=it->second->getOutDegree();
-            ASdegree.push_back(node);
-        }
-        std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
-        assert(ASdegree.at(0).second>=ASdegree.at(1).second);
+        
+        
         int h=0;
         /*while(seedSet.count(SortedNodeidCounts.at(h).first)==1){
          h++;
@@ -490,11 +485,16 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         if(seedSet.count(node)==1){
             alreadyinSeed.insert(node);
         }*/
+        
+        
         int node=ASdegree.at(h).first;
+        if(seedSet.count(node)==1){
+            alreadyinSeed.insert(node);
+        }
         subModNodesToremove.insert(node);
+        
         //remove node from RRset
         influencedGraph->removeVertexFromRRassociatedGraph(node);
-        
         //influencedGraph->removeNodeFromRRset(node);
         removeNodes--;
     }
@@ -588,9 +588,7 @@ int getNumberofVertices(string influenceFile){
 
 void executeTIMTIM(cxxopts::ParseResult result) {
     clock_t executionTimeBegin = clock();
-
     IMResults::getInstance().setFromFile(fromFile);
-    // insert code here...
     float percentageTargetsFloat = (float)percentageTargets/(float)100;
     
     //Generate graph
@@ -613,7 +611,6 @@ void executeTIMTIM(cxxopts::ParseResult result) {
     switch(initialSeed){
         case 1://bestTim for  case1, besthalfGRaph for case 2
             seedSet=getSeed(graph,vector<int>(),set<int>(),set<int>(),seedOrder);
-            //checkMod(graphFileName,percentageTargetsFloat,graph,seedSet,budget,useIndegree,probability);
             if(half_seed==2){
                 graph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
                 if(!useIndegree) {
