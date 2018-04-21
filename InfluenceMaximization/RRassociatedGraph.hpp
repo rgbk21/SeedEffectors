@@ -27,13 +27,8 @@
 using namespace std;
 
 class RRassociatedGraph{
-   /* struct KeyHasher {
-        std::size_t operator()(const vertex & k) const {
-            return std::hash<int>()(k.id);
-        }
-    };*/
+
 public:
-    //unordered_set<vertex> vertices;
     unordered_map<int,vertex*> vertexMap;
     unordered_map<string,Edge*> EdgeMap;
     int noOfEdges;

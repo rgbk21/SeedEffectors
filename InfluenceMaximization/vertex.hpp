@@ -29,29 +29,19 @@ public:
     {
         return id==obj->id;
     }
-    
-    int indDegree;
     int outDegree;
-    vector<Edge*> inComingEdges;
     vector<Edge*> outGoingEdges;
-    unordered_map<int,unordered_set<int>>  labels;
     
 public:
     
     vertex(int id);
     int getId();
     void setId(int id);
-    int getIndDegree();
-    void setIndDegree(int indDegree);
     int getOutDegree();
     void setOutDegree(int outDegree);
-    vector<Edge*> getinComingEdges();
-    void setInBoundNeighbours(vector<Edge*> inComingEdges);
     vector<Edge*> getoutGoingEdges();
     void setOutBoundNeighbours(vector<Edge*> outGoingEdges);
-    void removeOutgoingEdge(Edge* e,int rrSetID);
-    void removeIncomingEdge(Edge* e,int rrSetID);
-    void addInComingEdges(Edge* v);
+    bool removeOutgoingEdge(Edge* e,int rrSetID);
     void addOutGoingEdges(Edge* v);
     void deleteOutBoundNeighbour();
 };

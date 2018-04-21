@@ -32,14 +32,6 @@ public:
         return (a.second > b.second);
     }
 };
-/*
-class AS{
-public:
-    int data;
-    int count;
-    vector<AS> *next=new vector<AS>();
-    AS(int=0, AS* =NULL);
-};*/
 
 
 class Graph {
@@ -60,8 +52,6 @@ public:
     RRassociatedGraph *RRas;
     int n, m;
     double modImpactTime;
-    double testtime1;
-    double testtime2;
     vector<bool> alreadyVisited;
     //vector<unordered_map<AS,vector<AS>>> AStree;
     //vector<AS> *match;
