@@ -70,7 +70,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fullgraph false"
+            argument = "--fullgraph true"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -86,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-GrQc-processed.txt"
+            argument = "--graph graph_ic_75k.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
