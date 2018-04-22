@@ -490,7 +490,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         RRgraph=vector<vector<int>>(n) ;
         outdegree =vector<int>(n,n);
         modImpactTime=0;
-        
+        coverage=vector<int>(n,0);
         int t=(int)activatedSet.size();
         int doneRR=1;
         for(int i=0;i<R;i++) {
@@ -541,7 +541,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         
         clock_t startMOD = clock();
         //addSetintoASmatrix(expand, expand, rrSetID);
-        RRas->addEdge(expand, expand, rrSetID);
+        //RRas->addEdge(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
         //coverage[expand]++;
@@ -601,7 +601,10 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                     nodeAS[v].insert(i);
                     if(i!=v){
                         clock_t startMOD = clock();
-                        RRas->addEdge(i, v, rrSetID);
+                        //RRas->addEdge(i, v, rrSetID);
+                        
+                        coverage[i]++;
+                        
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }
@@ -639,7 +642,8 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                         }
                         
                         clock_t startMOD = clock();
-                        RRas->removeEdge(i,e,rrSetID);
+                        //RRas->removeEdge(i,e,rrSetID);
+                        coverage[i]--;
                         clock_t endMOD = clock();
                         modImpactTime += double(endMOD - startMOD);
                     }

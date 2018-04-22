@@ -384,7 +384,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
             case 4: //farthest from OutDegree threshold nodes
                 seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
                 break;
-        }
+     }
         
         cout<<"\n \n Selected new SeedSet in original graph: " << flush;
         resultLogFile<<"\n \n Selected new SeedSet in original graph: " << flush;
@@ -443,6 +443,17 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet,modular,resultLogFile);
 
     while(removeNodes!=0){
+        
+        vector<pair<int,int>> SortedNodeidCounts=vector<pair<int,int>>();
+        for(int i=0;i<influencedGraph->coverage.size();i++){
+            pair<int,int> node= pair<int,int>();
+            node.first=i;
+            node.second=influencedGraph->coverage[i];
+            SortedNodeidCounts.push_back(node);
+        }
+        std :: sort(SortedNodeidCounts.begin(),SortedNodeidCounts.end(), sortbysecdesc);
+        assert(SortedNodeidCounts.at(0).second>=SortedNodeidCounts.at(1).second);
+        /*
         ASdegree=vector<pair<int,int>>();
         for ( auto it = influencedGraph->RRas->vertexMap.begin(); it != influencedGraph->RRas->vertexMap.end(); ++it ){
             pair<int,int> node= pair<int,int>();
@@ -452,16 +463,26 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
         }
         std :: sort(ASdegree.begin(),ASdegree.end(), sortbysecdesc);
         assert(ASdegree.at(0).second>=ASdegree.at(1).second);
-        
+        */
         if(!SubImpact){
             cout << "\n \n ******* Running Mod Impact approach ********" <<flush;
             resultLogFile << "\n \n ******* Running Mod Impact approach ********";
-            int k=0;
+            /*int k=0;
             for(int i=0;i<removalNum;i++){
                 if(seedSet.count(ASdegree.at(i).first)==1){
                     k++;
                 }
                 removalModImpact->insert(ASdegree.at(i).first);
+                SubImpact=true;
+            }*/
+            
+            
+            int k=0;
+            for(int i=0;i<removalNum;i++){
+                if(seedSet.count(SortedNodeidCounts.at(i).first)==1){
+                    k++;
+                }
+                removalModImpact->insert(SortedNodeidCounts.at(i).first);
                 SubImpact=true;
             }
             
@@ -473,6 +494,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
             cout << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             resultLogFile << "\n Reverse submod impact algorithm time in minutes " << totalModImapctTime<<"\n";
             myfile <<totalModImapctTime<<" ";
+            break;
         }
         
         
@@ -502,6 +524,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     clock_t subModReverseEndTime = clock();
     
     vector<vector<int>>().swap(influencedGraph->rrSets);
+    
     for(int i:subModNodesToremove){
         influencedGraph->removeOutgoingEdges(i);
         assert(influencedGraph->graph[i].size()==0);
@@ -756,12 +779,51 @@ void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
     if(!useIndegree) {
         influencedGraph->setPropogationProbability(probability);
     }
+    
     vector<int> activatedSet=vector<int>(influencedGraph->n);
     for(int i=0;i<influencedGraph->n;i++){
         activatedSet[i]=i;
     }
     set<int> seedSet;
-
+    /*
+    int diffusionNum=0;
+    double percentage=0;
+    int influenceBudget=budget;
+    set<int> maxSeedSet;
+    //diffusion with RR approach to get the maximum influence
+    while(percentage<90){
+        maxSeedSet=getSeed(influencedGraph,activatedSet,set<int>(),set<int>(),NULL);
+        
+        int n = (int)activatedSet.size();
+        double epsilon = (double)EPSILON;
+        int R = (8+2 * epsilon) * n * (2 * log(n) + log(2))/(epsilon * epsilon);
+        cout<< "RR sets are: "<<R;
+        influencedGraph->generateRandomRRSetsFromTargets(R, activatedSet, "modular", resultLogFile);
+        for(vector<int> v:influencedGraph->rrSets){
+            for(int j:v){
+                if(maxSeedSet.count(j)==1){
+                    diffusionNum++;
+                    break;
+                }
+            }
+        }
+        diffusionNum=((double)diffusionNum/R)*n;
+        percentage= (float(diffusionNum)/(float)n)*100;
+        budget+=influenceBudget;
+        vector<vector<int>>().swap(influencedGraph->rrSets);
+    }
+    budget=influenceBudget;
+    //get % of seed size
+    int randomVertex;
+    int w=(int)maxSeedSet.size();
+    vector<int> temp=vector<int>(w);
+    temp.insert(temp.begin(),maxSeedSet.begin(), maxSeedSet.end());
+    for(int i=0;i<w/2;i++){
+        randomVertex = rand() % w;
+        seedSet.insert(temp[w]);
+    
+    */
+    
     cout << "\n Targets activated = " << activatedSet.size();
     cout << "\n Non targets are = " << influencedGraph->getNumberOfNonTargets()<< flush;
     
