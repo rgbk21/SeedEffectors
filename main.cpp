@@ -323,6 +323,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     resultLogFile<< "\n nodes To remove in mod Impact graph ";
     int B=0;
     int C=0;
+    set<int> removalModImpactNodes;
     for(int i: *removalModImpact){
         cout<< i << " ";
         resultLogFile<< i << " ";
@@ -331,6 +332,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         if(modNodes.count(i)==1)
             C++;
         modImpactGraph->removeOutgoingEdges(i);
+        removalModImpactNodes.insert(i);
         assert(modImpactGraph->graph[i].size()==0);
         assert(modImpactGraph->graphTranspose[i].size()==0);
     }
@@ -374,7 +376,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
                 if(!useIndegree) {
                     graph->setPropogationProbability(probability);
                 }
-                seedSet=getSeed(graph,activatedSet,modNodes,subModNodes,NULL);
+                seedSet=getSeed(graph,activatedSet,modNodes,removalModImpactNodes,NULL);
                 delete graph;
                 break;
             case 2: //random
