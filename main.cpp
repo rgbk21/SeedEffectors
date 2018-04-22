@@ -360,7 +360,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
     set<int> seedSet=set<int>();
-    Graph *graph;
+    Graph* graph=new Graph;
     int k=0;
     while(k<10){
         switch(1){
@@ -406,7 +406,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         modResults.push_back(oldNewIntersection(newGraph, seedSet,activatedSet,resultLogFile));
         cout<<"\n Sub Mod Results: " << flush;
         resultLogFile<<"\n Sub Mod Results: " << flush;
-        SubmodResults.push_back(oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile));
+        SubmodResults.push_back(0/*oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile)*/);
         cout<<"\n Mod Impact Results: " << flush;
         resultLogFile<<"\n Mod Impact Results: " << flush;
         modImpactResults.push_back(oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile));
@@ -756,6 +756,11 @@ void executeTIMTIM(cxxopts::ParseResult result) {
         modImpactGraph->setPropogationProbability(probability);
     }
     
+    set<int> newInfluenceSeed;
+    newInfluenceSeed=getSeed(modImpactGraph,activatedSet,set<int>(),set<int>(),NULL);
+    oldNewIntersection(modImpactGraph, newInfluenceSeed, activatedSet, resultLogFile);
+    cout << "\n \n******* New influence done******** \n" <<flush;
+    
     Graph *subNewGraph = new Graph;
     subNewGraph->writeInfluencedGraph(graphFileName, percentageTargetsFloat,convertedFile,NULL,NULL);
     if(!useIndegree) {
@@ -868,9 +873,18 @@ void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
     if(!useIndegree) {
         modImpactGraph->setPropogationProbability(probability);
     }
+     cout << "\n \n******* New influence start******** \n" <<flush;
+    set<int> newInfluenceSeed;
+    newInfluenceSeed=getSeed(modImpactGraph,activatedSet,set<int>(),set<int>(),NULL);
+    int newNumber;
+    newNumber=oldNewIntersection(modImpactGraph, newInfluenceSeed, activatedSet, resultLogFile);
+    myfile <<newNumber<<" ";
+    cout << "\n \n******* New influence end ******** \n" <<flush;
+    
     string convertedFile="graphs/"+graphFileName;
     Graph *subNewGraph = new Graph;
     subNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+    
     if(!useIndegree) {
         subNewGraph->setPropogationProbability(probability);
     }newDiffusion(modNewGraph,subNewGraph,modImpactGraph,modNodesToremove,subModNodesToremove,removalModImpact,activatedSet,newSeed,percentageTargetsFloat,convertedFile);
