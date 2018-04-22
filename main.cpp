@@ -404,7 +404,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         modResults.push_back(oldNewIntersection(newGraph, seedSet,activatedSet,resultLogFile));
         cout<<"\n Sub Mod Results: " << flush;
         resultLogFile<<"\n Sub Mod Results: " << flush;
-        SubmodResults.push_back(oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile));
+        SubmodResults.push_back(0/*oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile)*/);
         cout<<"\n Mod Impact Results: " << flush;
         resultLogFile<<"\n Mod Impact Results: " << flush;
         modImpactResults.push_back(oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile));
