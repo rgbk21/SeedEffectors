@@ -307,6 +307,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     cout<< "\n nodes To remove in submod graph "<<flush;
     resultLogFile<< "\n nodes To remove in submod graph ";
     
+    /*modified don't remove anything from submod impact
     int A=0;
     for(int i:subModNodes){
         cout<< i << " ";
@@ -316,7 +317,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         subNewGraph->removeOutgoingEdges(i);
         assert(subNewGraph->graph[i].size()==0);
         assert(subNewGraph->graphTranspose[i].size()==0);
-    }
+    }*/
     
     cout<< "\n nodes To remove in mod Impact graph "<<flush;
     resultLogFile<< "\n nodes To remove in mod Impact graph ";
@@ -333,10 +334,10 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         assert(modImpactGraph->graph[i].size()==0);
         assert(modImpactGraph->graphTranspose[i].size()==0);
     }
-    cout<< "\n intersection of mod and submod nodes to remove "<<A;
+    //cout<< "\n intersection of mod and submod nodes to remove "<<A;
     cout<< "\n intersection of submod and submodImpact nodes to remove "<<B;
     cout<< "\n intersection of mod and submodImpact nodes to remove "<<C<<"\n";
-    resultLogFile<< "\n intersection of mod and submod nodes to remove "<<A;
+    //resultLogFile<< "\n intersection of mod and submod nodes to remove "<<A;
     resultLogFile<< "\n intersection of submod and submodImpact nodes to remove "<<B;
     resultLogFile<< "\n intersection of mod and submodImpact nodes to remove "<<C<<"\n";
     //Random RR sets
@@ -374,6 +375,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
                     graph->setPropogationProbability(probability);
                 }
                 seedSet=getSeed(graph,activatedSet,modNodes,subModNodes,NULL);
+                delete graph;
                 break;
             case 2: //random
                 seedSet=SeedClass->getCompletelyRandom(modNodes,subModNodes);
@@ -404,7 +406,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         modResults.push_back(oldNewIntersection(newGraph, seedSet,activatedSet,resultLogFile));
         cout<<"\n Sub Mod Results: " << flush;
         resultLogFile<<"\n Sub Mod Results: " << flush;
-        SubmodResults.push_back(0/*oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile)*/);
+        SubmodResults.push_back(oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile));
         cout<<"\n Mod Impact Results: " << flush;
         resultLogFile<<"\n Mod Impact Results: " << flush;
         modImpactResults.push_back(oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile));
@@ -524,7 +526,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     clock_t subModReverseEndTime = clock();
     
     vector<vector<int>>().swap(influencedGraph->rrSets);
-    
+    /*
     for(int i:subModNodesToremove){
         influencedGraph->removeOutgoingEdges(i);
         assert(influencedGraph->graph[i].size()==0);
@@ -540,7 +542,7 @@ set<int> subModularNodesRemove(Graph *influencedGraph, vector<int> activatedSet,
     cout << "\n Submodular strength = "<<subModStrength;
     resultLogFile << "\n Number of nodes Already present in seed set = " << alreadyinSeed.size();
     resultLogFile << "\n Submodular strength = "<<subModStrength;
-    myfile <<subModStrength<<" ";
+    myfile <<subModStrength<<" ";*/
     double totalAlgorithmTime = double(subModReverseEndTime-subModReverseStartTime) / (CLOCKS_PER_SEC*60);
     cout << "\n Reverse submodular algorithm time in minutes " << totalAlgorithmTime;
     resultLogFile << "\n Reverse submodular algorithm time in minutes " << totalAlgorithmTime;
