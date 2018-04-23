@@ -78,7 +78,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--newSeedset 1"
+            argument = "--newSeedset 5"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -94,7 +94,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 5"
+            argument = "--budget 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -110,7 +110,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 20"
+            argument = "--nodesRemove 15"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
