@@ -540,7 +540,7 @@ void Graph::generateRandomRRSetwithRRgraphs(int randomVertex, int rrSetID) {
         
         clock_t startMOD = clock();
         //addSetintoASmatrix(expand, expand, rrSetID);
-        RRas->addEdge(expand, expand, rrSetID);
+        //RRas->addEdge(expand, expand, rrSetID);
         clock_t endMOD = clock();
         modImpactTime += double(endMOD - startMOD);
         //coverage[expand]++;
