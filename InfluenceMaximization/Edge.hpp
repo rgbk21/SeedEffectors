@@ -14,29 +14,34 @@
 #include <vector>
 #include <unordered_set>
 #include <set>
+#include <string>
 
 using namespace std;
+
+
+
 
 class Edge{
     
 public:
+
     bool operator==(const Edge* &obj) const
     {
         return eid==obj->eid;
     }
     
-    string eid;
+    std::pair<int,int> eid;
     set<int> rrids;
     int sourceid;
     int destid;
     int strength;
 
 public:
-    Edge(string eid,int from,int to);
-    string getId();
+    Edge(std::pair<int,int> eid,int from,int to);
+    std::pair<int,int> getId();
     void addRRid(int rrid);
     void removeRRid(int rrid);
     void setRRid(set<int> rrids);
-    void setId(string eid);
+    void setId(std::pair<int,int> eid);
 };
 #endif /* Edge_hpp */

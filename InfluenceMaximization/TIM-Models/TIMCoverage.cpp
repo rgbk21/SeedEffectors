@@ -162,11 +162,11 @@ set<pair<int, int>> TIMCoverage::findTopKNodesWithInfluence(int k, vector<vector
     return topKNodesWithInfluence;
 }
 
-set<int> TIMCoverage::findTopKNodes(int k, vector<vector<int>> *rrSets,unordered_set<int> activatedNodes, set<int>modNodes, set<int>subModNodes,vector<int> *seedOrder) {
+set<int> TIMCoverage::findTopKNodes(int k, vector<vector<int>> *rrSets,unordered_set<int> activatedNodes, set<int>modNodes, set<int>subModNodes,set<int>removalModImpactNodes,vector<int> *seedOrder) {
     set<int> topKNodes;
     for(int i=0; i< k;) {
         int node=findMaxInfluentialNodeAndUpdateModel(rrSets).first;
-        if((activatedNodes.size()==0 || activatedNodes.count(node)==1) && modNodes.count(node)==0 && subModNodes.count(node)==0){
+        if((activatedNodes.size()==0 || activatedNodes.count(node)==1) && modNodes.count(node)==0 && subModNodes.count(node)==0 && removalModImpactNodes.count(node)==0){
             topKNodes.insert(node);
             if(seedOrder!=NULL)
                 (*seedOrder)[i]= node;

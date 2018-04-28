@@ -614,6 +614,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                 set_symmetric_difference(nodeAS[v].begin(), nodeAS[v].end(),nodeAS[expand].begin(), nodeAS[expand].end(),inserter(symDifference,symDifference.begin()));
                 deque<pair<int,int>> store;
                 while(!workQueue.empty()){
+                    pair<int,int> x=workQueue.top();
                     int temp=workQueue.top().first;
                     workQueue.pop();
         
@@ -622,7 +623,7 @@ void Graph:: BFSonRRgraphs(int randomVertex,int rrSetID){
                         workQueue.push(pair<int,int>(v,outdegree[v]));
                         break;
                     }
-                    store.push_front(workQueue.top());
+                    store.push_front(x);
                 }
                 while(!store.empty()){
                     workQueue.push(store.front());
@@ -995,16 +996,19 @@ void Graph:: removeVertexFromRRassociatedGraph(int v){
         if(outEdges->rrids.size()>0){
             for(int RRi:outEdges->rrids){ //all the rrids from the edge
                 for(int j:rrSets[RRi]){ // all the nodes associated with that rrid
+                    if(RRas->vertexMap.count(j)==1){
                     vertex* ASnode = RRas->vertexMap.at(j);
-                    
-                    string eid=std::to_string(ASnode->getId()); //making edge id from source and destination vertex
-                    eid+="_"+std::to_string(outEdges->destid);
+                        std::pair<int,int> eid;
+                        eid.first=ASnode->getId();
+                        eid.second=outEdges->destid; //making edge id from source and destination vertex
+                   
                     if(eid!=outEdges->getId()){
-                        std::unordered_map<string,Edge*>::iterator it=RRas->EdgeMap.find(eid); //find that edge from edgeMap
+                        std::unordered_map<std::pair<int,int>,Edge*,pairHash>::iterator it=RRas->EdgeMap.find(eid); //find that edge from edgeMap
                         if (it != RRas->EdgeMap.end() && it->second->rrids.count(RRi)==1){
                             it->second->rrids.erase(RRi);   // remove rrid from the set
                             ASnode->outDegree--;
                         }
+                    }
                     }
                 }
             }
