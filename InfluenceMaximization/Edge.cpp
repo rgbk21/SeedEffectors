@@ -8,18 +8,18 @@
 
 #include "Edge.hpp"
 
-Edge:: Edge(string eid,int from,int to) {
+Edge:: Edge(std::pair<int,int> eid,int from,int to) {
     this->sourceid=from;
     this->destid=to;
     this->eid = eid;
     this->strength=0;
 }
 
-string Edge:: Edge::getId() {
+std::pair<int,int> Edge:: Edge::getId() {
     return eid;
 }
 
-void Edge:: Edge::setId(string eid) {
+void Edge:: Edge::setId(std::pair<int,int> eid) {
     this->eid = eid;
 }
 

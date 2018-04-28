@@ -22,15 +22,23 @@
 #include <ctime>
 #include <deque>
 #include <string.h>
+#include <string>
 #include <algorithm>
 #include "Edge.hpp"
 using namespace std;
+
+class pairHash{
+public:
+    size_t operator()(const pair<int, int> &k) const{
+        return k.first * 100 + k.second;
+    }
+};
 
 class RRassociatedGraph{
 
 public:
     unordered_map<int,vertex*> vertexMap;
-    unordered_map<string,Edge*> EdgeMap;
+    std::unordered_map<std::pair<int,int>,Edge*,pairHash> EdgeMap;
     int noOfEdges;
     
 public:
@@ -39,7 +47,7 @@ public:
     int getNumberOfVertices();
     void addVertex(vertex v);
     vertex* find(int id);
-    Edge* findedge(string id);
+    Edge* findedge(std::pair<int,int> id);
     void addEdge(int from, int to, int label);
     void removeEdge(int from, int to,int rrSetID);
 };

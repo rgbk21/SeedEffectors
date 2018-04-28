@@ -22,8 +22,8 @@ vertex* RRassociatedGraph::find(int id) {
     return nullptr;
 }
 
-Edge* RRassociatedGraph::findedge(string id){
-    unordered_map<string,Edge*>::const_iterator got=EdgeMap.find(id);
+Edge* RRassociatedGraph::findedge(std::pair<int,int> id){
+    unordered_map<std::pair<int,int>,Edge*,pairHash>::const_iterator got=EdgeMap.find(id);
     if(got != EdgeMap.end() )
         return got->second;
     return nullptr;
@@ -48,14 +48,15 @@ void RRassociatedGraph::addEdge(int from, int to, int label) {
         //cout<<fromVertex->getId()<<" "<<toVertex->getId()<<"\n";
         return;
     }
-    string eid=std::to_string(from);
-    eid+="_"+std::to_string(to);
+    std::pair<int,int> eid;
+    eid.first=from;
+    eid.second=to;
     Edge* edge=findedge(eid);
     if(edge==nullptr){
         edge=new Edge(eid,from,to);
         edge->addRRid(label);
         fromVertex->addOutGoingEdges(edge);
-        EdgeMap.insert(pair<string,Edge*>(edge->getId(), edge));
+        EdgeMap.insert(pair<std::pair<int,int>,Edge*>(edge->getId(), edge));
         noOfEdges++;
     }
     else{
@@ -68,8 +69,9 @@ void RRassociatedGraph::addEdge(int from, int to, int label) {
 
 void RRassociatedGraph::removeEdge(int from, int to,int rrSetID) {
     vertex* fromVertex = find(from);
-    string eid=std::to_string(from);
-    eid+="_"+std::to_string(to);
+    std::pair<int,int> eid;
+    eid.first=from;
+    eid.second=to;
     if(EdgeMap.count(eid)==1){
         Edge* e=EdgeMap.find(eid)->second;
         if(fromVertex->removeOutgoingEdge(e,rrSetID)){

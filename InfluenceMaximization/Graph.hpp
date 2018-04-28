@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <algorithm>
+#include <string>
 #include "RRassociatedGraph.hpp"
 
 using namespace std;
