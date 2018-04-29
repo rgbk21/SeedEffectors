@@ -78,7 +78,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--newSeedset 1"
+            argument = "--newSeedset 5"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -86,7 +86,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--graph ca-CondMat.txt"
+            argument = "--graph ca-GrQc-processed.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -94,7 +94,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--budget 1"
+            argument = "--budget 10"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -110,7 +110,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--nodesRemove 33"
+            argument = "--nodesRemove 5"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -496,7 +496,7 @@ void Graph::generateRandomRRSetsFromTargets(int R, vector<int> activatedSet,stri
         for(int i=0;i<R;i++) {
             int randomVertex;
             if(i==doneRR*1000000){
-                cout<<" "<<i<<" ";
+                cout<<" "<<i<<" "<<flush;
                 doneRR++;
             }
             randomVertex = activatedSet[rand() % t];

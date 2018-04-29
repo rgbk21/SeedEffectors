@@ -352,6 +352,7 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     resultLogFile<< "\n intersection of mod and submod nodes to remove "<<A;
     resultLogFile<< "\n intersection of submod and submodImpact nodes to remove "<<B;
     resultLogFile<< "\n intersection of mod and submodImpact nodes to remove "<<C<<"\n";
+    
     //Random RR sets
     int n = (int)activatedSet.size();
     double epsilon = (double)EPSILON;
@@ -372,10 +373,10 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     vector<int>().swap(modImpactGraph->NodeinRRsetsWithCounts);
     
     Graph* graph=new Graph;
-    //set<int> maxInfluenceSeed;
-    //int maxInfluenceNum;
+    set<int> maxInfluenceSeed;
+    int maxInfluenceNum;
     set<int> seedSet;
-    /*
+    
     set<int> modseedSet=set<int>();
     set<int> subModseedSet=set<int>();
     set<int> modImpactseedSet=set<int>();
@@ -388,23 +389,23 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
     
     cout << "\n \n******* Max influence start******** \n" <<flush;
     
-    maxInfluenceSeed=getSeed(graph,activatedSet,set<int>(),set<int>(),NULL);
+    maxInfluenceSeed=getSeed(graph,activatedSet,set<int>(),set<int>(),set<int>(),NULL);
     vector<vector<int>>().swap(graph->rrSets);
     maxInfluenceNum=oldNewIntersection(graph, maxInfluenceSeed, activatedSet, resultLogFile);
     myfile <<maxInfluenceNum<<" ";
     cout << "\n \n******* Max influence end ******** \n" <<flush;
-    delete graph;*/
+    delete graph;
     
     SeedSet *SeedClass = new SeedSet(newGraph , budget);
-    /*
-    modseedSet=getSeed(newGraph,activatedSet,modNodes,set<int>(),NULL);
-    subModseedSet=getSeed(subNewGraph,activatedSet,subModNodes,set<int>(),NULL);
-    modImpactseedSet=getSeed(modImpactGraph,activatedSet,removalModImpactNodes,set<int>(),NULL);*/
+    
+    modseedSet=getSeed(newGraph,activatedSet,modNodes,set<int>(),set<int>(),NULL);
+    subModseedSet=getSeed(subNewGraph,activatedSet,subModNodes,set<int>(),set<int>(),NULL);
+    modImpactseedSet=getSeed(modImpactGraph,activatedSet,removalModImpactNodes,set<int>(),set<int>(),NULL);
     
     
-    int k=1;
-    while(k<9){
-        switch(1){
+    int k=0;
+    while(k<5){
+        switch(5){
             case 0: //bestTim
                 seedSet=getSeed(newGraph,activatedSet,modNodes,subModNodes,removalModImpactNodes,NULL);
                 vector<vector<int>>().swap(newGraph->rrSets);
@@ -429,13 +430,13 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
             case 4: //farthest from OutDegree threshold nodes
                 seedSet=SeedClass->outdegreeFarthest(topBestThreshold);
                 break;
-            case 5: seedSet=maxSeedSet;
+            case 5: //seedSet=maxSeedSet;
                 break;
      }
         
         cout<<"\n \n Selected new SeedSet in original graph: " << flush;
         resultLogFile<<"\n \n Selected new SeedSet in original graph: " << flush;
-        for(auto item:seedSet){
+        for(auto item:maxInfluenceSeed){
             cout<< item << " ";
             resultLogFile<< item << " ";
         }
@@ -445,19 +446,19 @@ void newDiffusion(Graph *newGraph,Graph *subNewGraph,Graph *modImpactGraph, set<
         
         cout<<"\n Mod Results: " << flush;
         resultLogFile<<"\n Mod Results: " << flush;
-        infNum=oldNewIntersection(newGraph, seedSet,activatedSet,resultLogFile);
+        infNum=oldNewIntersection(newGraph, modseedSet,activatedSet,resultLogFile);
         modResults.push_back(infNum);
         myfile <<infNum<<" ";
         
         cout<<"\n Sub Mod Results: " << flush;
         resultLogFile<<"\n Sub Mod Results: " << flush;
-        infNum=oldNewIntersection(subNewGraph, seedSet,activatedSet,resultLogFile);
+        infNum=oldNewIntersection(subNewGraph, subModseedSet,activatedSet,resultLogFile);
         SubmodResults.push_back(infNum);
         myfile <<infNum<<" ";
         
         cout<<"\n Mod Impact Results: " << flush;
         resultLogFile<<"\n Mod Impact Results: " << flush;
-        infNum=oldNewIntersection(modImpactGraph, seedSet,activatedSet,resultLogFile);
+        infNum=oldNewIntersection(modImpactGraph, modImpactseedSet,activatedSet,resultLogFile);
         modImpactResults.push_back(infNum);
         myfile <<infNum<<"\n";
         k++;
@@ -895,39 +896,45 @@ void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
     if(!useIndegree) {
         subInfluencedGraph->setPropogationProbability(probability);
     }
-    set<int> *removalModImpact=new set<int>();
-    set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,activatedSet,removeNodes, seedSet,removalModImpact);
-    delete subInfluencedGraph;
     
-    cout << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
-    resultLogFile << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
+
+
+
+        set<int> *removalModImpact=new set<int>();
+        set<int> subModNodesToremove=subModularNodesRemove(subInfluencedGraph,activatedSet,removeNodes, seedSet,removalModImpact);
+        //delete subInfluencedGraph;
+        
+        cout << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
+        resultLogFile << "\n \n******* Node removed in all three approaches ******** \n" <<flush;
+        
+        Graph *modNewGraph = new Graph;
+        modNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+        if(!useIndegree) {
+            modNewGraph->setPropogationProbability(probability);
+        }
+        
+        Graph *modImpactGraph = new Graph;
+        modImpactGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+        if(!useIndegree) {
+            modImpactGraph->setPropogationProbability(probability);
+        }
+        
+        
+        Graph *subNewGraph = new Graph;
+        subNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
+        if(!useIndegree) {
+            subNewGraph->setPropogationProbability(probability);
+        }
+        
+        string convertedFile="graphs/"+graphFileName;
+        newDiffusion(modNewGraph,subNewGraph,modImpactGraph,modNodesToremove,subModNodesToremove,removalModImpact,activatedSet,newSeed,percentageTargetsFloat,convertedFile);
+        
+        clock_t executionTimeEnd = clock();
+        double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
+        cout << "\n Elapsed time in minutes " << totalExecutionTime;
+        resultLogFile << "\n Elapsed time in minutes " << totalExecutionTime;
+
     
-    Graph *modNewGraph = new Graph;
-    modNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
-    if(!useIndegree) {
-        modNewGraph->setPropogationProbability(probability);
-    }
-    
-    Graph *modImpactGraph = new Graph;
-    modImpactGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
-    if(!useIndegree) {
-        modImpactGraph->setPropogationProbability(probability);
-    }
-    
-    
-    Graph *subNewGraph = new Graph;
-    subNewGraph->readGraph(graphFileName, percentageTargetsFloat,resultLogFile);
-    if(!useIndegree) {
-        subNewGraph->setPropogationProbability(probability);
-    }
-    
-    string convertedFile="graphs/"+graphFileName;
-    newDiffusion(modNewGraph,subNewGraph,modImpactGraph,modNodesToremove,subModNodesToremove,removalModImpact,activatedSet,newSeed,percentageTargetsFloat,convertedFile);
-    
-    clock_t executionTimeEnd = clock();
-    double totalExecutionTime = double(executionTimeEnd - executionTimeBegin) / (CLOCKS_PER_SEC*60);
-    cout << "\n Elapsed time in minutes " << totalExecutionTime;
-    resultLogFile << "\n Elapsed time in minutes " << totalExecutionTime;
 }
 
 
