@@ -30,18 +30,18 @@ public:
         return eid==obj->eid;
     }
     
-    std::pair<int,int> eid;
+    std::string eid;
     set<int> rrids;
     int sourceid;
     int destid;
     int strength;
 
 public:
-    Edge(std::pair<int,int> eid,int from,int to);
-    std::pair<int,int> getId();
+    Edge(std::string eid,int from,int to);
+    std::string getId();
     void addRRid(int rrid);
     void removeRRid(int rrid);
     void setRRid(set<int> rrids);
-    void setId(std::pair<int,int> eid);
+    void setId(std::string eid);
 };
 #endif /* Edge_hpp */

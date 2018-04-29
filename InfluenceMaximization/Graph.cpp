@@ -998,12 +998,12 @@ void Graph:: removeVertexFromRRassociatedGraph(int v){
                 for(int j:rrSets[RRi]){ // all the nodes associated with that rrid
                     if(RRas->vertexMap.count(j)==1){
                     vertex* ASnode = RRas->vertexMap.at(j);
-                        std::pair<int,int> eid;
-                        eid.first=ASnode->getId();
-                        eid.second=outEdges->destid; //making edge id from source and destination vertex
+                        std::string eid;
+                        eid=std::to_string(ASnode->getId());
+                        eid+=std::to_string(outEdges->destid); //making edge id from source and destination vertex
                    
                     if(eid!=outEdges->getId()){
-                        std::unordered_map<std::pair<int,int>,Edge*,pairHash>::iterator it=RRas->EdgeMap.find(eid); //find that edge from edgeMap
+                        std::unordered_map<std::string,Edge*>::iterator it=RRas->EdgeMap.find(eid); //find that edge from edgeMap
                         if (it != RRas->EdgeMap.end() && it->second->rrids.count(RRi)==1){
                             it->second->rrids.erase(RRi);   // remove rrid from the set
                             ASnode->outDegree--;
