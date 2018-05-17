@@ -46,13 +46,13 @@ Store the graph file/labels file in the graphs folder. The graph file has the fo
 Set the following Parameters:
 ```
 algorithm - "timtim"
-fullgraph - true (false if passed only the influenced graph)
+fullgraph - true ( or false to create the influenced graph for the program)
 seedset - 0 (selecting best seed to get the influenced graph)
 Diffusion - 0 (Algorithm of one simulation to get the influenced graph)
 percentage - The percentage of targets. 100 i.e. all nodes are Targets
 budget - Set the seed set size
-nodesRemove - nodes to be removed (the critical nodes)
-newSeedset -  new Seed for influence check is calculated using the best seed nodes for all three approaches after removal of critical nodes.
+nodesRemove - number of nodes to be removed (the critical nodes)
+newSeedset -  to get the new Seed set to calculate the imapct of critical nodes in all three approaches.
 ```
 Example command:
 ```
@@ -62,6 +62,6 @@ Example command:
 The graphs that we have used, along with labels file can be found in "graphs" folder of the code. If you want to use another graph file then place the file in graphs folder before running the program.
 
 ## Results
-Results file get created for every execution and can be found in results folder (if budget, graph name, nodeRemove are same then the file in results folder will get appended instead of generating new file). Log file will also get created and can be found in ResultsData folder
+Results file will get created after every execution and can be found in results folder (if budget, graph name, nodeRemove are same then the program will append the exsisting file instead of generating new file). Log file will also get created and can be found in ResultsData folder.
 
 
