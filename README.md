@@ -3,17 +3,31 @@
 We formulate and study the problem of identifying nodes whose absence can maximally disrupt network-diffusion under independent cascade model. We refer to such nodes as critical nodes. We present the notion of impact and characterize critical nodes based on this notion. Informally, impact of a set of nodes quantifies the necessity of the nodes in the diffusion process. We prove that the impact is monotonic. Interestingly, unlike similar formulation of critical edges in the context of Linear Threshold diffusion model, impact is neither submodular nor supermodular. Hence, we develop heuristics that rely on greedy strategy and modular or submodular approximations of impact function. We empirically evaluate our heuristics by comparing the level of disruption achieved by identifying and removing critical nodes as opposed to that acheived by removing the most influential nodes.
 
 ## Code Structure
-### executeTIMTIM - This is the implementation to create the influenced graph by using two strategies:
-
+### executeTIMTIM
+This is the implementation to create the influenced graph by using two strategies:
 ```
-1. 20,000 simulation on the graph using best seed set
+executeTIMTIM(result)
+```
+```
+1. 20,000 simulations on the graph using best seed set
 2. One diffusion using the best seed set
 ```
-If the influenced file is already present in "graphs" folder it will use the created one otherwise it will create the new influenced file represented as:
+If the influenced file is already present in "graphs" folder, it will use the created one otherwise it will create the new influenced file represented as:
 ```
-convertedFile="graphs/"+graphFileName+"_converted"+"_"+to_string(budget)+"_"+to_string(probability);
+convertedFile="graphs/"+graphFileName+"_converted"+"_"+to_string(budget)+"_"+to_string(probability)
 ```
-### executeTIMTIMfullGraph - This is the implementation where complete graph is used as influenced graph.
+### executeTIMTIMfullGraph  
+This is the implementation where complete graph is used as influenced graph.
+```
+executeTIMTIMfullGraph(result);
+```
+### Graph.cpp 
+This includes the implementation of computation of Impact through Random reachability
+```
+function - generateRandomRRSetsFromTargets()
+```
+### SeedSet.cpp 
+This implementation contains different approaches of selecting the seed set based on random selection, degree, best seed through random reachability. 
 
 ## How to Compile
 We recommend using GCC 4.9 and greater.
