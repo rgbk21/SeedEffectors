@@ -1,4 +1,4 @@
-//
+// Adding a comment just for checking what happens
 //  main.cpp
 //  InfluenceMaximization
 //
