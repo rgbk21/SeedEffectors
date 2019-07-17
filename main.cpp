@@ -940,6 +940,7 @@ void executeTIMTIMfullGraph(cxxopts::ParseResult result) {
 
 int main(int argc, char **argv) {
     cout << "Starting program\n";
+    cout << "Here we go now..." << endl;
     
     string resultDataFile;
     srand(time(0));
